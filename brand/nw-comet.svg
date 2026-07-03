@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <radialGradient id="space" cx="42%" cy="38%" r="75%">
+      <stop offset="0" stop-color="#241a5e"/>
+      <stop offset=".5" stop-color="#120b35"/>
+      <stop offset="1" stop-color="#05030f"/>
+    </radialGradient>
+    <radialGradient id="neb1" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#7c3aed" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#7c3aed" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="neb2" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity=".45"/>
+      <stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="tail" x1="150" y1="930" x2="745" y2="318" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity="0"/>
+      <stop offset=".7" stop-color="#7dd3fc" stop-opacity=".5"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity=".95"/>
+    </linearGradient>
+    <linearGradient id="nwg" x1="0" y1="1" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset=".5" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#f472b6"/>
+    </linearGradient>
+    <radialGradient id="flare" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".4" stop-color="#a5f3fc" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#a5f3fc" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="17"/></filter>
+    <filter id="soft" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="40"/></filter>
+  </defs>
+
+  <rect width="1080" height="1080" fill="url(#space)"/>
+  <circle cx="320" cy="700" r="320" fill="url(#neb1)" filter="url(#soft)" opacity=".8"/>
+  <circle cx="820" cy="420" r="280" fill="url(#neb2)" filter="url(#soft)" opacity=".8"/>
+
+  <!-- stars -->
+  <g fill="#ffffff">
+    <circle cx="150" cy="180" r="3" opacity=".9"/><circle cx="930" cy="150" r="2.4" opacity=".7"/>
+    <circle cx="980" cy="640" r="3.2" opacity=".85"/><circle cx="240" cy="430" r="2" opacity=".6"/>
+    <circle cx="760" cy="900" r="2.6" opacity=".75"/><circle cx="540" cy="120" r="2.2" opacity=".7"/>
+    <circle cx="120" cy="880" r="2.8" opacity=".7"/><circle cx="900" cy="930" r="2" opacity=".6"/>
+    <circle cx="430" cy="960" r="2.2" opacity=".6"/><circle cx="680" cy="200" r="2" opacity=".6"/>
+    <circle cx="60" cy="540" r="2.4" opacity=".65"/><circle cx="1010" cy="320" r="2.2" opacity=".6"/>
+  </g>
+
+  <!-- comet tail -->
+  <path d="M150 930 L760 296 L724 344 Z" fill="url(#tail)" opacity=".9"/>
+  <path d="M150 930 L745 318 L700 300 Z" fill="url(#tail)" opacity=".6"/>
+
+  <!-- NW glow + crisp -->
+  <g transform="translate(540 552) scale(8.4) translate(-50 -50)" fill="none"
+     stroke-linecap="round" stroke-linejoin="round">
+    <g stroke="url(#nwg)" stroke-width="11" filter="url(#glow)" opacity=".9">
+      <path d="M10 82 V18 L46 82 V18"/><path d="M54 18 L62 82 L72 46 L82 82 L90 18"/>
+    </g>
+    <g stroke="url(#nwg)" stroke-width="9.2">
+      <path d="M10 82 V18 L46 82 V18"/><path d="M54 18 L62 82 L72 46 L82 82 L90 18"/>
+    </g>
+  </g>
+
+  <!-- nova flare at comet head -->
+  <g transform="translate(742 320)">
+    <circle r="120" fill="url(#flare)"/>
+    <g fill="#ffffff">
+      <path d="M0 -150C5 -34 9 -22 26 0C9 22 5 34 0 150C-5 34 -9 22 -26 0C-9 -22 -5 -34 0 -150Z" opacity=".95"/>
+      <path transform="rotate(90)" d="M0 -96C4 -22 7 -14 18 0C7 14 4 22 0 96C-4 22 -7 14 -18 0C-7 -14 -4 -22 0 -96Z" opacity=".85"/>
+      <circle r="13"/>
+    </g>
+  </g>
+</svg>

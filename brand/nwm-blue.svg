@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a1230"/>
+      <stop offset=".5" stop-color="#1e40af"/>
+      <stop offset="1" stop-color="#0891b2"/>
+    </linearGradient>
+    <radialGradient id="hi" cx="28%" cy="20%" r="62%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vig" cx="50%" cy="50%" r="62%">
+      <stop offset="0" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#040a1f" stop-opacity=".4"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1080" height="1080" fill="url(#bg)"/>
+  <rect width="1080" height="1080" fill="url(#hi)"/>
+
+  <g transform="translate(540 540)" fill="none" stroke="#ffffff">
+    <circle r="468" stroke-width="2" opacity=".28"/>
+    <circle r="452" stroke-width="6" opacity=".85"/>
+    <circle r="436" stroke-width="1.4" opacity=".25"/>
+  </g>
+
+  <g fill="#ffffff"><circle cx="468" cy="540" r="5"/><circle cx="612" cy="540" r="5"/></g>
+
+  <g transform="translate(540 506) scale(7.4) translate(-51 -50)"
+     fill="none" stroke="#ffffff" stroke-width="4.8"
+     stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8">
+    <path d="M12 78 V22 L46 78 V22"/>
+    <path d="M52 22 L61 78 L71 44 L81 78 L90 22"/>
+  </g>
+
+  <text x="540" y="852" text-anchor="middle"
+        font-family="'Sora','Segoe UI',sans-serif" font-size="58" font-weight="600"
+        letter-spacing="20" fill="#ffffff">NOVAWEB</text>
+  <text x="540" y="904" text-anchor="middle"
+        font-family="'Segoe UI',sans-serif" font-size="22" font-weight="500"
+        letter-spacing="11" fill="#cfe6ff" opacity=".85">WEB&#160;STUDIO</text>
+
+  <rect width="1080" height="1080" fill="url(#vig)"/>
+</svg>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="uk" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="description" content="Veblix Motion — унікальні кінематографічні анімації під кожен бренд: продуктові 3D-ролики, motion-фони, аеро- та промо-зйомка. Приклад: дрон-ролик 4K." />
+<meta name="theme-color" content="#000000" />
+<meta property="og:title" content="Veblix — унікальні анімації під кожен бренд" />
+<meta property="og:description" content="Кінематографічні анімації під ключ: продукт, бренд, реклама, аерозйомка. Приклад — дрон-ролик 4K." />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="uk_UA" />
+<meta property="og:site_name" content="Veblix" />
+<title>Veblix — унікальні анімації під кожен бренд</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="brand/favicon.png" />
+<link rel="apple-touch-icon" href="brand/favicon.png" />
+<link rel="stylesheet" href="styles.css?v=28" />
+<script>
+  document.documentElement.setAttribute('data-theme', 'dark');
+  try { localStorage.removeItem('novaTheme'); } catch(_) {}
+</script>
+<style>
+  .amotion{padding:128px 0 0}
+  .amotion__head{max-width:780px}
+  .amotion__lead{color:var(--muted);font-size:clamp(16px,2.2vw,19px);margin-top:18px;max-width:60ch}
+  .amotion h1{font-family:var(--font-display);font-weight:800;line-height:1.02;
+    font-size:clamp(38px,7vw,76px);letter-spacing:-.02em;margin:0}
+  .amotion__sect-title{font-family:var(--font-display);font-weight:800;
+    font-size:clamp(26px,4.4vw,44px);letter-spacing:-.02em;margin:0 0 8px}
+
+  /* Флагман */
+  .stage{position:relative;margin-top:clamp(34px,6vw,60px);border-radius:clamp(16px,2.4vw,26px);
+    overflow:hidden;border:1px solid var(--glass-brd);background:#000;box-shadow:var(--shadow-lg)}
+  .stage::after{content:"";position:absolute;inset:0;pointer-events:none;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);border-radius:inherit}
+  .stage video{width:100%;height:auto;display:block;aspect-ratio:16/9;object-fit:cover;background:#000}
+  .stage__tag{position:absolute;top:16px;left:16px;z-index:2;display:inline-flex;align-items:center;gap:8px;
+    padding:8px 14px;border-radius:var(--r-pill);font-size:13px;font-weight:700;letter-spacing:.02em;
+    color:#fff;background:rgba(10,12,24,.55);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(10px)}
+  .stage__tag b{color:var(--accent-deep)}
+  .stage__cap{margin-top:18px;color:var(--muted);max-width:62ch}
+
+  /* Галерея */
+  .agrid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,26px);margin-top:clamp(30px,5vw,52px)}
+  .acard{border-radius:var(--r-card);overflow:hidden;background:var(--surface);border:1px solid var(--line);
+    box-shadow:var(--shadow);transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+  .acard:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+  .acard__media{position:relative;aspect-ratio:16/10;background:#000;overflow:hidden}
+  .acard__media video{width:100%;height:100%;object-fit:cover;display:block}
+  .acard__body{padding:18px 20px 22px}
+  .acard__body h3{margin:0 0 6px;font-size:18px;font-weight:700;color:var(--ink)}
+  .acard__body p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.55}
+
+  /* Кроки */
+  .asteps{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,24px);margin-top:clamp(28px,4vw,44px)}
+  .astep{padding:24px;border-radius:var(--r-card);border:1px solid var(--line);background:var(--surface)}
+  .astep__n{font-family:var(--font-display);font-weight:800;font-size:30px;
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .astep h3{margin:8px 0 6px;font-size:17px;color:var(--ink)}
+  .astep p{margin:0;color:var(--muted);font-size:14.5px}
+
+  /* CTA */
+  .acta{margin:clamp(56px,8vw,104px) 0 0;padding:clamp(40px,6vw,72px) clamp(24px,5vw,64px);
+    border-radius:clamp(18px,2.6vw,30px);text-align:center;position:relative;overflow:hidden;
+    border:1px solid var(--glass-brd);background:
+      radial-gradient(120% 160% at 50% -20%,rgba(91,108,255,.22),transparent 60%),var(--surface)}
+  .acta h2{font-family:var(--font-display);font-weight:800;font-size:clamp(26px,4.4vw,46px);
+    letter-spacing:-.02em;margin:0 0 12px}
+  .acta p{color:var(--muted);max-width:52ch;margin:0 auto 26px}
+
+  .back-home{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-weight:600;
+    font-size:14px;margin-bottom:22px}
+  .back-home:hover{color:var(--accent-deep)}
+
+  @media (max-width:860px){.agrid,.asteps{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="bg-noise" aria-hidden="true"></div>
+<div class="bg-orb bg-orb--1" aria-hidden="true"></div>
+<div class="bg-orb bg-orb--2" aria-hidden="true"></div>
+<div class="bg-orb bg-orb--3" aria-hidden="true"></div>
+
+<!-- HEADER -->
+<header class="header" id="header">
+  <div class="container header__inner">
+    <a href="index.html#top" class="logo">
+      <img src="brand/veblix-logo.png" alt="Veblix" class="logo__wordmark" width="240" height="100" decoding="async">
+    </a>
+    <nav class="nav" id="nav">
+      <a href="index.html#cinema">Студія</a>
+      <a href="index.html#works">Роботи</a>
+      <a href="animations.html">Анімації</a>
+      <a href="index.html#pricing">Тарифи</a>
+      <a href="index.html#faq">FAQ</a>
+    </nav>
+    <a href="index.html#order" class="btn btn--primary header__cta">Замовити сайт</a>
+    <button class="burger" id="burger" aria-label="Меню" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- Інтро -->
+  <section class="amotion section" style="padding-bottom:0">
+    <div class="container">
+      <a href="index.html" class="back-home">
+        <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 10H4M9 5L4 10l5 5"/></svg>
+        На головну
+      </a>
+      <div class="amotion__head reveal">
+        <span class="eyebrow">Veblix Motion</span>
+        <h1>Унікальні анімації<br><span class="grad">під кожен бренд</span></h1>
+        <p class="amotion__lead">Жодних шаблонів. Кожному клієнту — власний кінематографічний ролик: продукт, бренд, реклама чи аерозйомка. Створюємо під вашу ідею з нуля й прокачуємо до 4K.</p>
+      </div>
+
+      <!-- Флагман: дрон-ролик 4K -->
+      <div class="stage reveal">
+        <span class="stage__tag"><b>4K</b> · аерозйомка</span>
+        <video class="io-video" src="video/showcase-drone.mp4?v=2" poster="video/showcase-drone-poster.webp"
+               muted loop playsinline controls preload="metadata"></video>
+      </div>
+      <p class="stage__cap reveal">Реальний приклад: 45 секунд безперервного польоту, змонтовані в один плавний сюжет і прокачані до 4K. Саме так ми робимо промо-ролики під ваш бренд.</p>
+    </div>
+  </section>
+
+  <!-- Галерея можливостей -->
+  <section class="section" style="padding-bottom:clamp(20px,4vw,40px)">
+    <div class="container">
+      <div class="reveal">
+        <h2 class="amotion__sect-title">Що ми вміємо оживляти</h2>
+        <p style="color:var(--muted);margin:0;max-width:56ch">Кілька форматів анімацій, які ми створюємо під клієнта.</p>
+      </div>
+
+      <div class="agrid">
+        <article class="acard reveal">
+          <div class="acard__media">
+            <video src="video/veblix-hero.mp4" poster="video/veblix-hero-poster.webp?v=2" class="io-video" muted loop playsinline preload="none"></video>
+          </div>
+          <div class="acard__body">
+            <h3>Продуктова 3D-анімація</h3>
+            <p>Ідея перетворюється на готовий сайт на ноутбуці, планшеті й телефоні.</p>
+          </div>
+        </article>
+
+        <article class="acard reveal">
+          <div class="acard__media">
+            <video src="video/sec-bot.mp4?v=1" poster="video/sec-bot-poster.webp" class="io-video" muted loop playsinline preload="none"></video>
+          </div>
+          <div class="acard__body">
+            <h3>Motion-фон бренду</h3>
+            <p>Атмосферний фон під ваш стиль і фірмові кольори — для hero-секцій і реклами.</p>
+          </div>
+        </article>
+
+        <article class="acard reveal">
+          <div class="acard__media">
+            <video src="video/anim-aerial.mp4" poster="video/anim-aerial-poster.webp" class="io-video" muted loop playsinline preload="none"></video>
+          </div>
+          <div class="acard__body">
+            <h3>Аеро- та промо-ролики</h3>
+            <p>Кінематографічні кадри для реклами, презентацій і соцмереж.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Як ми це робимо -->
+  <section class="section" style="padding-top:clamp(20px,4vw,40px)">
+    <div class="container">
+      <div class="reveal">
+        <h2 class="amotion__sect-title">Як ми це робимо</h2>
+      </div>
+      <div class="asteps">
+        <div class="astep reveal">
+          <div class="astep__n">01</div>
+          <h3>Ідея під ваш бренд</h3>
+          <p>Обговорюємо задачу й вигадуємо сюжет, що передає характер вашого продукту.</p>
+        </div>
+        <div class="astep reveal">
+          <div class="astep__n">02</div>
+          <h3>Генеруємо й монтуємо</h3>
+          <p>Створюємо кадри, зшиваємо їх у плавний безперервний ролик із вашими кольорами.</p>
+        </div>
+        <div class="astep reveal">
+          <div class="astep__n">03</div>
+          <h3>Прокачуємо до 4K</h3>
+          <p>Підвищуємо якість і віддаємо готове відео — для сайту, реклами чи соцмереж.</p>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="acta reveal">
+        <h2>Хочете унікальну анімацію<br>для свого бренду?</h2>
+        <p>Напишіть нам — підберемо ідею, покажемо приклади й порахуємо вартість.</p>
+        <a href="index.html#order" class="btn btn--primary btn--lg">Замовити анімацію</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer" id="contacts">
+  <div class="container footer__bottom" style="border:0">
+    <p>© <span id="year">2026</span> Veblix. Усі права захищено.</p>
+    <p><a href="index.html">На головну</a> · <a href="privacy.html">Конфіденційність</a> · <a href="terms.html">Оферта</a> · <a href="rights.html">Права</a></p>
+  </div>
+</footer>
+
+<script>
+  // Економія CPU/батареї телефона: відео грають ЛИШЕ коли видимі на екрані.
+  (() => {
+    const vids = [...document.querySelectorAll('.io-video')];
+    if (!vids.length) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        const v = e.target;
+        if (e.isIntersecting && e.intersectionRatio >= 0.35) {
+          if (v.preload === 'none') v.preload = 'auto';
+          v.play().catch(() => {});
+        } else {
+          v.pause();
+        }
+      });
+    }, { threshold: [0, 0.35, 1] });
+    vids.forEach((v) => io.observe(v));
+  })();
+</script>
+<script src="config.js"></script>
+<!-- Meta Pixel — ID береться з config.js (VEBLIX_CONFIG.META_PIXEL_ID). Порожній ID = вимкнено. -->
+<script>
+(function(){
+  var id = (window.VEBLIX_CONFIG && window.VEBLIX_CONFIG.META_PIXEL_ID) || '';
+  if(!id) return;
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', id);
+  fbq('track', 'PageView');
+})();
+</script>
+<!-- End Meta Pixel -->
+<script src="script.js?v=16"></script>
+<script src="lang.js?v=6" defer></script>
+</body>
+</html>

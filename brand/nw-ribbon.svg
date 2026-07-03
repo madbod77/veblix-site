@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="70%">
+      <stop offset="0" stop-color="#181b24"/>
+      <stop offset=".6" stop-color="#0c0e15"/>
+      <stop offset="1" stop-color="#06070b"/>
+    </radialGradient>
+    <radialGradient id="under" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#8b5cf6" stop-opacity=".5"/>
+      <stop offset=".55" stop-color="#22d3ee" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="iri" x1="0" y1="1" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#67e8f9"/>
+      <stop offset=".38" stop-color="#818cf8"/>
+      <stop offset=".66" stop-color="#c084fc"/>
+      <stop offset="1" stop-color="#fbbf24"/>
+    </linearGradient>
+    <filter id="usoft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="55"/></filter>
+    <filter id="sh" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="9"/></filter>
+  </defs>
+
+  <rect width="1080" height="1080" fill="url(#bg)"/>
+  <circle cx="540" cy="520" r="330" fill="url(#under)" filter="url(#usoft)"/>
+
+  <!-- faint vertical accent stars -->
+  <g fill="#ffffff" opacity=".5">
+    <circle cx="180" cy="200" r="2.2"/><circle cx="900" cy="240" r="2"/>
+    <circle cx="860" cy="860" r="2.4"/><circle cx="200" cy="840" r="2"/>
+  </g>
+
+  <g transform="translate(540 548) scale(8.0) translate(-50 -50)"
+     fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- cast shadow -->
+    <g transform="translate(0 1.4)" stroke="#000000" stroke-opacity=".55" stroke-width="9.6" filter="url(#sh)">
+      <path d="M10 82 V18 L46 82 V18"/><path d="M54 18 L62 82 L72 46 L82 82 L90 18"/>
+    </g>
+    <!-- dark base (extrude depth) -->
+    <g transform="translate(0 .8)" stroke="#3b2f1f" stroke-width="9.6">
+      <path d="M10 82 V18 L46 82 V18"/><path d="M54 18 L62 82 L72 46 L82 82 L90 18"/>
+    </g>
+    <!-- iridescent face -->
+    <g stroke="url(#iri)" stroke-width="9.2">
+      <path d="M10 82 V18 L46 82 V18"/><path d="M54 18 L62 82 L72 46 L82 82 L90 18"/>
+    </g>
+    <!-- glossy top highlight -->
+    <g transform="translate(0 -1.1)" stroke="#ffffff" stroke-opacity=".6" stroke-width="2.6">
+      <path d="M10 82 V18 L46 82 V18"/><path d="M54 18 L62 82 L72 46 L82 82 L90 18"/>
+    </g>
+  </g>
+
+  <!-- sparkle -->
+  <path transform="translate(786 322) scale(1.4)" fill="#fde68a" opacity=".95"
+    d="M0 -22C2.4 -6 5.6 -2.4 22 0C5.6 2.4 2.4 5.6 0 22C-2.4 5.6 -5.6 2.4 -22 0C-5.6 -2.4 -2.4 -5.6 0 -22Z"/>
+</svg>

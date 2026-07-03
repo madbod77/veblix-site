@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5b6cff"/>
+      <stop offset=".5" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".38"/>
+      <stop offset=".5" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="fade" cx="50%" cy="44%" r="60%">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="#000"/>
+    </radialGradient>
+    <mask id="gridmask"><rect width="1080" height="1080" fill="url(#fade)"/></mask>
+    <pattern id="grid" width="90" height="90" patternUnits="userSpaceOnUse">
+      <path d="M90 0H0V90" fill="none" stroke="#0e1228" stroke-width="1.2"/>
+    </pattern>
+    <filter id="orb" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="70"/>
+    </filter>
+    <filter id="float" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="34" stdDeviation="42" flood-color="#3a2a86" flood-opacity=".30"/>
+    </filter>
+    <filter id="nsh" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#1a1147" flood-opacity=".30"/>
+    </filter>
+  </defs>
+
+  <!-- white premium base -->
+  <rect width="1080" height="1080" fill="#ffffff"/>
+
+  <!-- soft brand orbs -->
+  <g filter="url(#orb)" opacity=".5">
+    <circle cx="220" cy="210" r="190" fill="#c7d0ff"/>
+    <circle cx="900" cy="380" r="180" fill="#cdfbff"/>
+    <circle cx="600" cy="930" r="200" fill="#ecdcff"/>
+  </g>
+
+  <!-- faint grid -->
+  <rect width="1080" height="1080" fill="url(#grid)" opacity=".05" mask="url(#gridmask)"/>
+
+  <!-- floating gradient tile -->
+  <g filter="url(#float)">
+    <rect x="318" y="306" width="444" height="444" rx="132" fill="url(#tile)"/>
+    <rect x="318" y="306" width="444" height="444" rx="132" fill="url(#gloss)"/>
+    <rect x="319.5" y="307.5" width="441" height="441" rx="130.5"
+          fill="none" stroke="#ffffff" stroke-opacity=".35" stroke-width="3"/>
+  </g>
+
+  <!-- N monogram -->
+  <g transform="translate(540 528) scale(13.5) translate(-16 -16)"
+     fill="none" stroke="#ffffff" stroke-width="3.05"
+     stroke-linecap="round" stroke-linejoin="round" filter="url(#nsh)">
+    <path d="M6 24V8l20 16V8"/>
+  </g>
+</svg>

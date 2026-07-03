@@ -1,0 +1,26 @@
+# NovaWeb — конфіг деплою Netlify (статичний сайт, корінь = publish)
+
+[build]
+  publish = "."
+
+# Кадри scroll-відео, скріншоти робіт і бренд-асети незмінні — кешуємо на рік
+[[headers]]
+  for = "/slider/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/works/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/brand/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# HTML завжди свіжий (стилі/скрипти версіонуються query-параметром)
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
