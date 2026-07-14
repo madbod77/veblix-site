@@ -25,9 +25,9 @@
   const nodes = [...hero.querySelectorAll('.vh-hud__node')];
 
   const SCENES = [
-    { title: 'Сайт', thought: 'Сайт веде людину до однієї зрозумілої дії.', cls: '', poster: 'assets/img/scene-01.jpg', posterMobile: 'assets/img/scene-01-mobile.jpg' },
-    { title: 'Бот',  thought: 'Запит не губиться — бот кваліфікує і передає живій людині.', cls: '', poster: 'assets/img/scene-02.jpg', posterMobile: 'assets/img/scene-02-mobile.jpg' },
-    { title: 'Автоматизація та аналітика', thought: 'Процеси працюють самі, а щомісяця ти маєш рішення з власних даних.', cls: 'mint', poster: 'assets/img/scene-05.jpg', posterMobile: 'assets/img/scene-05-mobile.jpg' },
+    { title: 'Сайт', thought: 'Сайт веде людину до однієї зрозумілої дії.', cls: '', poster: 'assets/img/scene-01.jpg?v=2', posterMobile: 'assets/img/scene-01-mobile.jpg?v=2' },
+    { title: 'Бот',  thought: 'Запит не губиться — бот кваліфікує і передає живій людині.', cls: '', poster: 'assets/img/scene-02.jpg?v=2', posterMobile: 'assets/img/scene-02-mobile.jpg?v=2' },
+    { title: 'Автоматизація та аналітика', thought: 'Процеси працюють самі, а щомісяця ти маєш рішення з власних даних.', cls: 'mint', poster: 'assets/img/scene-05.jpg?v=2', posterMobile: 'assets/img/scene-05-mobile.jpg?v=2' },
   ];
   const N = SCENES.length;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -40,7 +40,7 @@
   let lastVideoTime = -1;
 
   if (totalEl) totalEl.textContent = String(N).padStart(2, '0');
-  video.poster = mobileMedia.matches ? 'assets/img/hero-poster-mobile.jpg' : 'assets/img/hero-poster.jpg';
+  video.poster = mobileMedia.matches ? 'assets/img/hero-poster-mobile.jpg?v=2' : 'assets/img/hero-poster.jpg?v=2';
 
   function scenePoster(scene) {
     return mobileMedia.matches ? scene.posterMobile : scene.poster;
@@ -55,7 +55,7 @@
   // телефона. Перезавантажуємо лише медіаелемент, а loadedmetadata нижче
   // повертає відео до актуальної позиції scroll-scrub.
   mobileMedia.addEventListener('change', () => {
-    video.poster = mobileMedia.matches ? 'assets/img/hero-poster-mobile.jpg' : 'assets/img/hero-poster.jpg';
+    video.poster = mobileMedia.matches ? 'assets/img/hero-poster-mobile.jpg?v=2' : 'assets/img/hero-poster.jpg?v=2';
     if (staticMode) {
       if (idx >= 0) poster.src = scenePoster(SCENES[idx]);
       return;

@@ -25,6 +25,12 @@ DURATION = 24
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUT = ROOT / "assets/video/veblix-hero.mp4"
+DESKTOP_POSTERS = {
+    4.70: ("hero-poster.jpg",),
+    7.20: ("scene-01.jpg",),
+    15.20: ("scene-02.jpg",),
+    23.40: ("scene-05.jpg",),
+}
 FONT_REGULAR = "/System/Library/Fonts/Supplemental/Arial.ttf"
 FONT_BOLD = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
 
@@ -137,10 +143,11 @@ def make_base() -> Image.Image:
     radial(470, 760, 620, (28, 38, 95), .045)
     image = Image.fromarray(np.clip(arr, 0, 255).astype(np.uint8), "RGB").convert("RGBA")
     d = ImageDraw.Draw(image, "RGBA")
+    # The Veblix grid remains a quiet stage, not part of the product UI.
     for x in range(0, W + 1, 64):
-        d.line((x, 0, x, H), fill=(90, 108, 210, 10), width=1)
+        d.line((x, 0, x, H), fill=(90, 108, 210, 5), width=1)
     for y in range(0, H + 1, 64):
-        d.line((0, y, W, y), fill=(90, 108, 210, 9), width=1)
+        d.line((0, y, W, y), fill=(90, 108, 210, 4), width=1)
     # Keep the copy area quiet even before the website's CSS scrim is applied.
     overlay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     od = ImageDraw.Draw(overlay)
@@ -164,22 +171,15 @@ def ambience(frame: Image.Image, t: float):
     indigo_alpha = 1 - mint_p * .65
     cx = 820 + math.sin(t * .24) * 42
     cy = 335 + math.cos(t * .19) * 28
-    ad.ellipse((cx - 310, cy - 250, cx + 310, cy + 250), fill=c(INDIGO, 52 * indigo_alpha))
-    ad.ellipse((790 - 340, 350 - 280, 790 + 340, 350 + 280), fill=c(MINT, 50 * mint_p))
-    ad.ellipse((1060 - 190, 210 - 180, 1060 + 190, 210 + 180), fill=c(CYAN, 21))
+    ad.ellipse((cx - 310, cy - 250, cx + 310, cy + 250), fill=c(INDIGO, 31 * indigo_alpha))
+    ad.ellipse((790 - 340, 350 - 280, 790 + 340, 350 + 280), fill=c(MINT, 28 * mint_p))
+    ad.ellipse((1060 - 190, 210 - 180, 1060 + 190, 210 + 180), fill=c(CYAN, 13))
     frame.alpha_composite(aura.filter(ImageFilter.GaussianBlur(92)))
     d = ImageDraw.Draw(frame, "RGBA")
     for i, (x, y, r, phase) in enumerate(STARS):
-        alpha = 22 + 24 * (.5 + .5 * math.sin(t * .72 + phase))
+        alpha = 9 + 13 * (.5 + .5 * math.sin(t * .72 + phase))
         col = MINT if mint_p > .55 and i % 4 == 0 else VIOLET
         d.ellipse((x - r, y - r, x + r, y + r), fill=c(col, alpha))
-    # Slow scanning beam makes scroll movement visible even between UI beats.
-    beam_x = (t / DURATION) * (W + 420) - 210
-    beam = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    bd = ImageDraw.Draw(beam)
-    bd.polygon([(beam_x - 80, 0), (beam_x + 70, 0), (beam_x + 220, H), (beam_x + 40, H)],
-               fill=c(MINT if mint_p > .5 else INDIGO, 18))
-    frame.alpha_composite(beam.filter(ImageFilter.GaussianBlur(28)))
 
 
 def scene_canvas():
@@ -197,102 +197,244 @@ def composite_scene(frame: Image.Image, layer: Image.Image, glow: Image.Image, a
     frame.alpha_composite(layer)
 
 
+def panel_shadow(gd: ImageDraw.ImageDraw, box, radius: int = 28, alpha: int = 125,
+                 accent: tuple[int, int, int] | None = None):
+    """Neutral product shadow with only a restrained accent edge."""
+    x1, y1, x2, y2 = box
+    gd.rounded_rectangle((x1 + 2, y1 + 16, x2 + 2, y2 + 22), radius=radius,
+                         fill=(0, 0, 0, alpha))
+    if accent:
+        gd.rounded_rectangle((x1 - 3, y1 - 3, x2 + 3, y2 + 3), radius=radius + 2,
+                             outline=c(accent, 42), width=5)
+
+
+def draw_lock(draw: ImageDraw.ImageDraw, x: float, y: float, color):
+    draw.arc((x, y, x + 10, y + 11), 180, 360, fill=color, width=2)
+    draw.rounded_rectangle((x - 1, y + 5, x + 11, y + 16), radius=3, fill=color)
+
+
+def draw_battery(draw: ImageDraw.ImageDraw, x: float, y: float, level: float = .82):
+    draw.rounded_rectangle((x, y, x + 25, y + 11), radius=3, outline=c(INK, 205), width=2)
+    draw.rectangle((x + 26, y + 3, x + 28, y + 8), fill=c(INK, 170))
+    draw.rounded_rectangle((x + 3, y + 3, x + 3 + 18 * clamp(level), y + 8), radius=2,
+                           fill=c(MINT if level > .25 else AMBER, 230))
+
+
+def draw_wifi(draw: ImageDraw.ImageDraw, x: float, y: float):
+    draw.arc((x, y, x + 20, y + 15), 215, 325, fill=c(INK, 205), width=2)
+    draw.arc((x + 4, y + 5, x + 16, y + 15), 215, 325, fill=c(INK, 205), width=2)
+    draw.ellipse((x + 9, y + 12, x + 12, y + 15), fill=c(INK, 220))
+
+
+def draw_chevron(draw: ImageDraw.ImageDraw, x: float, y: float, color, direction: str = "left"):
+    if direction == "left":
+        draw.line((x + 8, y, x, y + 8, x + 8, y + 16), fill=color, width=3, joint="curve")
+    elif direction == "right":
+        draw.line((x, y, x + 8, y + 8, x, y + 16), fill=color, width=3, joint="curve")
+    else:
+        draw.line((x, y, x + 6, y + 6, x + 12, y), fill=color, width=2, joint="curve")
+
+
+def product_icon(draw: ImageDraw.ImageDraw, x: float, y: float, kind: str, color, size: float = 13):
+    """Draw tiny UI icons as vectors so every glyph is deterministic."""
+    if kind == "scenario":
+        text(draw, (x, y), "C", int(size), color, True, "mm")
+    elif kind == "runs":
+        draw.polygon(((x - 4, y - 6), (x + 6, y), (x - 4, y + 6)), fill=color)
+    elif kind == "analytics":
+        for i, height in enumerate((6, 11, 8)):
+            draw.rounded_rectangle((x - 7 + i * 6, y + 6 - height, x - 3 + i * 6, y + 6),
+                                   radius=1, fill=color)
+    elif kind == "settings":
+        draw.ellipse((x - 4, y - 4, x + 4, y + 4), outline=color, width=2)
+        draw.ellipse((x - 1, y - 1, x + 1, y + 1), fill=color)
+        for angle in range(0, 360, 45):
+            rad = math.radians(angle)
+            draw.line((x + math.cos(rad) * 5, y + math.sin(rad) * 5,
+                       x + math.cos(rad) * 8, y + math.sin(rad) * 8), fill=color, width=2)
+
+
+def typing_dots(draw: ImageDraw.ImageDraw, x: float, y: float, phase: float, alpha: float):
+    for i in range(3):
+        lift = 3 * max(0, math.sin(phase * math.tau - i * .8))
+        draw.ellipse((x + i * 14, y - lift, x + 7 + i * 14, y + 7 - lift), fill=c(MUTED, 210 * alpha))
+
+
 def draw_browser(frame: Image.Image, t: float, alpha: float):
     if alpha <= 0:
         return
     layer, d, glow, gd = scene_canvas()
-    build = smooth(.15, 2.65, t)
-    exit_p = smooth(6.85, 8.0, t)
-    x = 570 - 90 * exit_p
-    y = 118 - 34 * exit_p
-    w, h = 570, 420
-    shell_a = int(85 + 155 * build)
-    rr(gd, (x - 8, y - 8, x + w + 8, y + h + 8), 34, c(INDIGO, 80))
-    rr(d, (x, y, x + w, y + h), 26, c(PANEL, shell_a), c(VIOLET, 80 + 80 * build), 2)
-    # Browser chrome
-    rr(d, (x + 18, y + 16, x + w - 18, y + 55), 14, c(PANEL_2, 230 * build), c(VIOLET, 35), 1)
-    for i, col in enumerate(((255, 112, 128), AMBER, MINT)):
-        d.ellipse((x + 34 + i * 18, y + 31, x + 42 + i * 18, y + 39), fill=c(col, 170 * build))
-    rr(d, (x + 128, y + 25, x + 386, y + 46), 10, c(BG, 180 * build), c(VIOLET, 30), 1)
-    text(d, (x + 150, y + 29), "veblix.site", 12, c(MUTED, 210 * build))
-    d.ellipse((x + 365, y + 32, x + 372, y + 39), outline=c(MINT, 190 * build), width=2)
+    exit_p = smooth(7.68, 8.28, t)
+    x = 560 - 42 * exit_p
+    y = 48 - 12 * exit_p
+    w, h = 665, 620
+    panel_shadow(gd, (x, y, x + w, y + h), 30, 155, INDIGO)
+    rr(d, (x, y, x + w, y + h), 30, c((24, 26, 34), 252), c((118, 126, 154), 105), 2)
 
-    # Components fly into their final layout.
-    component_specs = [
-        ((x + 30, y + 76, x + 325, y + 270), (x - 170, y + 240, x + 125, y + 434)),
-        ((x + 345, y + 76, x + 540, y + 270), (x + 510, y - 130, x + 705, y + 64)),
-        ((x + 30, y + 292, x + 190, y + 385), (x + 70, y + 510, x + 230, y + 603)),
-        ((x + 205, y + 292, x + 365, y + 385), (x + 650, y + 340, x + 810, y + 433)),
-        ((x + 380, y + 292, x + 540, y + 385), (x + 270, y - 170, x + 430, y - 77)),
-    ]
-    boxes = []
-    for target, start in component_specs:
-        p = out_back(smooth(.25, 2.35, t))
-        boxes.append(tuple(mix(start[i], target[i], p) for i in range(4)))
+    # Familiar desktop browser chrome: tab, URL, lock, controls and menu.
+    rr(d, (x + 1, y + 1, x + w - 1, y + 66), 29, c((31, 34, 44), 255))
+    d.rectangle((x + 1, y + 38, x + w - 1, y + 68), fill=c((31, 34, 44), 255))
+    for i, col in enumerate(((255, 96, 104), (255, 190, 76), (50, 205, 114))):
+        d.ellipse((x + 20 + i * 20, y + 21, x + 31 + i * 20, y + 32), fill=c(col, 245))
+    rr(d, (x + 88, y + 10, x + 300, y + 43), 11, c((43, 46, 58), 255), c((118, 126, 154), 52), 1)
+    d.ellipse((x + 102, y + 18, x + 119, y + 35), fill=c(INDIGO, 235))
+    text(d, (x + 127, y + 18), "Veblix · розрахунок проєкту", 13, c(INK, 225), True)
+    rr(d, (x + 320, y + 10, x + w - 54, y + 43), 11, c((20, 22, 29), 255), c((118, 126, 154), 50), 1)
+    draw_lock(d, x + 338, y + 18, c(MINT, 210))
+    text(d, (x + 358, y + 18), "veblix.site/start", 13, c((199, 204, 218), 225))
+    for yy in (18, 24, 30):
+        d.ellipse((x + w - 31, y + yy, x + w - 27, y + yy + 4), fill=c(MUTED, 190))
 
-    # Hero block
-    b = boxes[0]
-    rr(d, b, 18, c((16, 22, 48), 225), c(VIOLET, 58), 1)
-    tx, ty = b[0] + 22, b[1] + 23
-    text(d, (tx, ty), "ВАШ БІЗНЕС", 14, c(VIOLET, 220), True)
-    text(d, (tx, ty + 28), "ПРАЦЮЄ ОНЛАЙН", 23, c(INK, 245), True)
-    d.rounded_rectangle((tx, ty + 68, tx + 226, ty + 76), 4, fill=c(MUTED, 90))
-    d.rounded_rectangle((tx, ty + 84, tx + 184, ty + 92), 4, fill=c(MUTED, 55))
-    cta = (tx, ty + 118, tx + 196, ty + 158)
-    rr(gd, (cta[0] - 4, cta[1] - 4, cta[2] + 4, cta[3] + 4), 15, c(INDIGO, 90))
-    rr(d, cta, 12, c(INDIGO, 245), c(VIOLET, 180), 1)
-    text(d, ((cta[0] + cta[2]) / 2, cta[1] + 13), "ОТРИМАТИ ЗАЯВКУ", 12, c(INK, 245), True, "ma")
+    page = (x + 10, y + 67, x + w - 10, y + h - 10)
+    rr(d, page, 20, c((241, 239, 234), 255))
+    px, py = page[0], page[1]
+    pw, ph = page[2] - page[0], page[3] - page[1]
 
-    # Visual proof card
-    b = boxes[1]
-    rr(d, b, 18, c((12, 18, 39), 232), c(CYAN, 65), 1)
-    bx, by = b[0] + 20, b[1] + 23
-    text(d, (bx, by), "САЙТ ГОТОВИЙ", 12, c(CYAN, 210), True)
-    d.arc((bx + 25, by + 40, bx + 125, by + 140), -90, 235, fill=c(INDIGO, 210), width=8)
-    d.arc((bx + 38, by + 53, bx + 112, by + 127), -90, 150 + 70 * smooth(2, 4, t), fill=c(MINT, 220), width=7)
-    text(d, (bx + 75, by + 78), "24/7", 17, c(INK, 235), True, "mm")
-    text(d, (bx + 75, by + 148), "приймає заявки", 11, c(MUTED, 190), False, "ma")
+    # A complete, credible service website rather than placeholder rectangles.
+    text(d, (px + 26, py + 20), "VEBLIX", 17, c((22, 24, 31), 255), True)
+    d.ellipse((px + 99, py + 25, px + 106, py + 32), fill=c(INDIGO, 255))
+    text(d, (px + 190, py + 22), "Послуги", 13, c((73, 76, 89), 235), True)
+    text(d, (px + 268, py + 22), "Як працюємо", 13, c((73, 76, 89), 235), True)
+    text(d, (px + 375, py + 22), "Кейси", 13, c((73, 76, 89), 235), True)
+    rr(d, (px + pw - 142, py + 12, px + pw - 22, py + 46), 17, c((25, 27, 36), 255))
+    text(d, (px + pw - 82, py + 23), "Обговорити", 12, c(INK, 245), True, "ma")
+    d.line((px + 22, py + 58, px + pw - 22, py + 58), fill=c((26, 28, 36), 22), width=1)
 
-    # Three proof tiles
-    tile_labels = (("01", "СТРУКТУРА"), ("02", "ДОВІРА"), ("03", "ЗАЯВКА"))
-    for b, (num, label) in zip(boxes[2:], tile_labels):
-        rr(d, b, 15, c(PANEL_2, 225), c(VIOLET, 45), 1)
-        text(d, (b[0] + 16, b[1] + 15), num, 12, c(VIOLET, 210), True)
-        text(d, (b[0] + 16, b[1] + 46), label, 12, c(INK, 220), True)
-        d.rounded_rectangle((b[0] + 16, b[1] + 68, b[2] - 16, b[1] + 73), 3, fill=c(MUTED, 45))
+    # Website hero content.
+    rr(d, (px + 27, py + 84, px + 205, py + 113), 14, c((230, 231, 255), 255))
+    text(d, (px + 42, py + 91), "СИСТЕМА ПРОДАЖІВ 24/7", 11, c((62, 72, 190), 255), True)
+    text(d, (px + 27, py + 137), "Сайт, бот і", 31, c((22, 24, 31), 255), True)
+    text(d, (px + 27, py + 173), "автоматизація", 31, c((22, 24, 31), 255), True)
+    text(d, (px + 27, py + 209), "в одній системі", 31, c((77, 89, 221), 255), True)
+    text(d, (px + 28, py + 260), "Заявки одразу потрапляють у Telegram і CRM.", 15, c((74, 77, 91), 245))
+    text(d, (px + 28, py + 283), "Менше ручної роботи — більше зрозумілих рішень.", 15, c((74, 77, 91), 245))
+    cta = (px + 28, py + 326, px + 238, py + 376)
+    hover = smooth(.72, 1.18, t) * (1 - smooth(1.7, 2.0, t))
+    rr(gd, (cta[0] - 4, cta[1] - 2, cta[2] + 4, cta[3] + 7), 16, c(INDIGO, 45 + 70 * hover))
+    rr(d, cta, 15, c((68, 79, 221), 255), c((102, 113, 245), 210), 1)
+    text(d, ((cta[0] + cta[2]) / 2, cta[1] + 17), "Отримати розрахунок  →", 14, c(INK, 250), True, "ma")
+    d.ellipse((px + 30, py + 408, px + 55, py + 433), fill=c((244, 180, 92), 255))
+    d.ellipse((px + 48, py + 408, px + 73, py + 433), fill=c((91, 108, 255), 255))
+    d.ellipse((px + 66, py + 408, px + 91, py + 433), fill=c((61, 180, 151), 255))
+    text(d, (px + 103, py + 409), "4.9 · клієнти рекомендують Veblix", 13, c((62, 65, 77), 240), True)
 
-    # Cursor + click.  Exact CTA centre is retained after layout settles.
-    cp = smooth(3.05, 4.15, t)
-    cx = mix(x + 1030, cta[0] + 156, cp)
-    cy = mix(y + 30, cta[1] + 20, cp)
-    cursor(d, cx, cy, appear(t, 2.8) * (1 - smooth(5.1, 5.55, t)))
-    click = smooth(4.12, 4.32, t) * (1 - smooth(4.32, 4.88, t))
-    if click > .01:
-        radius = 8 + 34 * smooth(4.12, 4.88, t)
-        d.ellipse((cx - radius, cy - radius, cx + radius, cy + radius), outline=c(MINT, 210 * click), width=3)
+    # A concrete result preview on the website itself.
+    visual = (px + 390, py + 86, px + pw - 25, py + 438)
+    rr(d, visual, 24, c((23, 26, 38), 255))
+    # Subtle photographic-style studio gradient.
+    for row in range(int(visual[1] + 1), int(visual[3] - 1), 4):
+        rp = (row - visual[1]) / max(1, visual[3] - visual[1])
+        col = tuple(int(mix(a, b, rp)) for a, b in zip((84, 73, 155), (24, 29, 49)))
+        d.rectangle((visual[0] + 1, row, visual[2] - 1, row + 4), fill=c(col, 255))
+    d.ellipse((visual[0] + 82, visual[1] + 64, visual[0] + 180, visual[1] + 162), fill=c((231, 194, 170), 255))
+    d.rounded_rectangle((visual[0] + 58, visual[1] + 142, visual[0] + 205, visual[1] + 330), radius=54,
+                        fill=c((27, 32, 49), 255))
+    d.arc((visual[0] + 72, visual[1] + 56, visual[0] + 193, visual[1] + 182), 195, 345,
+          fill=c((29, 22, 33), 255), width=22)
+    rr(d, (visual[0] + 16, visual[1] + 16, visual[0] + 142, visual[1] + 47), 14, c((255, 255, 255), 222))
+    text(d, (visual[0] + 30, visual[1] + 25), "48 заявок / місяць", 12, c((25, 27, 35), 255), True)
+    rr(d, (visual[0] + 98, visual[3] - 72, visual[2] - 15, visual[3] - 18), 17, c((255, 255, 255), 236))
+    text(d, (visual[0] + 114, visual[3] - 60), "Середня відповідь", 11, c((84, 87, 98), 245))
+    text(d, (visual[0] + 114, visual[3] - 42), "38 секунд", 17, c((25, 27, 35), 255), True)
 
-    # A real, readable conversion receipt replaces the old abstract orb.
-    lead_p = out_back(appear(t, 4.45, .55))
-    lead_exit = smooth(6.5, 7.85, t)
-    lx = mix(x + 178, x + 110, lead_exit)
-    ly = mix(y + 337, y + 500, lead_exit)
-    lw, lh = 300, 66
-    if lead_p > .01:
-        off = (1 - lead_p) * 38
-        rr(gd, (lx - 6, ly - off - 6, lx + lw + 6, ly + lh - off + 6), 19, c(MINT, 90))
-        rr(d, (lx, ly - off, lx + lw, ly + lh - off), 17, c((13, 31, 31), 245), c(MINT, 170), 2)
-        d.ellipse((lx + 17, ly + 17 - off, lx + 49, ly + 49 - off), fill=c(MINT, 240))
-        checkmark(d, lx + 33, ly + 33 - off, 15, c(BG, 245), 4)
-        text(d, (lx + 64, ly + 13 - off), "НОВА ЗАЯВКА", 12, c(MINT, 240), True)
-        text(d, (lx + 64, ly + 34 - off), "Клієнт натиснув головну дію", 12, c(INK, 225))
+    # Form drawer opens inside the browser after a real CTA click.
+    drawer_p = out_back(smooth(1.38, 2.03, t))
+    if drawer_p > .001:
+        dim = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        dim_draw = ImageDraw.Draw(dim, "RGBA")
+        dim_draw.rounded_rectangle(page, radius=20, fill=c((18, 20, 28), 92 * drawer_p))
+        layer.alpha_composite(dim)
+        d = ImageDraw.Draw(layer, "RGBA")
+        dw = 326
+        dx = mix(page[2] + 12, page[2] - dw - 12, drawer_p)
+        dy, dh = page[1] + 12, ph - 24
+        panel_shadow(gd, (dx, dy, dx + dw, dy + dh), 22, 95)
+        rr(d, (dx, dy, dx + dw, dy + dh), 22, c((252, 251, 248), 255), c((25, 27, 35), 26), 1)
+        text(d, (dx + 22, dy + 20), "Розрахувати проєкт", 21, c((25, 27, 35), 255), True)
+        text(d, (dx + 22, dy + 49), "Відповімо в Telegram протягом 2 хв", 12, c((92, 95, 108), 245))
+        d.line((dx + 22, dy + 76, dx + dw - 22, dy + 76), fill=c((25, 27, 35), 24), width=1)
 
-    # Signal leaves the site and becomes the incoming message in scene two.
-    signal_p = smooth(5.75, 8.05, t)
-    sx = mix(cta[2] - 20, 710, signal_p)
-    sy = mix(cta[1] + 20, 170, signal_p)
-    if signal_p > .01:
-        d.line((cta[2] - 20, cta[1] + 20, sx, sy), fill=c(MINT, 115), width=3)
-        glow_dot(gd, d, sx, sy, 7, MINT, 1 - .2 * exit_p)
+        content_a = 1.0 if t < 5.72 else 0.0
+        if content_a > .01:
+            text(d, (dx + 22, dy + 95), "Що потрібно?", 12, c((62, 65, 77), 245 * content_a), True)
+            services = (("Сайт", 22, 88), ("Сайт + бот", 96, 203), ("Автоматизація", 211, 304))
+            service_selected = t >= 2.62
+            for label, x1, x2 in services:
+                selected = label == "Сайт + бот" and service_selected
+                rr(d, (dx + x1, dy + 119, dx + x2, dy + 155), 12,
+                   c((230, 232, 255) if selected else (245, 244, 241), 255 * content_a),
+                   c(INDIGO if selected else (35, 38, 48), (185 if selected else 28) * content_a), 1)
+                text(d, ((dx + x1 + dx + x2) / 2, dy + 131), label, 11,
+                     c((57, 68, 194) if selected else (77, 80, 93), 245 * content_a), True, "ma")
+
+            text(d, (dx + 22, dy + 177), "Орієнтовний бюджет", 12, c((62, 65, 77), 245 * content_a), True)
+            budgets = (("до $500", 22, 100), ("$500–1000", 108, 211), ("$1000+", 219, 304))
+            budget_selected = t >= 3.43
+            for label, x1, x2 in budgets:
+                selected = label == "$500–1000" and budget_selected
+                rr(d, (dx + x1, dy + 201, dx + x2, dy + 237), 12,
+                   c((224, 248, 238) if selected else (245, 244, 241), 255 * content_a),
+                   c(MINT if selected else (35, 38, 48), (195 if selected else 28) * content_a), 1)
+                text(d, ((dx + x1 + dx + x2) / 2, dy + 213), label, 11,
+                     c((20, 112, 74) if selected else (77, 80, 93), 245 * content_a), True, "ma")
+
+            text(d, (dx + 22, dy + 259), "Telegram для відповіді", 12, c((62, 65, 77), 245 * content_a), True)
+            focus = t >= 3.82
+            rr(d, (dx + 22, dy + 283, dx + dw - 22, dy + 331), 13, c((248, 247, 244), 255 * content_a),
+               c(INDIGO if focus else (35, 38, 48), (180 if focus else 32) * content_a), 2 if focus else 1)
+            handle = "@olena_demo"
+            typed = int(len(handle) * smooth(3.86, 4.62, t))
+            shown = handle[:typed]
+            text(d, (dx + 38, dy + 298), shown or "@username", 14,
+                 c((29, 32, 42) if shown else (137, 139, 149), 245 * content_a), True if shown else False)
+            if focus and t < 4.83 and int(t * 3) % 2 == 0:
+                tw = d.textlength(shown, font=font(14, True))
+                d.line((dx + 40 + tw, dy + 297, dx + 40 + tw, dy + 317), fill=c(INDIGO, 220 * content_a), width=2)
+            if typed == len(handle):
+                d.ellipse((dx + dw - 52, dy + 297, dx + dw - 30, dy + 319), fill=c(MINT, 245 * content_a))
+                checkmark(d, dx + dw - 41, dy + 308, 9, c((252, 251, 248), 255 * content_a), 3)
+
+            send = (dx + 22, dy + 354, dx + dw - 22, dy + 405)
+            send_ready = typed == len(handle)
+            rr(d, send, 14, c((68, 79, 221) if send_ready else (184, 187, 199), 255 * content_a))
+            text(d, ((send[0] + send[2]) / 2, send[1] + 18), "Надіслати заявку", 14,
+                 c(INK if send_ready else (248, 248, 249), 250 * content_a), True, "ma")
+            text(d, (dx + dw / 2, dy + 424), "Демо-дані · без спаму", 11, c((115, 118, 130), 220 * content_a), False, "ma")
+
+        success = smooth(5.62, 6.12, t)
+        if success > .01:
+            sy = dy + 120 + (1 - out_back(success)) * 28
+            d.ellipse((dx + dw / 2 - 37, sy, dx + dw / 2 + 37, sy + 74), fill=c(MINT, 245 * success))
+            checkmark(d, dx + dw / 2, sy + 37, 29, c((252, 251, 248), 255 * success), 6)
+            text(d, (dx + dw / 2, sy + 99), "Заявку отримано", 23, c((25, 27, 35), 255 * success), True, "ma")
+            rr(d, (dx + 40, sy + 137, dx + dw - 40, sy + 246), 15, c((239, 248, 244), 255 * success), c(MINT, 90 * success), 1)
+            text(d, (dx + 58, sy + 151), "VLX-0284", 13, c((23, 116, 78), 255 * success), True)
+            text(d, (dx + 58, sy + 175), "Олена  ·  @olena_demo", 12, c((91, 94, 106), 240 * success), True)
+            text(d, (dx + 58, sy + 198), "Сайт + бот  ·  $500–1000", 13, c((38, 41, 51), 250 * success), True)
+            text(d, (dx + 58, sy + 221), "Відповідь у Telegram до 14:34", 12, c((91, 94, 106), 240 * success))
+
+    # Cursor follows a plausible series of controls and stays reversible.
+    cursor_a = appear(t, .25, .25) * (1 - smooth(5.82, 6.1, t))
+    if t < 1.48:
+        p = smooth(.35, 1.18, t); cx, cy = mix(x + w - 54, cta[0] + 168, p), mix(y + 98, cta[1] + 25, p)
+    elif t < 2.72:
+        p = smooth(1.72, 2.55, t); cx, cy = mix(cta[0] + 168, page[2] - 174, p), mix(cta[1] + 25, page[1] + 151, p)
+    elif t < 3.52:
+        p = smooth(2.82, 3.38, t); cx, cy = mix(page[2] - 174, page[2] - 166, p), mix(page[1] + 151, page[1] + 233, p)
+    elif t < 4.82:
+        p = smooth(3.55, 4.08, t); cx, cy = mix(page[2] - 166, page[2] - 170, p), mix(page[1] + 233, page[1] + 324, p)
+    else:
+        p = smooth(4.82, 5.42, t); cx, cy = mix(page[2] - 170, page[2] - 170, p), mix(page[1] + 324, page[1] + 400, p)
+    cursor(d, cx, cy, cursor_a)
+    for centre, begin in (((cta[0] + 168, cta[1] + 25), 1.30),
+                          ((page[2] - 174, page[1] + 151), 2.55),
+                          ((page[2] - 166, page[1] + 233), 3.38),
+                          ((page[2] - 170, page[1] + 400), 5.42)):
+        ripple = smooth(begin, begin + .12, t) * (1 - smooth(begin + .12, begin + .46, t))
+        if ripple > .01:
+            radius = 8 + 23 * smooth(begin, begin + .46, t)
+            d.ellipse((centre[0] - radius, centre[1] - radius, centre[0] + radius, centre[1] + radius),
+                      outline=c(INDIGO, 180 * ripple), width=3)
 
     composite_scene(frame, layer, glow, alpha)
 
@@ -312,75 +454,165 @@ def bubble(d, box, fill, outline, value, value_color, alpha, align="left", size=
     text(d, (x1 + 16, y1 + 14), value, size, c(value_color, 235 * alpha), bold)
 
 
+def phone_bubble(draw: ImageDraw.ImageDraw, box, lines: list[str], alpha: float,
+                 outgoing: bool = False, stamp: str = "14:32", checks: bool = False):
+    if alpha <= .01:
+        return
+    opacity = 1.0
+    x1, y1, x2, y2 = box
+    offset = (1 - out_back(alpha)) * (24 if outgoing else -24)
+    x1 += offset; x2 += offset
+    fill = (47, 63, 111) if outgoing else (31, 39, 58)
+    outline = (92, 108, 255) if outgoing else (111, 125, 154)
+    rr(draw, (x1, y1, x2, y2), 18, c(fill, 252 * opacity), c(outline, 70 * opacity), 1)
+    yy = y1 + 13
+    for line in lines:
+        text(draw, (x1 + 15, yy), line, 19, c(INK, 245 * opacity), False)
+        yy += 23
+    stamp_x = x2 - (40 if checks else 14)
+    text(draw, (stamp_x, y2 - 18), stamp, 11, c((174, 184, 204), 205 * opacity), False, "ra")
+    if checks:
+        checkmark(draw, x2 - 26, y2 - 13, 6, c(CYAN, 230 * opacity), 2)
+        checkmark(draw, x2 - 17, y2 - 13, 6, c(CYAN, 230 * opacity), 2)
+
+
 def draw_chat(frame: Image.Image, t: float, alpha: float):
     if alpha <= 0:
         return
     layer, d, glow, gd = scene_canvas()
     s = t - 8
-    enter = smooth(-.8, .2, s)
-    exit_p = smooth(6.85, 8.1, s)
-    x = 625 + (1 - enter) * 90 - exit_p * 85
-    y = 92 + (1 - enter) * 35 - exit_p * 20
-    w, h = 500, 520
-    rr(gd, (x - 9, y - 9, x + w + 9, y + h + 9), 35, c(CYAN, 70))
-    rr(d, (x, y, x + w, y + h), 28, c(PANEL, 246), c(CYAN, 90), 2)
-    rr(d, (x + 18, y + 16, x + w - 18, y + 70), 16, c(PANEL_2, 235), c(VIOLET, 45), 1)
-    d.ellipse((x + 34, y + 29, x + 73, y + 68), fill=c((37, 146, 215), 245))
-    paper_plane(d, x + 53, y + 48, 21, c(INK, 250))
-    text(d, (x + 88, y + 28), "TELEGRAM-БОТ", 15, c(INK, 240), True)
-    text(d, (x + 88, y + 50), "кваліфікує запит автоматично", 11, c(MUTED, 205))
-    d.ellipse((x + w - 73, y + 36, x + w - 61, y + 48), fill=c(MINT, 245))
-    text(d, (x + w - 53, y + 34), "ONLINE", 10, c(MINT, 225), True)
+    enter = smooth(-.35, .18, s)
+    exit_p = smooth(7.65, 8.28, s)
+    x = 720 + (1 - enter) * 28 - 42 * exit_p
+    y = 24 + (1 - enter) * 18 - 10 * exit_p
+    w, h = 414, 672
 
-    a_user = appear(s, .35, .42)
-    bubble(d, (x + 210, y + 90, x + 464, y + 139), INDIGO, VIOLET,
-           "Хочу запустити сайт", INK, a_user, "right", 13, True)
+    # Physical phone: neutral metal, side controls, glass and a restrained reflection.
+    panel_shadow(gd, (x, y, x + w, y + h), 58, 175, CYAN)
+    rr(d, (x - 5, y + 102, x + 2, y + 174), 4, c((109, 114, 127), 240))
+    rr(d, (x - 5, y + 194, x + 2, y + 265), 4, c((109, 114, 127), 240))
+    rr(d, (x + w - 2, y + 150, x + w + 5, y + 252), 4, c((109, 114, 127), 240))
+    rr(d, (x, y, x + w, y + h), 56, c((72, 76, 88), 255), c((209, 214, 226), 105), 2)
+    rr(d, (x + 6, y + 6, x + w - 6, y + h - 6), 51, c((7, 10, 18), 255), c((10, 12, 18), 255), 2)
+    sx, sy, sw, sh = x + 12, y + 12, w - 24, h - 24
+    rr(d, (sx, sy, sx + sw, sy + sh), 46, c((13, 18, 31), 255))
 
-    a_bot = appear(s, 1.05, .48)
-    bubble(d, (x + 34, y + 157, x + 334, y + 207), PANEL_2, CYAN,
-           "Який у вас бюджет?", INK, a_bot, "left", 13, True)
-    chips_a = appear(s, 1.65, .5)
-    chip_y = y + 219
-    chip_specs = (("до $500", 34, 125), ("$500–1000", 137, 252), ("$1000+", 264, 357))
-    for i, (label, x1, x2) in enumerate(chip_specs):
-        selected = i == 1 and s > 2.4
-        rr(d, (x + x1, chip_y, x + x2, chip_y + 36), 18,
-           c(MINT if selected else PANEL_2, (230 if selected else 200) * chips_a),
-           c(MINT if selected else VIOLET, (185 if selected else 65) * chips_a), 1)
-        text(d, ((x + x1 + x + x2) / 2, chip_y + 11), label, 11,
-             c(BG if selected else MUTED, 235 * chips_a), True, "ma")
+    # Native status bar and dynamic island.
+    text(d, (sx + 28, sy + 18), "14:32", 14, c(INK, 235), True)
+    d.line((sx + sw - 100, sy + 26, sx + sw - 96, sy + 21), fill=c(INK, 205), width=2)
+    d.line((sx + sw - 94, sy + 26, sx + sw - 94, sy + 18), fill=c(INK, 205), width=2)
+    d.line((sx + sw - 88, sy + 26, sx + sw - 88, sy + 15), fill=c(INK, 205), width=2)
+    draw_wifi(d, sx + sw - 78, sy + 14)
+    draw_battery(d, sx + sw - 44, sy + 17, .82)
+    rr(d, (sx + sw / 2 - 54, sy + 9, sx + sw / 2 + 54, sy + 36), 14, c((2, 3, 6), 255))
+    d.ellipse((sx + sw / 2 + 31, sy + 17, sx + sw / 2 + 39, sy + 25), fill=c((18, 27, 47), 255))
 
-    a_bot2 = appear(s, 2.85, .45)
-    bubble(d, (x + 34, y + 281, x + 350, y + 331), PANEL_2, CYAN,
-           "Коли потрібен запуск?", INK, a_bot2, "left", 13, True)
-    a_answer = appear(s, 3.55, .42)
-    bubble(d, (x + 254, y + 345, x + 464, y + 394), INDIGO, VIOLET,
-           "Цього місяця", INK, a_answer, "right", 13, True)
+    app_y = sy + 45
+    # Telegram-style navigation chrome.
+    d.rectangle((sx, app_y, sx + sw, app_y + 72), fill=c((24, 31, 49), 255))
+    d.line((sx, app_y + 71, sx + sw, app_y + 71), fill=c((119, 132, 158), 40), width=1)
+    draw_chevron(d, sx + 20, app_y + 28, c(CYAN, 235))
+    d.ellipse((sx + 47, app_y + 13, sx + 97, app_y + 63), fill=c((37, 146, 215), 255))
+    paper_plane(d, sx + 72, app_y + 38, 24, c(INK, 255))
+    text(d, (sx + 111, app_y + 15), "Veblix Асистент", 20, c(INK, 250), True)
+    text(d, (sx + 111, app_y + 42), "бот · відповідає миттєво", 13, c((118, 197, 235), 235))
+    d.ellipse((sx + sw - 38, app_y + 28, sx + sw - 32, app_y + 34), fill=c(INK, 185))
+    d.ellipse((sx + sw - 38, app_y + 38, sx + sw - 32, app_y + 44), fill=c(INK, 185))
+    d.ellipse((sx + sw - 38, app_y + 48, sx + sw - 32, app_y + 54), fill=c(INK, 185))
 
-    qualified = appear(s, 4.25, .58)
-    qy = y + 420
-    qoff = (1 - out_back(qualified)) * 26
-    rr(gd, (x + 22, qy - qoff - 5, x + w - 22, qy + 72 - qoff + 5), 20, c(MINT, 80 * qualified))
-    rr(d, (x + 22, qy - qoff, x + w - 22, qy + 72 - qoff), 18,
-       c((12, 31, 30), 240 * qualified), c(MINT, 160 * qualified), 2)
-    d.ellipse((x + 42, qy + 18 - qoff, x + 78, qy + 54 - qoff), fill=c(MINT, 240 * qualified))
-    checkmark(d, x + 60, qy + 36 - qoff, 16, c(BG, 250 * qualified), 4)
-    text(d, (x + 94, qy + 13 - qoff), "ЛІД КВАЛІФІКОВАНО", 12, c(MINT, 245 * qualified), True)
-    text(d, (x + 94, qy + 36 - qoff), "Передано менеджеру з контекстом", 12, c(INK, 225 * qualified))
-    # Human handoff avatar.
-    d.ellipse((x + w - 79, qy + 18 - qoff, x + w - 43, qy + 54 - qoff),
-              fill=c(VIOLET, 235 * qualified), outline=c(INK, 120 * qualified), width=2)
-    d.ellipse((x + w - 67, qy + 26 - qoff, x + w - 55, qy + 38 - qoff), fill=c(INK, 220 * qualified))
-    d.arc((x + w - 71, qy + 37 - qoff, x + w - 51, qy + 55 - qoff), 185, 355,
-          fill=c(INK, 220 * qualified), width=3)
+    chat_top = app_y + 72
+    chat_bottom = sy + sh - 66
+    d.rectangle((sx, chat_top, sx + sw, chat_bottom), fill=c((14, 20, 34), 255))
+    # Very quiet Telegram-like wallpaper details.
+    for i in range(14):
+        wx = sx + 18 + ((i * 83) % int(sw - 36)); wy = chat_top + 18 + ((i * 57) % int(chat_bottom - chat_top - 36))
+        d.arc((wx, wy, wx + 22, wy + 22), 15, 235, fill=c((95, 112, 151), 22), width=1)
+        d.ellipse((wx + 8, wy + 8, wx + 12, wy + 12), outline=c((95, 112, 151), 20), width=1)
 
-    # Pulse exits with the qualified lead and feeds the automation graph.
-    leave = smooth(6.35, 8.15, s)
+    # Real chat continuity: same service, budget and ID as the website form.
+    intro = appear(s, 1.05, .38)
+    phone_bubble(d, (sx + 18, chat_top + 20, sx + 338, chat_top + 93),
+                 ["Бачу заявку «Сайт + бот».", "Уточню 2 питання — 30 секунд."], intro, False, "14:32")
+    q1 = appear(s, 1.85, .35)
+    phone_bubble(d, (sx + 18, chat_top + 106, sx + 294, chat_top + 157),
+                 ["Який бюджет на запуск?"], q1, False, "14:32")
+    chips = appear(s, 2.2, .34)
+    chip_y = chat_top + 168
+    chip_specs = (("до $500", 18, 112), ("$500–1000", 120, 238), ("$1000+", 246, 338))
+    if chips > .01:
+        for label, x1, x2 in chip_specs:
+            selected = label == "$500–1000" and s >= 2.82
+            rr(d, (sx + x1, chip_y, sx + x2, chip_y + 39), 13,
+               c((36, 124, 92) if selected else (24, 34, 54), 245),
+               c(MINT if selected else CYAN, 180 if selected else 80), 1)
+            text(d, ((sx + x1 + sx + x2) / 2, chip_y + 12), label, 13, c(INK, 240), True, "ma")
+
+    answer1 = appear(s, 2.82, .3)
+    phone_bubble(d, (sx + 168, chat_top + 220, sx + 365, chat_top + 268),
+                 ["$500–1000"], answer1, True, "14:32", True)
+
+    typing = smooth(3.22, 3.42, s) * (1 - smooth(3.88, 4.08, s))
+    if typing > .01:
+        rr(d, (sx + 18, chat_top + 280, sx + 92, chat_top + 319), 17, c((31, 39, 58), 245))
+        typing_dots(d, sx + 35, chat_top + 296, (s * 1.5) % 1, 1)
+
+    q2 = appear(s, 3.92, .34)
+    phone_bubble(d, (sx + 18, chat_top + 280, sx + 286, chat_top + 331),
+                 ["Коли хочете запустити?"], q2, False, "14:33")
+    answer2 = appear(s, 4.55, .32)
+    phone_bubble(d, (sx + 166, chat_top + 344, sx + 365, chat_top + 392),
+                 ["Цього місяця"], answer2, True, "14:33", True)
+
+    done = appear(s, 5.18, .42)
+    qy = chat_top + 406
+    qoff = (1 - out_back(done)) * 24
+    if done > .01:
+        rr(gd, (sx + 16, qy - qoff - 4, sx + sw - 16, qy + 84 - qoff + 6), 20, c(MINT, 58))
+        rr(d, (sx + 16, qy - qoff, sx + sw - 16, qy + 84 - qoff), 18,
+           c((19, 47, 42), 250), c(MINT, 150), 2)
+        d.ellipse((sx + 34, qy + 19 - qoff, sx + 78, qy + 63 - qoff), fill=c(MINT, 245))
+        checkmark(d, sx + 56, qy + 41 - qoff, 18, c((10, 28, 24), 255), 4)
+        text(d, (sx + 94, qy + 14 - qoff), "Лід кваліфіковано", 17, c(INK, 250), True)
+        text(d, (sx + 94, qy + 40 - qoff), "VLX-0284 · передано Богдану", 13, c((175, 226, 205), 235))
+        text(d, (sx + sw - 34, qy + 61 - qoff), "14:33", 11, c((175, 226, 205), 205), False, "ra")
+
+    # Composer persists like a real chat surface.
+    d.rectangle((sx, chat_bottom, sx + sw, sy + sh), fill=c((20, 26, 42), 255))
+    d.ellipse((sx + 16, chat_bottom + 15, sx + 54, chat_bottom + 53), outline=c(MUTED, 110), width=2)
+    text(d, (sx + 35, chat_bottom + 34), "+", 23, c(MUTED, 190), False, "mm")
+    rr(d, (sx + 65, chat_bottom + 10, sx + sw - 58, chat_bottom + 57), 22, c((33, 41, 60), 255))
+    text(d, (sx + 84, chat_bottom + 25), "Повідомлення", 14, c(MUTED, 175))
+    d.ellipse((sx + sw - 49, chat_bottom + 14, sx + sw - 11, chat_bottom + 52), fill=c((37, 146, 215), 255))
+    d.line((sx + sw - 30, chat_bottom + 24, sx + sw - 30, chat_bottom + 39), fill=c(INK, 240), width=3)
+    d.arc((sx + sw - 36, chat_bottom + 28, sx + sw - 24, chat_bottom + 44), 0, 180, fill=c(INK, 240), width=2)
+
+    # Native notification arrives first; tapping it reveals the chat beneath.
+    notification_in = appear(s, .02, .28)
+    notification_out = smooth(.92, 1.34, s)
+    notification_a = notification_in * (1 - notification_out)
+    if notification_a > .01:
+        ny = sy + 47 - notification_out * 30
+        panel_shadow(gd, (sx + 12, ny, sx + sw - 12, ny + 112), 24, 75)
+        rr(d, (sx + 12, ny, sx + sw - 12, ny + 112), 24, c((43, 48, 62), 248), c(INK, 35), 1)
+        d.ellipse((sx + 29, ny + 18, sx + 69, ny + 58), fill=c((37, 146, 215), 255))
+        paper_plane(d, sx + 49, ny + 38, 20, c(INK, 255))
+        text(d, (sx + 82, ny + 17), "Veblix Асистент", 15, c(INK, 250), True)
+        text(d, (sx + sw - 31, ny + 18), "зараз", 11, c(MUTED, 210), False, "ra")
+        text(d, (sx + 29, ny + 70), "Бачу заявку «Сайт + бот».", 14, c(INK, 242), True)
+        text(d, (sx + 29, ny + 91), "Уточню 2 питання — це займе 30 секунд.", 13, c((201, 207, 219), 230))
+        tap = smooth(.76, .9, s) * (1 - smooth(.9, 1.2, s))
+        if tap > .01:
+            radius = 8 + 32 * smooth(.76, 1.2, s)
+            tx, ty = sx + sw - 70, ny + 56
+            d.ellipse((tx - radius, ty - radius, tx + radius, ty + radius), outline=c(CYAN, 180 * tap), width=3)
+
+    # Same qualified packet becomes the first execution in scene three.
+    leave = smooth(6.72, 8.22, s)
     if leave > .01:
-        sx = mix(x + w - 42, 625, leave)
-        sy = mix(qy + 36 - qoff, 238, leave)
-        d.line((x + w - 42, qy + 36 - qoff, sx, sy), fill=c(MINT, 120), width=3)
-        glow_dot(gd, d, sx, sy, 7, MINT, 1)
+        start_x, start_y = sx + sw - 30, qy + 42 - qoff
+        packet_x = mix(start_x, 630, leave); packet_y = mix(start_y, 182, leave)
+        d.line((start_x, start_y, packet_x, packet_y), fill=c(MINT, 88), width=2)
+        glow_dot(gd, d, packet_x, packet_y, 7, MINT, 1 - .2 * exit_p)
 
     composite_scene(frame, layer, glow, alpha)
 
@@ -425,88 +657,210 @@ def draw_automation(frame: Image.Image, t: float, alpha: float):
         return
     layer, d, glow, gd = scene_canvas()
     s = t - 16
-    enter = smooth(-.85, .25, s)
-    x = 535 + (1 - enter) * 100
-    y = 74 + (1 - enter) * 36
-    w, h = 650, 555
-    rr(gd, (x - 10, y - 10, x + w + 10, y + h + 10), 38, c(MINT, 70))
-    rr(d, (x, y, x + w, y + h), 30, c(PANEL, 247), c(MINT, 105), 2)
+    enter = smooth(-.35, .2, s)
+    x = 548 + (1 - enter) * 28
+    y = 48 + (1 - enter) * 16
+    w, h = 680, 620
+    panel_shadow(gd, (x, y, x + w, y + h), 28, 160, MINT)
+    rr(d, (x, y, x + w, y + h), 28, c((19, 22, 29), 255), c((122, 132, 151), 90), 2)
 
-    text(d, (x + 28, y + 24), "АВТОМАТИЗАЦІЯ", 15, c(INK, 240), True)
-    text(d, (x + 28, y + 47), "кожен лід проходить один надійний маршрут", 11, c(MUTED, 205))
-    rr(d, (x + w - 175, y + 23, x + w - 28, y + 51), 14, c((12, 32, 30), 235), c(MINT, 95), 1)
-    d.ellipse((x + w - 158, y + 32, x + w - 148, y + 42), fill=c(MINT, 245))
-    text(d, (x + w - 138, y + 29), "СИСТЕМА ПРАЦЮЄ", 10, c(MINT, 230), True)
+    # Real automation app chrome.
+    rr(d, (x + 1, y + 1, x + w - 1, y + 64), 27, c((28, 32, 41), 255))
+    d.rectangle((x + 1, y + 38, x + w - 1, y + 65), fill=c((28, 32, 41), 255))
+    rr(d, (x + 18, y + 14, x + 54, y + 50), 10, c((34, 44, 62), 255))
+    text(d, (x + 36, y + 32), "V", 17, c(MINT, 245), True, "mm")
+    text(d, (x + 68, y + 16), "Veblix Flow", 17, c(INK, 245), True)
+    text(d, (x + 68, y + 39), "Сайт → Telegram → CRM", 11, c(MUTED, 210))
+    rr(d, (x + w - 246, y + 16, x + w - 130, y + 48), 15, c((22, 48, 41), 255), c(MINT, 90), 1)
+    d.ellipse((x + w - 230, y + 27, x + w - 220, y + 37), fill=c(MINT, 245))
+    text(d, (x + w - 210, y + 24), "АКТИВНА", 11, c((162, 231, 203), 245), True)
+    rr(d, (x + w - 116, y + 14, x + w - 18, y + 50), 13, c((68, 79, 221), 255))
+    text(d, (x + w - 67, y + 26), "Запустити", 12, c(INK, 245), True, "ma")
 
-    node_y = y + 152
-    node_xs = [x + 82, x + 245, x + 408, x + 570]
-    labels = ["ЛІД", "БОТ", "CRM", "ДІЯ"]
-    icons = ["+1", "B", "C", "✓"]
-    route = smooth(.35, 4.0, s)
-    for a, b in zip(node_xs, node_xs[1:]):
-        d.line((a + 37, node_y, b - 37, node_y), fill=c(FAINT, 95), width=4)
-    partial_polyline(d, [(node_xs[0], node_y), (node_xs[-1], node_y)], route, c(MINT, 205), 4)
-    for i, nx in enumerate(node_xs):
-        active = smooth(i / 4, (i + .65) / 4, route)
-        flow_node(d, gd, nx, node_y, 34, labels[i], icons[i], active, MINT)
-    # Data packet moving across the workflow.
-    packet_x = mix(node_xs[0], node_xs[-1], route)
-    glow_dot(gd, d, packet_x, node_y, 6.5, MINT, 1)
+    sidebar_w = 118
+    d.rectangle((x + 1, y + 64, x + sidebar_w, y + h - 1), fill=c((23, 26, 34), 255))
+    d.line((x + sidebar_w, y + 64, x + sidebar_w, y + h - 1), fill=c((122, 132, 151), 42), width=1)
+    text(d, (x + 18, y + 87), "РОБОЧИЙ ПРОСТІР", 9, c(MUTED, 180), True)
+    side_items = (("scenario", "Сценарії"), ("runs", "Запуски"),
+                  ("analytics", "Аналітика"), ("settings", "Налаштування"))
+    analytics_motion = smooth(4.48, 5.03, s)
+    analytics_p = 1.0 if analytics_motion >= .4 else 0.0
+    for i, (icon_kind, label) in enumerate(side_items):
+        iy = y + 111 + i * 52
+        active = (i == 0 and analytics_p < .5) or (i == 2 and analytics_p >= .5)
+        if active:
+            rr(d, (x + 10, iy - 7, x + sidebar_w - 10, iy + 32), 11,
+               c((39, 45, 66), 255), c(INDIGO if i == 0 else MINT, 70), 1)
+        icon_color = c(INDIGO if i == 0 else MINT if i == 2 else MUTED, 235)
+        product_icon(d, x + 24, iy + 7, icon_kind, icon_color)
+        text(d, (x + 43, iy), label, 12, c(INK if active else MUTED, 230), True)
+    text(d, (x + 18, y + h - 63), "DEMO WORKSPACE", 9, c(MUTED, 165), True)
+    text(d, (x + 18, y + h - 43), "bogdan@veblix", 11, c((193, 198, 212), 210))
 
-    dash_p = smooth(2.35, 3.45, s)
-    dx, dy, dw, dh = x + 28, y + 238, w - 56, 282
-    doff = (1 - out_back(dash_p)) * 36
-    rr(d, (dx, dy + doff, dx + dw, dy + dh + doff), 20, c(PANEL_2, 235 * dash_p), c(MINT, 65 * dash_p), 1)
-    text(d, (dx + 22, dy + 18 + doff), "АНАЛІТИКА БІЗНЕСУ", 13, c(INK, 235 * dash_p), True)
-    text(d, (dx + dw - 22, dy + 19 + doff), "останні 30 днів", 10, c(MUTED, 190 * dash_p), False, "ra")
+    main_x, main_y = x + sidebar_w + 1, y + 65
+    main_w, main_h = w - sidebar_w - 2, h - 66
+    d.rectangle((main_x, main_y, main_x + main_w, main_y + main_h), fill=c((15, 18, 25), 255))
 
-    # Metrics become trustworthy receipts, not unlabeled glowing spheres.
-    metrics = (("48", "ЗАЯВОК", INDIGO), ("27%", "КОНВЕРСІЯ", MINT), ("3", "РІШЕННЯ", AMBER))
-    for i, (value, label, col) in enumerate(metrics):
-        mx = dx + 22 + i * 180
-        rr(d, (mx, dy + 54 + doff, mx + 160, dy + 116 + doff), 13, c(BG, 150 * dash_p), c(col, 55 * dash_p), 1)
-        text(d, (mx + 14, dy + 64 + doff), value, 23, c(col, 240 * dash_p), True)
-        text(d, (mx + 14, dy + 92 + doff), label, 9, c(MUTED, 210 * dash_p), True)
+    workflow_a = 1 - analytics_p
+    if workflow_a > .01:
+        # Canvas header and real execution metadata.
+        text(d, (main_x + 18, main_y + 17), "Кваліфікація нового ліда", 16, c(INK, 245 * workflow_a), True)
+        text(d, (main_x + 18, main_y + 42), "Останній запуск: VLX-0284 · 14:33:23", 11, c(MUTED, 205 * workflow_a))
+        rr(d, (main_x + main_w - 146, main_y + 14, main_x + main_w - 18, main_y + 45), 14,
+           c((22, 48, 41), 245 * workflow_a), c(MINT, 80 * workflow_a), 1)
+        text(d, (main_x + main_w - 82, main_y + 25), "УСПІШНО · 1.8с", 10, c((162, 231, 203), 235 * workflow_a), True, "ma")
 
-    chart_p = smooth(3.25, 5.4, s)
-    chart = (dx + 24, dy + 143 + doff, dx + 355, dy + 247 + doff)
-    for gy in range(4):
-        yy = chart[1] + gy * 31
-        d.line((chart[0], yy, chart[2], yy), fill=c(FAINT, 38 * dash_p), width=1)
-    values = [.76, .62, .69, .45, .51, .28, .18]
-    pts = []
-    for i, value in enumerate(values):
-        pts.append((chart[0] + i * ((chart[2] - chart[0]) / (len(values) - 1)), chart[1] + value * (chart[3] - chart[1])))
-    partial_polyline(gd, pts, chart_p, c(MINT, 90), 10)
-    partial_polyline(d, pts, chart_p, c(MINT, 235 * dash_p), 4)
-    count = max(1, min(len(pts), int(math.ceil(chart_p * len(pts)))))
-    for px, py in pts[:count]:
-        d.ellipse((px - 4, py - 4, px + 4, py + 4), fill=c(MINT, 240 * dash_p), outline=c(INK, 100 * dash_p), width=1)
+        canvas_y = main_y + 64
+        d.rectangle((main_x, canvas_y, main_x + main_w, main_y + 284), fill=c((17, 21, 30), 255 * workflow_a))
+        for gx in range(int(main_x + 12), int(main_x + main_w), 28):
+            d.line((gx, canvas_y, gx, main_y + 284), fill=c((120, 133, 167), 14 * workflow_a), width=1)
+        for gy in range(int(canvas_y + 10), int(main_y + 284), 28):
+            d.line((main_x, gy, main_x + main_w, gy), fill=c((120, 133, 167), 14 * workflow_a), width=1)
 
-    decision = smooth(5.0, 6.15, s)
-    qx, qy = dx + 378, dy + 143 + doff
-    rr(gd, (qx - 5, qy - 5, dx + dw - 18, dy + 248 + doff), 18, c(AMBER, 75 * decision))
-    rr(d, (qx, qy, dx + dw - 22, dy + 244 + doff), 16, c((34, 27, 22), 230 * decision), c(AMBER, 130 * decision), 2)
-    text(d, (qx + 16, qy + 13), "РЕКОМЕНДАЦІЯ", 9, c(AMBER, 235 * decision), True)
-    text(d, (qx + 16, qy + 36), "Підсилити", 16, c(INK, 240 * decision), True)
-    text(d, (qx + 16, qy + 57), "рекламу сайту", 16, c(INK, 240 * decision), True)
-    d.ellipse((dx + dw - 65, qy + 65, dx + dw - 35, qy + 95), fill=c(AMBER, 235 * decision))
-    checkmark(d, dx + dw - 50, qy + 80, 13, c(BG, 250 * decision), 4)
-
-    # Final pulse links the route to the recommendation card.
-    final_p = smooth(5.45, 7.1, s)
-    if final_p > .01:
-        path = [(node_xs[-1], node_y + 34), (node_xs[-1], qy - 18), (dx + dw - 50, qy + 80)]
-        partial_polyline(d, path, final_p, c(AMBER, 180), 3)
-        if final_p < .99:
-            # Approximate packet position along the two-piece path.
-            if final_p < .55:
-                pp = final_p / .55
-                px, py = mix(path[0][0], path[1][0], pp), mix(path[0][1], path[1][1], pp)
+        node_y = canvas_y + 91
+        node_xs = [main_x + 34 + i * 104 for i in range(5)]
+        node_data = [
+            ("form", "Форма", "Webhook", INDIGO),
+            ("verify", "Перевірка", "контакту", AMBER),
+            ("telegram", "Telegram", "2 питання", CYAN),
+            ("crm", "CRM", "створити лід", (177, 118, 255)),
+            ("manager", "Менеджер", "повідомити", MINT),
+        ]
+        route = smooth(.55, 3.55, s)
+        centres = [(nx + 43, node_y + 37) for nx in node_xs]
+        for a, b in zip(centres, centres[1:]):
+            d.line((a[0] + 43, a[1], b[0] - 43, b[1]), fill=c((102, 112, 137), 85 * workflow_a), width=3)
+        for i, (nx, data) in enumerate(zip(node_xs, node_data)):
+            icon_kind, name, sub, col = data
+            active = smooth(i / 5, (i + .72) / 5, route)
+            if active > .02:
+                gd.rounded_rectangle((nx - 4, node_y - 4, nx + 90, node_y + 79), radius=18,
+                                     fill=c(col, 42 * active * workflow_a))
+            rr(d, (nx, node_y, nx + 86, node_y + 74), 15, c((29, 34, 46), 255 * workflow_a),
+               c(col, (190 if active > .55 else 65) * workflow_a), 2 if active > .55 else 1)
+            d.ellipse((nx + 12, node_y + 11, nx + 42, node_y + 41), fill=c(col, (245 if active > .2 else 165) * workflow_a))
+            node_icon_color = c((10, 13, 19), 245 * workflow_a)
+            if icon_kind == "verify":
+                checkmark(d, nx + 27, node_y + 26, 9, node_icon_color, 3)
+            elif icon_kind == "telegram":
+                paper_plane(d, nx + 27, node_y + 26, 13, node_icon_color)
             else:
-                pp = (final_p - .55) / .45
-                px, py = mix(path[1][0], path[2][0], pp), mix(path[1][1], path[2][1], pp)
-            glow_dot(gd, d, px, py, 6, AMBER, 1)
+                node_letters = {"form": "F", "crm": "C", "manager": "B"}
+                text(d, (nx + 27, node_y + 26), node_letters[icon_kind], 13,
+                     node_icon_color, True, "mm")
+            text(d, (nx + 10, node_y + 48), name, 11, c(INK, 238 * workflow_a), True)
+            text(d, (nx + 10, node_y + 62), sub, 9, c(MUTED, 190 * workflow_a))
+            if active > .82:
+                d.ellipse((nx + 70, node_y + 9, nx + 82, node_y + 21), fill=c(MINT, 245 * workflow_a))
+                checkmark(d, nx + 76, node_y + 15, 5, c((15, 24, 22), 255 * workflow_a), 2)
+        # Moving packet above the real connector path.
+        packet_segment = clamp(route) * (len(centres) - 1)
+        seg = min(len(centres) - 2, int(packet_segment))
+        local = packet_segment - seg
+        px = mix(centres[seg][0], centres[seg + 1][0], local); py = centres[seg][1]
+        glow_dot(gd, d, px, py, 5.5, MINT, workflow_a)
+
+        # Execution log + exact CRM record for the same lead.
+        lower_y = main_y + 298
+        rr(d, (main_x + 14, lower_y, main_x + 300, main_y + main_h - 14), 16,
+           c((23, 27, 36), 255 * workflow_a), c((122, 132, 151), 42 * workflow_a), 1)
+        text(d, (main_x + 30, lower_y + 14), "Журнал виконання", 13, c(INK, 240 * workflow_a), True)
+        log_lines = [
+            ("14:32:07", "Заявку отримано"),
+            ("14:32:08", "Контакт перевірено"),
+            ("14:33:21", "Кваліфікацію завершено"),
+            ("14:33:22", "Створено лід VLX-0284"),
+            ("14:33:23", "Богдана повідомлено"),
+        ]
+        for i, (stamp, value) in enumerate(log_lines):
+            la = appear(s, .75 + i * .5, .28) * workflow_a
+            ly = lower_y + 44 + i * 31
+            d.ellipse((main_x + 30, ly + 4, main_x + 40, ly + 14), fill=c(MINT, 240 * la))
+            text(d, (main_x + 50, ly), stamp, 10, c(MUTED, 200 * la), True)
+            text(d, (main_x + 112, ly), value, 11, c((211, 216, 228), 230 * la))
+
+        crm_p = appear(s, 3.0, .48) * workflow_a
+        if crm_p > .01:
+            cx = main_x + 314; cy = lower_y
+            rr(gd, (cx - 3, cy - 3, main_x + main_w - 14, main_y + main_h - 11), 18, c(INDIGO, 40))
+            rr(d, (cx, cy, main_x + main_w - 14, main_y + main_h - 14), 16,
+               c((25, 30, 42), 255), c(INDIGO, 90), 1)
+            text(d, (cx + 18, cy + 14), "CRM · VLX-0284", 13, c(VIOLET, 240), True)
+            d.ellipse((cx + 18, cy + 45, cx + 60, cy + 87), fill=c((244, 180, 92), 245))
+            text(d, (cx + 39, cy + 66), "О", 16, c((45, 34, 23), 250), True, "mm")
+            text(d, (cx + 74, cy + 43), "Олена", 15, c(INK, 245), True)
+            text(d, (cx + 74, cy + 65), "@olena_demo", 11, c(MUTED, 205))
+            crm_rows = (("Послуга", "Сайт + бот"), ("Бюджет", "$500–1000"), ("Запуск", "цього місяця"))
+            for i, (label, value) in enumerate(crm_rows):
+                ry = cy + 104 + i * 30
+                text(d, (cx + 18, ry), label, 10, c(MUTED, 190), True)
+                text(d, (main_x + main_w - 32, ry), value, 11, c(INK, 230), True, "ra")
+            rr(d, (cx + 18, cy + 200, main_x + main_w - 32, cy + 232), 13, c((22, 48, 41), 245))
+            text(d, ((cx + 18 + main_x + main_w - 32) / 2, cy + 211), "КВАЛІФІКОВАНО", 10, c(MINT, 240), True, "ma")
+
+    # Analytics is a real app tab with date range, axes, funnel and demo-data label.
+    if analytics_p > .01:
+        aoff = (1 - out_back(analytics_motion)) * 22
+        ax, ay = main_x, main_y + aoff
+        d.rectangle((ax, ay, ax + main_w, y + h - 1), fill=c((16, 19, 26), 255 * analytics_p))
+        text(d, (ax + 18, ay + 17), "Аналітика продажів", 17, c(INK, 245 * analytics_p), True)
+        rr(d, (ax + 195, ay + 14, ax + 280, ay + 43), 13, c((35, 40, 52), 245 * analytics_p))
+        text(d, (ax + 237, ay + 24), "ДЕМО-ДАНІ", 9, c(MUTED, 210 * analytics_p), True, "ma")
+        rr(d, (ax + main_w - 162, ay + 12, ax + main_w - 18, ay + 45), 13, c((29, 34, 45), 255 * analytics_p), c((122, 132, 151), 45 * analytics_p), 1)
+        text(d, (ax + main_w - 98, ay + 24), "01–30 червня", 10,
+             c((213, 218, 230), 230 * analytics_p), True, "ma")
+        draw_chevron(d, ax + main_w - 42, ay + 24,
+                     c((213, 218, 230), 210 * analytics_p), "down")
+
+        metrics = (("48", "Заявок", "+14%", INDIGO), ("27", "Кваліфіковано", "+8%", MINT),
+                   ("56%", "Конверсія", "+5%", CYAN), ("38с", "Перша відповідь", "−12с", AMBER))
+        for i, (value, label, delta, col) in enumerate(metrics):
+            mx = ax + 18 + i * 132
+            rr(d, (mx, ay + 63, mx + 120, ay + 132), 14, c((25, 29, 39), 255 * analytics_p), c((122, 132, 151), 38 * analytics_p), 1)
+            text(d, (mx + 13, ay + 74), value, 22, c(col, 245 * analytics_p), True)
+            text(d, (mx + 13, ay + 103), label, 9, c(MUTED, 205 * analytics_p), True)
+            text(d, (mx + 108, ay + 76), delta, 9, c(MINT, 220 * analytics_p), True, "ra")
+
+        chart = (ax + 18, ay + 151, ax + 349, ay + 335)
+        rr(d, chart, 16, c((24, 28, 38), 255 * analytics_p), c((122, 132, 151), 38 * analytics_p), 1)
+        text(d, (chart[0] + 16, chart[1] + 14), "Заявки за 30 днів", 12, c(INK, 230 * analytics_p), True)
+        for i, label in enumerate(("0", "6", "12", "18")):
+            yy = chart[3] - 31 - i * 34
+            d.line((chart[0] + 38, yy, chart[2] - 14, yy), fill=c((122, 132, 151), 32 * analytics_p), width=1)
+            text(d, (chart[0] + 28, yy - 5), label, 9, c(MUTED, 150 * analytics_p), False, "ra")
+        values = [.82, .68, .74, .56, .61, .42, .26, .18]
+        pts = [(chart[0] + 42 + i * 38, chart[1] + 56 + value * 96) for i, value in enumerate(values)]
+        chart_p = smooth(5.0, 6.2, s)
+        partial_polyline(gd, pts, chart_p, c(MINT, 45 * analytics_p), 10)
+        partial_polyline(d, pts, chart_p, c(MINT, 235 * analytics_p), 4)
+        count = max(1, min(len(pts), int(math.ceil(chart_p * len(pts)))))
+        for px, py in pts[:count]:
+            d.ellipse((px - 4, py - 4, px + 4, py + 4), fill=c(MINT, 245 * analytics_p))
+
+        funnel = (ax + 364, ay + 151, ax + main_w - 18, ay + 335)
+        rr(d, funnel, 16, c((24, 28, 38), 255 * analytics_p), c((122, 132, 151), 38 * analytics_p), 1)
+        text(d, (funnel[0] + 16, funnel[1] + 14), "Воронка", 12, c(INK, 230 * analytics_p), True)
+        stages = (("1 284", "відвідування", 1.0), ("48", "заявок", .76), ("27", "кваліфіковано", .56), ("11", "дзвінків", .38))
+        for i, (value, label, scale) in enumerate(stages):
+            fy = funnel[1] + 47 + i * 31
+            fw = (funnel[2] - funnel[0] - 34) * scale
+            rr(d, (funnel[0] + 16, fy, funnel[0] + 16 + fw, fy + 23), 8, c((68, 79, 221), (180 + i * 18) * analytics_p))
+            text(d, (funnel[0] + 24, fy + 6), value, 10, c(INK, 235 * analytics_p), True)
+            text(d, (funnel[2] - 16, fy + 6), label, 9, c(MUTED, 190 * analytics_p), False, "ra")
+
+        recommendation = smooth(5.75, 6.45, s) * analytics_p
+        ry = ay + 354
+        if recommendation > .01:
+            rr(gd, (ax + 14, ry - 4, ax + main_w - 14, y + h - 14), 18, c(AMBER, 48))
+            rr(d, (ax + 18, ry, ax + main_w - 18, y + h - 18), 16,
+               c((38, 32, 26), 255), c(AMBER, 105), 1)
+            d.ellipse((ax + 34, ry + 18, ax + 74, ry + 58), fill=c(AMBER, 245))
+            text(d, (ax + 54, ry + 38), "!", 19, c((43, 31, 18), 255), True, "mm")
+            text(d, (ax + 90, ry + 14), "Рекомендація на наступний місяць", 12, c(AMBER, 240), True)
+            text(d, (ax + 90, ry + 38), "Приберіть поле «Коментар» на мобільних — воно дає 18% відмов.", 12,
+                 c(INK, 238), True)
+            text(d, (ax + 90, ry + 59), "Запустіть A/B тест на 14 днів і порівняйте конверсію.", 11,
+                 c((205, 196, 182), 220))
 
     composite_scene(frame, layer, glow, alpha)
 
@@ -562,6 +916,12 @@ def render_video(output: Path):
         proc.stdin.close()
     if proc.wait() != 0:
         raise SystemExit("ffmpeg render failed")
+    poster_dir = ROOT / "assets/img"
+    poster_dir.mkdir(parents=True, exist_ok=True)
+    for timestamp, names in DESKTOP_POSTERS.items():
+        still = render_frame(timestamp)
+        for name in names:
+            still.save(poster_dir / name, quality=92, optimize=True)
     print(output)
 
 
