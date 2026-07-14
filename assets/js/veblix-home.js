@@ -34,6 +34,11 @@
 
   if (totalEl) totalEl.textContent = String(N).padStart(2, '0');
 
+  function showPoster(show) {
+    if (!poster) return;
+    poster.hidden = !show;
+  }
+
   // ── сцена (підписи/акценти); відео мотає apply() ──
   function setScene(i) {
     i = Math.max(0, Math.min(N - 1, i));
@@ -55,7 +60,8 @@
     sceneBox.setAttribute('data-anim', '');
     if (staticMode) {
       poster.src = s.poster;
-      progEl.style.width = ((i + 1) / N * 100) + '%';
+      showPoster(true);
+      progEl.style.transform = `scaleX(${(i + 1) / N})`;
     }
   }
 
@@ -69,7 +75,7 @@
 
   // ── застосувати прогрес p∈[0..1]: відео + прогрес-бар + сцена ──
   function apply(p) {
-    progEl.style.width = (p * 100) + '%';
+    progEl.style.transform = `scaleX(${p})`;
     if (!staticMode && video.readyState >= 1 && isFinite(dur)) {
       try { video.currentTime = Math.min(dur - 0.05, Math.max(0, p * dur)); } catch (_) {}
     }
@@ -115,6 +121,7 @@
     staticMode = true;
     hero.classList.add('is-static');
     track.classList.add('is-static');
+    showPoster(true);
     const cur0 = Math.max(0, idx); idx = -1; setScene(cur0);
   }
 
@@ -122,8 +129,10 @@
   if (staticMode) {
     hero.classList.add('is-static');
     track.classList.add('is-static');
+    showPoster(true);
     setScene(0);
   } else {
+    showPoster(false);
     try { video.pause(); } catch (_) {}
     video.addEventListener('loadedmetadata', () => {
       if (isFinite(video.duration) && video.duration > 1) dur = video.duration;

@@ -39,14 +39,20 @@ img,video{max-width:100%;display:block}
 .vh-track.is-static{height:auto}
 .vh-hero{position:sticky;top:0;height:100svh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;isolation:isolate}
 .vh-track.is-static .vh-hero{position:relative;height:auto;min-height:100svh}
-.vh-hero__media{position:absolute;inset:0;z-index:-1}
+.vh-hero__media{position:absolute;inset:0;z-index:0}
 .vh-hero__video,.vh-hero__poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.vh-hero__video{z-index:0;filter:brightness(1.14) saturate(1.16) contrast(1.04);transform:scale(1.015)}
+.vh-hero__poster{z-index:1}
+/* Author-level img{display:block} otherwise overrides the browser's [hidden] rule
+   and leaves the fallback poster on top of the scrubbable video. */
+.vh-hero__poster[hidden]{display:none!important}
 .vh-hero__scrim{position:absolute;inset:0;
   background:
-    radial-gradient(120% 90% at 15% 40%,rgba(10,12,21,.92),rgba(10,12,21,.45) 55%,transparent 80%),
-    linear-gradient(180deg,rgba(10,12,21,.55),rgba(10,12,21,.2) 30%,rgba(10,12,21,.75) 100%)}
+    linear-gradient(90deg,rgba(10,12,21,.88) 0%,rgba(10,12,21,.58) 34%,rgba(10,12,21,.10) 64%,rgba(10,12,21,.22) 100%),
+    linear-gradient(180deg,rgba(10,12,21,.32),rgba(10,12,21,.04) 42%,rgba(10,12,21,.58) 100%);
+  z-index:2;pointer-events:none}
 
-.vh-hero__inner{width:min(1180px,92vw);margin:0 auto;padding:120px 0 150px;display:grid;
+.vh-hero__inner{position:relative;z-index:1;width:min(1180px,92vw);margin:0 auto;padding:120px 0 150px;display:grid;
   grid-template-columns:1.1fr .9fr;grid-template-rows:1fr auto;align-items:center;gap:24px}
 .vh-hero__copy{grid-column:1;grid-row:1}
 .vh-hero__title{font-family:var(--serif);font-weight:800;font-size:clamp(40px,6.2vw,80px);line-height:1.02;
@@ -83,7 +89,8 @@ img,video{max-width:100%;display:block}
   color:var(--ink);font-size:18px;line-height:1;cursor:pointer;transition:background .25s var(--ease),transform .25s var(--ease)}
 .vh-hud__arrow:hover{background:var(--surface-2);transform:scale(1.06)}
 .vh-hud__progress{flex-basis:100%;height:3px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:4px}
-.vh-hud__progress i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,var(--signal),var(--signal-2))}
+.vh-hud__progress i{display:block;height:100%;width:100%;border-radius:3px;background:linear-gradient(90deg,var(--signal),var(--signal-2));
+  transform:scaleX(0);transform-origin:left center;will-change:transform}
 .vh-hud.is-mint .vh-hud__progress i{background:linear-gradient(90deg,var(--mint),#8BEDC4)}
 
 /* ===== FOUNDER PATH теаzер ===== */
