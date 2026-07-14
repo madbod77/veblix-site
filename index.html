@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/veblix-home.css?v=9" />
+<link rel="stylesheet" href="assets/css/veblix-home.css?v=11" />
 <noscript><style>.vh-nav{opacity:1!important;transform:none!important;visibility:visible!important;pointer-events:auto!important}</style></noscript>
 </head>
 <body>
@@ -33,6 +33,7 @@
   <!-- Змістовний motion-design: сайт → бот → автоматизація скрабиться скролом; постер на reduced-motion / помилку -->
   <div class="vh-hero__media">
     <video class="vh-hero__video" muted playsinline preload="auto" poster="assets/img/hero-poster.jpg" aria-hidden="true">
+      <source src="assets/video/veblix-hero-mobile.mp4?v=1" type="video/mp4" media="(max-width: 820px) and (orientation: portrait)" />
       <source src="assets/video/veblix-hero.mp4?v=5" type="video/mp4" />
     </video>
     <img class="vh-hero__poster" src="assets/img/scene-01.jpg" alt="" aria-hidden="true" hidden />
@@ -60,7 +61,7 @@
       <li><button class="vh-hud__node vh-hud__node--mint" role="tab" aria-selected="false" data-go="2" aria-label="Сцена 3: Автоматизація та аналітика"><span>03</span> Автоматизація та аналітика</button></li>
     </ol>
     <div class="vh-hud__side">
-      <span class="vh-hud__hint" aria-hidden="true">прокрутіть ↓</span>
+      <span class="vh-hud__hint" aria-hidden="true"><span class="vh-hud__hint-desktop">прокрутіть ↓</span><span class="vh-hud__hint-mobile">свайпніть вгору ↑</span></span>
       <span class="vh-hud__count"><b data-scene-num>01</b> / <span data-scene-total>03</span></span>
       <button class="vh-hud__arrow" data-next aria-label="Наступна сцена">›</button>
     </div>
@@ -105,6 +106,6 @@
   <span class="vh-foot__bridge">Built by The AI Employee. Delivered by Veblix.</span>
 </footer>
 
-<script src="assets/js/veblix-home.js?v=11" defer></script>
+<script src="assets/js/veblix-home.js?v=14" defer></script>
 </body>
 </html>

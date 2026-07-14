@@ -26,4 +26,5 @@ __pycache__/
 
 # hero-відео нової головної — деплоїмо
 !assets/video/veblix-hero.mp4
+!assets/video/veblix-hero-mobile.mp4
 !video/*.mp4
