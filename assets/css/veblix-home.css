@@ -25,7 +25,10 @@ img,video{max-width:100%;display:block}
 
 /* ===== NAV ===== */
 .vh-nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
-  padding:16px clamp(18px,3vw,40px);background:linear-gradient(180deg,rgba(10,12,21,.85),rgba(10,12,21,0));backdrop-filter:blur(6px)}
+  padding:16px clamp(18px,3vw,40px);background:linear-gradient(180deg,rgba(10,12,21,.85),rgba(10,12,21,0));backdrop-filter:blur(6px);
+  transition:opacity .22s var(--ease),transform .28s var(--ease),visibility 0s linear 0s;will-change:opacity,transform}
+.vh-nav.is-slider-hidden{opacity:0;transform:translateY(-110%);visibility:hidden;pointer-events:none;
+  transition:opacity .22s var(--ease),transform .28s var(--ease),visibility 0s linear .28s}
 .vh-brand{font-family:var(--serif);font-weight:800;font-size:22px;letter-spacing:.01em}
 .vh-brand b{color:var(--signal-2)}
 .vh-navlinks{display:flex;gap:26px;font-size:14px;color:var(--muted);font-weight:500}
@@ -129,7 +132,7 @@ img,video{max-width:100%;display:block}
 /* ===== REDUCED MOTION: без відео, статичні постери ===== */
 @media (prefers-reduced-motion:reduce){
   .vh-scene[data-anim]{animation:none}
-  .vh-btn,.vh-hud__arrow{transition:none}
+  .vh-btn,.vh-hud__arrow,.vh-nav{transition:none}
 }
 .vh-hero.is-static .vh-hero__video{display:none}
 .vh-hero.is-static .vh-hero__poster{display:block!important}

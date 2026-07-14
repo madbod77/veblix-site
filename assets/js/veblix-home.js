@@ -8,6 +8,7 @@
   const hero = document.getElementById('hero');
   const track = document.getElementById('hero-track');
   if (!hero || !track) return;
+  const siteNav = document.querySelector('.vh-nav');
   const q = (s) => hero.querySelector(s);
   const video = q('.vh-hero__video');
   const poster = q('.vh-hero__poster');
@@ -73,6 +74,25 @@
     range = Math.max(1, track.offsetHeight - window.innerHeight);
   }
 
+  // Прибираємо глобальну навігацію, доки scroll-трек керує слайдером.
+  // Щойно sticky-ділянка завершилась, панель повертається над оферами.
+  function updateNavVisibility() {
+    if (!siteNav) return;
+    if (staticMode) {
+      siteNav.classList.remove('is-slider-hidden');
+      siteNav.inert = false;
+      siteNav.removeAttribute('aria-hidden');
+      return;
+    }
+    // Тримаємо панель прихованою й під час виходу sticky-сцени. Вона
+    // повертається лише коли верх наступної секції дістався верху екрана.
+    const sliderActive = track.getBoundingClientRect().bottom > 0;
+    siteNav.classList.toggle('is-slider-hidden', sliderActive);
+    siteNav.inert = sliderActive;
+    if (sliderActive) siteNav.setAttribute('aria-hidden', 'true');
+    else siteNav.removeAttribute('aria-hidden');
+  }
+
   // ── застосувати прогрес p∈[0..1]: відео + прогрес-бар + сцена ──
   function apply(p) {
     progEl.style.transform = `scaleX(${p})`;
@@ -91,6 +111,7 @@
     rafId = (cur === target) ? 0 : requestAnimationFrame(loop);
   }
   function onScroll() {
+    updateNavVisibility();
     if (staticMode) return;
     target = Math.min(1, Math.max(0, (window.scrollY - trackTop) / range));
     if (cur < 0) cur = target;
@@ -122,6 +143,7 @@
     hero.dataset.staticReason = reason;
     hero.classList.add('is-static');
     track.classList.add('is-static');
+    updateNavVisibility();
     showPoster(true);
     const cur0 = Math.max(0, idx); idx = -1; setScene(cur0);
   }
@@ -131,6 +153,7 @@
     hero.dataset.staticReason = 'reduced-motion';
     hero.classList.add('is-static');
     track.classList.add('is-static');
+    updateNavVisibility();
     showPoster(true);
     setScene(0);
   } else {
