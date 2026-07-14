@@ -12,7 +12,7 @@
   const video = q('.vh-hero__video');
   const poster = q('.vh-hero__poster');
   const sceneBox = q('.vh-scene');
-  const tagEl = q('[data-scene-tag]');
+  const titleEl = q('[data-scene-title]');
   const thoughtEl = q('[data-scene-thought]');
   const numEl = q('[data-scene-num]');
   const progEl = q('[data-progress]');
@@ -21,9 +21,9 @@
   const nodes = [...hero.querySelectorAll('.vh-hud__node')];
 
   const SCENES = [
-    { tag: '01 · Сайт', thought: 'Сайт веде людину до однієї зрозумілої дії.',                          cls: '',     poster: 'assets/img/scene-01.jpg' },
-    { tag: '02 · Бот',  thought: 'Запит не губиться — бот кваліфікує і передає живій людині.',           cls: '',     poster: 'assets/img/scene-02.jpg' },
-    { tag: '03 · Автоматизація та аналітика', thought: 'Процеси працюють самі, а щомісяця ти маєш рішення з власних даних.', cls: 'mint', poster: 'assets/img/scene-05.jpg' },
+    { title: 'Сайт', thought: 'Сайт веде людину до однієї зрозумілої дії.',                          cls: '',     poster: 'assets/img/scene-01.jpg' },
+    { title: 'Бот',  thought: 'Запит не губиться — бот кваліфікує і передає живій людині.',           cls: '',     poster: 'assets/img/scene-02.jpg' },
+    { title: 'Автоматизація та аналітика', thought: 'Процеси працюють самі, а щомісяця ти маєш рішення з власних даних.', cls: 'mint', poster: 'assets/img/scene-05.jpg' },
   ];
   const N = SCENES.length;
   const SCENE_MS = 5200;
@@ -43,7 +43,7 @@
     if (i === idx) return;
     idx = i;
     const s = SCENES[i];
-    tagEl.textContent = s.tag;
+    titleEl.textContent = s.title;
     thoughtEl.textContent = s.thought;
     numEl.textContent = String(i + 1).padStart(2, '0');
     sceneBox.classList.toggle('is-mint', s.cls === 'mint');
