@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="uk" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="description" content="Veblix Flow — живе демо: як автоматизація приймає заявку, кваліфікує ліда і рахує аналітику вашого бізнесу." />
+<meta name="theme-color" content="#0A0C15" />
+<title>Veblix Flow — демо автоматизації та аналітики</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/veblix-flow.css?v=1" />
+</head>
+<body class="fl">
+
+<!-- ===== TOP BAR ===== -->
+<header class="fl-top">
+  <div class="fl-top__brand">
+    <span class="fl-logo" aria-hidden="true">V</span>
+    <div>
+      <p class="fl-top__name">Veblix Flow</p>
+      <p class="fl-top__crumb">Сайт → Telegram → CRM</p>
+    </div>
+  </div>
+  <div class="fl-top__right">
+    <span class="fl-badge fl-badge--live"><i></i>Активна</span>
+    <button class="vh-btn" type="button" data-run>Запустити</button>
+    <a class="fl-top__back" href="/">← На сайт</a>
+  </div>
+</header>
+
+<div class="fl-shell">
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="fl-side">
+    <p class="fl-side__label">Робочий простір</p>
+    <nav class="fl-tabs" role="tablist" aria-label="Розділи демо">
+      <button class="fl-tab is-active" role="tab" aria-selected="true"  data-tab="scen"><span>C</span>Сценарії</button>
+      <button class="fl-tab" role="tab" aria-selected="false" data-tab="runs"><span>▶</span>Запуски</button>
+      <button class="fl-tab" role="tab" aria-selected="false" data-tab="stats"><span>📊</span>Аналітика</button>
+      <button class="fl-tab is-off" type="button" disabled title="Недоступно в демо"><span>⚙</span>Налаштування</button>
+    </nav>
+    <div class="fl-side__foot">
+      <p>Demo workspace</p>
+      <p>bogdan@veblix</p>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main class="fl-main">
+
+    <!-- ПАНЕЛЬ 1: СЦЕНАРІЙ -->
+    <section class="fl-panel is-active" data-panel="scen" role="tabpanel" aria-label="Сценарії">
+      <header class="fl-panel__head">
+        <div>
+          <h1>Кваліфікація нового ліда</h1>
+          <p class="fl-sub">Останній запуск: <b data-last-run>—</b></p>
+        </div>
+        <span class="fl-badge fl-badge--ok" data-run-status hidden>Успішно · <b data-run-ms>1.8с</b></span>
+      </header>
+
+      <div class="fl-canvas" aria-label="Схема сценарію">
+        <ol class="fl-flow">
+          <li class="fl-node" data-node="0" style="--node:#5B6CFF">
+            <span class="fl-node__check" aria-hidden="true">✓</span>
+            <span class="fl-node__icon">F</span>
+            <b>Форма</b><i>webhook</i>
+          </li>
+          <li class="fl-conn" aria-hidden="true"><i></i></li>
+          <li class="fl-node" data-node="1" style="--node:#FFB65C">
+            <span class="fl-node__check" aria-hidden="true">✓</span>
+            <span class="fl-node__icon">✓</span>
+            <b>Перевірка</b><i>контакту</i>
+          </li>
+          <li class="fl-conn" aria-hidden="true"><i></i></li>
+          <li class="fl-node" data-node="2" style="--node:#4EA8DE">
+            <span class="fl-node__check" aria-hidden="true">✓</span>
+            <span class="fl-node__icon">✈</span>
+            <b>Telegram</b><i>2 питання</i>
+          </li>
+          <li class="fl-conn" aria-hidden="true"><i></i></li>
+          <li class="fl-node" data-node="3" style="--node:#B08BFF">
+            <span class="fl-node__check" aria-hidden="true">✓</span>
+            <span class="fl-node__icon">C</span>
+            <b>CRM</b><i>створити лід</i>
+          </li>
+          <li class="fl-conn" aria-hidden="true"><i></i></li>
+          <li class="fl-node" data-node="4" style="--node:#3DDC97">
+            <span class="fl-node__check" aria-hidden="true">✓</span>
+            <span class="fl-node__icon">М</span>
+            <b>Менеджер</b><i>повідомити</i>
+          </li>
+        </ol>
+      </div>
+
+      <div class="fl-grid2">
+        <article class="fl-card">
+          <h2>Журнал виконання</h2>
+          <ul class="fl-journal" data-journal aria-live="polite">
+            <li class="fl-journal__empty">Натисни «Запустити» — і дивись, як заявка проходить сценарій.</li>
+          </ul>
+        </article>
+
+        <article class="fl-card fl-lead" data-lead hidden>
+          <h2>CRM · <span data-lead-id>VLX-0000</span></h2>
+          <div class="fl-lead__who">
+            <span class="fl-lead__ava" data-lead-ava>О</span>
+            <div><b data-lead-name>—</b><i data-lead-handle>—</i></div>
+          </div>
+          <dl class="fl-lead__rows">
+            <div><dt>Послуга</dt><dd data-lead-service>—</dd></div>
+            <div><dt>Бюджет</dt><dd data-lead-budget>—</dd></div>
+            <div><dt>Запуск</dt><dd data-lead-when>—</dd></div>
+          </dl>
+          <p class="fl-lead__ok">Кваліфіковано ✓</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ПАНЕЛЬ 2: ЗАПУСКИ -->
+    <section class="fl-panel" data-panel="runs" role="tabpanel" aria-label="Запуски" hidden>
+      <header class="fl-panel__head">
+        <div>
+          <h1>Запуски</h1>
+          <p class="fl-sub">Кожен прогін сценарію — один рядок. Запусти ще раз — з'явиться згори.</p>
+        </div>
+      </header>
+      <article class="fl-card">
+        <table class="fl-table">
+          <thead><tr><th>Лід</th><th>Час</th><th>Джерело</th><th>Результат</th><th>Тривалість</th></tr></thead>
+          <tbody data-runs></tbody>
+        </table>
+      </article>
+    </section>
+
+    <!-- ПАНЕЛЬ 3: АНАЛІТИКА -->
+    <section class="fl-panel" data-panel="stats" role="tabpanel" aria-label="Аналітика" hidden>
+      <header class="fl-panel__head">
+        <div>
+          <h1>Аналітика продажів <span class="fl-badge fl-badge--demo">демо-дані</span></h1>
+          <p class="fl-sub">01–30 червня · оновлюється після кожного запуску сценарію</p>
+        </div>
+      </header>
+
+      <div class="fl-kpis">
+        <article class="fl-kpi" style="--kpi:#8B93FF"><b data-kpi-leads>48</b><span class="fl-kpi__delta" data-kpi-leads-d>+14%</span><i>Заявок</i></article>
+        <article class="fl-kpi" style="--kpi:#3DDC97"><b data-kpi-qual>27</b><span class="fl-kpi__delta" data-kpi-qual-d>+8%</span><i>Кваліфіковано</i></article>
+        <article class="fl-kpi" style="--kpi:#4EA8DE"><b data-kpi-conv>56%</b><span class="fl-kpi__delta" data-kpi-conv-d>+5%</span><i>Конверсія</i></article>
+        <article class="fl-kpi" style="--kpi:#FFB65C"><b data-kpi-first>38с</b><span class="fl-kpi__delta">−12с</span><i>Перша відповідь</i></article>
+      </div>
+
+      <div class="fl-grid2 fl-grid2--stats">
+        <article class="fl-card">
+          <h2>Заявки за 30 днів</h2>
+          <svg class="fl-chart" viewBox="0 0 560 220" role="img" aria-label="Графік заявок за 30 днів" data-chart preserveAspectRatio="none"></svg>
+        </article>
+        <article class="fl-card">
+          <h2>Воронка</h2>
+          <ul class="fl-funnel" data-funnel>
+            <li style="--w:84%"><b>1 284</b><span>відвідування</span></li>
+            <li style="--w:76%"><b data-fun-leads>48</b><span>заявок</span></li>
+            <li style="--w:58%"><b data-fun-qual>27</b><span>кваліфіковано</span></li>
+            <li style="--w:42%"><b>11</b><span>дзвінків</span></li>
+          </ul>
+        </article>
+      </div>
+
+      <article class="fl-card fl-reco">
+        <span class="fl-reco__mark" aria-hidden="true">!</span>
+        <div>
+          <h2>Рекомендація на наступний місяць</h2>
+          <p><b>Приберіть поле «Коментар» на мобільних — воно дає 18% відмов.</b></p>
+          <p class="fl-sub">Запустіть A/B тест на 14 днів і порівняйте конверсію.</p>
+        </div>
+      </article>
+    </section>
+
+  </main>
+</div>
+
+<footer class="fl-foot">
+  <span>Це інтерактивне демо на вигаданих даних — вашу автоматизацію збираємо під ваші процеси.</span>
+  <a class="vh-btn" href="https://t.me/madbod_77" target="_blank" rel="noopener">Хочу таке для свого бізнесу →</a>
+</footer>
+
+<script src="assets/js/veblix-flow.js?v=1" defer></script>
+</body>
+</html>
