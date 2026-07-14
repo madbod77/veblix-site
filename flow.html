@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/veblix-flow.css?v=1" />
+<link rel="stylesheet" href="assets/css/veblix-flow.css?v=2" />
 </head>
 <body class="fl">
 
@@ -37,6 +37,7 @@
       <button class="fl-tab is-active" role="tab" aria-selected="true"  data-tab="scen"><span>C</span>Сценарії</button>
       <button class="fl-tab" role="tab" aria-selected="false" data-tab="runs"><span>▶</span>Запуски</button>
       <button class="fl-tab" role="tab" aria-selected="false" data-tab="stats"><span>📊</span>Аналітика</button>
+      <button class="fl-tab" role="tab" aria-selected="false" data-tab="biz"><span>Б</span>Мій бізнес</button>
       <button class="fl-tab is-off" type="button" disabled title="Недоступно в демо"><span>⚙</span>Налаштування</button>
     </nav>
     <div class="fl-side__foot">
@@ -174,6 +175,69 @@
       </article>
     </section>
 
+    <!-- ПАНЕЛЬ 4: МІЙ БІЗНЕС (реальний аналізатор) -->
+    <section class="fl-panel" data-panel="biz" role="tabpanel" aria-label="Мій бізнес" hidden>
+      <header class="fl-panel__head">
+        <div>
+          <h1>Аналіз вашого бізнесу</h1>
+          <p class="fl-sub">Введіть свої цифри за місяць — порахуємо конверсії, знайдемо найбільший виток і оцінимо потенціал. <b>Дані рахуються у вашому браузері й нікуди не надсилаються</b>, доки ви самі не натиснете «Надіслати аудит».</p>
+        </div>
+      </header>
+
+      <div class="fl-grid2 fl-grid2--biz">
+        <article class="fl-card">
+          <h2>Цифри за місяць</h2>
+          <form class="fl-form" data-biz-form novalidate>
+            <label><span>Відвідування сайту</span><input type="number" min="0" inputmode="numeric" name="visits" placeholder="напр. 1200" required></label>
+            <label><span>Заявок / звернень</span><input type="number" min="0" inputmode="numeric" name="leads" placeholder="напр. 45" required></label>
+            <label><span>Кваліфікованих (реальні розмови)</span><input type="number" min="0" inputmode="numeric" name="qual" placeholder="напр. 24" required></label>
+            <label><span>Продажів / угод</span><input type="number" min="0" inputmode="numeric" name="sales" placeholder="напр. 8" required></label>
+            <label><span>Середній чек, ₴ <em>необовʼязково</em></span><input type="number" min="0" inputmode="numeric" name="check" placeholder="напр. 6500"></label>
+            <label><span>Перша відповідь клієнту, хв <em>необовʼязково</em></span><input type="number" min="0" inputmode="numeric" name="resp" placeholder="напр. 40"></label>
+            <div class="fl-form__row">
+              <button class="vh-btn" type="submit">Порахувати →</button>
+              <button class="fl-ghostbtn" type="button" data-biz-example>Заповнити прикладом</button>
+            </div>
+            <p class="fl-form__err" data-biz-err hidden>Заповніть чотири основні поля числами (продажі ≤ кваліфіковані ≤ заявки ≤ відвідування).</p>
+          </form>
+        </article>
+
+        <article class="fl-card fl-bizres" data-biz-res hidden>
+          <h2>Ваша воронка</h2>
+          <ul class="fl-funnel" data-biz-funnel></ul>
+          <div class="fl-bizkpis" data-biz-kpis></div>
+        </article>
+      </div>
+
+      <article class="fl-card fl-reco" data-biz-insights hidden>
+        <span class="fl-reco__mark" aria-hidden="true">!</span>
+        <div data-biz-insights-body>
+          <h2>Що підтягнути першим</h2>
+        </div>
+      </article>
+
+      <div class="fl-grid2 fl-grid2--biz" data-biz-extra hidden>
+        <article class="fl-card">
+          <h2>Динаміка по місяцях <span class="fl-sub" style="font-size:12px">(збережені у цьому браузері)</span></h2>
+          <svg class="fl-chart" viewBox="0 0 560 220" role="img" aria-label="Динаміка ваших заявок і продажів" data-biz-chart preserveAspectRatio="none"></svg>
+          <p class="fl-sub" data-biz-chart-hint>Збережіть два і більше місяців — з'явиться графік динаміки.</p>
+        </article>
+        <article class="fl-card">
+          <h2>Аудит від Veblix</h2>
+          <p class="fl-sub" style="margin-bottom:12px">Надішлемо ваші цифри Богдану — повернемось із планом, який виток закривати першим і чим (сайт, бот чи автоматизація).</p>
+          <form class="fl-form" data-audit-form novalidate>
+            <label><span>Ім'я</span><input type="text" name="name" placeholder="Як до вас звертатись" required></label>
+            <label><span>Telegram або телефон</span><input type="text" name="contact" placeholder="@username" required></label>
+            <div class="fl-form__row">
+              <button class="vh-btn" type="submit" data-audit-send>Надіслати аудит →</button>
+              <button class="fl-ghostbtn" type="button" data-biz-save>Зберегти місяць</button>
+            </div>
+            <p class="fl-form__err" data-audit-msg hidden></p>
+          </form>
+        </article>
+      </div>
+    </section>
+
   </main>
 </div>
 
@@ -182,6 +246,6 @@
   <a class="vh-btn" href="https://t.me/madbod_77" target="_blank" rel="noopener">Хочу таке для свого бізнесу →</a>
 </footer>
 
-<script src="assets/js/veblix-flow.js?v=1" defer></script>
+<script src="assets/js/veblix-flow.js?v=2" defer></script>
 </body>
 </html>

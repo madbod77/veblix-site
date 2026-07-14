@@ -161,3 +161,172 @@
   // авто-демо через секунду після відкриття — щоб «щось відбувалось» одразу
   if (!reduce) setTimeout(run, 900);
 })();
+
+/* ── «Мій бізнес»: реальний аналізатор цифр клієнта (усе локально в браузері) ──
+   Орієнтири-«бенчмарки» — типові діапазони для сервісного бізнесу; у висновках
+   подаються як гіпотези для тесту, не як гарантії. */
+(() => {
+  'use strict';
+  const $ = (s) => document.querySelector(s);
+  const form = $('[data-biz-form]');
+  if (!form) return;
+  const fmt = (n) => Math.round(n).toLocaleString('uk-UA');
+  const BENCH = { leads: [2, 5], qual: [40, 60], sale: [25, 40], resp: 5 };
+  const LS_KEY = 'veblixFlowMonths';
+  let last = null; // останній розрахунок
+
+  const err = $('[data-biz-err]');
+  const resCard = $('[data-biz-res]');
+  const insCard = $('[data-biz-insights]');
+  const insBody = $('[data-biz-insights-body]');
+  const extra = $('[data-biz-extra]');
+  const auditMsg = $('[data-audit-msg]');
+
+  $('[data-biz-example]').addEventListener('click', () => {
+    const ex = { visits: 1200, leads: 45, qual: 24, sales: 8, check: 6500, resp: 40 };
+    for (const k in ex) form.elements[k].value = ex[k];
+    form.requestSubmit();
+  });
+
+  function rateRow(label, val, bench, unit) {
+    const [lo] = bench;
+    const bad = val < lo;
+    return { label, val, lo, bad, unit };
+  }
+
+  function compute() {
+    const g = (n) => { const v = parseFloat(form.elements[n].value); return isFinite(v) && v >= 0 ? v : null; };
+    const visits = g('visits'), leads = g('leads'), qual = g('qual'), sales = g('sales');
+    const check = g('check') || 0, resp = g('resp');
+    const okOrder = [visits, leads, qual, sales].every((v) => v !== null) &&
+      sales <= qual && qual <= leads && leads <= visits && visits > 0;
+    err.hidden = okOrder;
+    if (!okOrder) { resCard.hidden = insCard.hidden = extra.hidden = true; return; }
+
+    const rLeads = leads / visits * 100;
+    const rQual = leads ? qual / leads * 100 : 0;
+    const rSale = qual ? sales / qual * 100 : 0;
+    const revenue = sales * check;
+
+    /* воронка: sqrt-шкала, щоб малі значення було видно */
+    const w = (v) => (22 + 62 * Math.sqrt(v / visits)).toFixed(1) + '%';
+    const stages = [
+      { name: 'відвідування', v: visits, rate: null },
+      { name: 'заявок', v: leads, rate: rateRow('Сайт → заявка', rLeads, BENCH.leads, '%') },
+      { name: 'кваліфіковано', v: qual, rate: rateRow('Заявка → розмова', rQual, BENCH.qual, '%') },
+      { name: 'продажів', v: sales, rate: rateRow('Розмова → продаж', rSale, BENCH.sale, '%') },
+    ];
+    /* найбільший виток = найгірше відставання від нижньої межі орієнтиру */
+    let worst = null;
+    for (const s of stages) if (s.rate && s.rate.bad) {
+      const gap = (s.rate.lo - s.rate.val) / s.rate.lo;
+      if (!worst || gap > worst.gap) worst = { stage: s, gap };
+    }
+
+    $('[data-biz-funnel]').innerHTML = stages.map((s) =>
+      `<li style="--w:${w(s.v)}" class="${worst && worst.stage === s ? 'is-leak' : ''}">
+         <b>${fmt(s.v)}</b><span>${s.name}${s.rate ? ` · ${s.rate.val.toFixed(1)}%` : ''}${worst && worst.stage === s ? ' ⚠ головний виток' : ''}</span></li>`).join('');
+
+    const kpis = [
+      ['Сайт → заявка', rLeads.toFixed(1) + '%', rLeads >= BENCH.leads[0]],
+      ['Заявка → розмова', rQual.toFixed(0) + '%', rQual >= BENCH.qual[0]],
+      ['Розмова → продаж', rSale.toFixed(0) + '%', rSale >= BENCH.sale[0]],
+      check ? ['Виручка / міс', '₴' + fmt(revenue), true] : null,
+    ].filter(Boolean);
+    $('[data-biz-kpis]').innerHTML = kpis.map(([l, v, ok]) =>
+      `<div class="fl-bizkpi ${ok ? '' : 'is-low'}"><b>${v}</b><i>${l}</i></div>`).join('');
+
+    /* висновки: топ-3 правила */
+    const ins = [];
+    if (rLeads < BENCH.leads[0]) ins.push({ gap: (BENCH.leads[0] - rLeads) / BENCH.leads[0],
+      t: `Сайт конвертує ${rLeads.toFixed(1)}% відвідувачів у заявки (типово ${BENCH.leads[0]}–${BENCH.leads[1]}%)`,
+      a: 'Перевірте перший екран: одна зрозуміла дія, коротша форма, швидкість на мобільному.' });
+    if (rQual < BENCH.qual[0]) ins.push({ gap: (BENCH.qual[0] - rQual) / BENCH.qual[0],
+      t: `До розмови доходить ${rQual.toFixed(0)}% заявок (типово ${BENCH.qual[0]}–${BENCH.qual[1]}%)`,
+      a: 'Бот, що відповідає одразу і ставить 2 питання (бюджет, термін), зазвичай піднімає цей етап.' });
+    if (rSale < BENCH.sale[0]) ins.push({ gap: (BENCH.sale[0] - rSale) / BENCH.sale[0],
+      t: `У продаж закривається ${rSale.toFixed(0)}% розмов (типово ${BENCH.sale[0]}–${BENCH.sale[1]}%)`,
+      a: 'Автоматичний фолоу-ап через 24/72 год повертає частину «зниклих» клієнтів.' });
+    if (resp !== null && resp > BENCH.resp) ins.push({ gap: Math.min(1, (resp - BENCH.resp) / 60),
+      t: `Перша відповідь — ${fmt(resp)} хв (ціль — до ${BENCH.resp} хв)`,
+      a: 'Миттєве автопідтвердження в Telegram/SMS утримує клієнта, поки менеджер зайнятий.' });
+    ins.sort((a, b) => b.gap - a.gap);
+
+    let potential = '';
+    if (worst && check) {
+      const s = worst.stage.rate;
+      const factor = s.lo / s.val;
+      const extraSales = sales * factor - sales;
+      if (extraSales >= 0.5) potential =
+        `<p class="fl-ins__pot">Потенціал: якщо підтягнути «${s.label}» до типових ${s.lo}% — це ~<b>+${fmt(extraSales)} продажів</b> (~<b>+₴${fmt(extraSales * check)}</b>) на місяць. Це гіпотеза для тесту, не гарантія.</p>`;
+    }
+    insBody.innerHTML = '<h2>Що підтягнути першим</h2>' +
+      (ins.length
+        ? '<ol class="fl-ins">' + ins.slice(0, 3).map((i) => `<li><b>${i.t}.</b> ${i.a}</li>`).join('') + '</ol>' + potential
+        : '<p>Ваші конверсії в межах типових діапазонів або вище — так тримати! Далі має сенс масштабувати трафік і стежити за динамікою щомісяця.</p>');
+
+    resCard.hidden = false;
+    insCard.hidden = false;
+    extra.hidden = false;
+    last = { visits, leads, qual, sales, check, resp, rLeads, rQual, rSale };
+    drawBizChart();
+  }
+  form.addEventListener('submit', (e) => { e.preventDefault(); compute(); });
+
+  /* ── збереження місяців + динаміка ── */
+  const months = () => { try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; } catch (_) { return []; } };
+  $('[data-biz-save]').addEventListener('click', () => {
+    if (!last) { auditMsg.hidden = false; auditMsg.textContent = 'Спершу натисніть «Порахувати».'; return; }
+    const d = new Date();
+    const label = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    const list = months().filter((m) => m.m !== label);
+    list.push({ m: label, leads: last.leads, sales: last.sales });
+    list.sort((a, b) => a.m < b.m ? -1 : 1);
+    localStorage.setItem(LS_KEY, JSON.stringify(list.slice(-12)));
+    auditMsg.hidden = false; auditMsg.textContent = `Місяць ${label} збережено (у цьому браузері).`;
+    drawBizChart();
+  });
+
+  function drawBizChart() {
+    const svg = $('[data-biz-chart]'); const hint = $('[data-biz-chart-hint]');
+    const list = months();
+    if (list.length < 2) { svg.innerHTML = ''; hint.hidden = false; return; }
+    hint.hidden = true;
+    const W = 560, H = 220, P = 34;
+    const max = Math.max(...list.map((m) => m.leads), 4);
+    const xs = (i) => P + i * ((W - P * 2) / (list.length - 1));
+    const ys = (v) => H - P - (v / max) * (H - P * 2);
+    const line = (key, color) =>
+      `<polyline points="${list.map((m, i) => `${xs(i)},${ys(m[key])}`).join(' ')}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>` +
+      list.map((m, i) => `<circle cx="${xs(i)}" cy="${ys(m[key])}" r="3.5" fill="${color}"/>`).join('');
+    const labels = list.map((m, i) => `<text x="${xs(i)}" y="${H - 10}" text-anchor="middle" font-size="10" fill="#6A7085">${m.m.slice(2)}</text>`).join('');
+    svg.innerHTML = line('leads', '#3DDC97') + line('sales', '#8B93FF') + labels +
+      `<text x="${P}" y="16" font-size="11" fill="#3DDC97">— заявки</text><text x="${P + 90}" y="16" font-size="11" fill="#8B93FF">— продажі</text>`;
+  }
+  drawBizChart();
+
+  /* ── надіслати аудит (через існуючу серверну функцію форми) ── */
+  $('[data-audit-form]').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!last) { auditMsg.hidden = false; auditMsg.textContent = 'Спершу натисніть «Порахувати».'; return; }
+    const f = e.target;
+    const name = f.elements.name.value.trim(), contact = f.elements.contact.value.trim();
+    if (!name || !contact) { auditMsg.hidden = false; auditMsg.textContent = 'Вкажіть ім\'я і контакт.'; return; }
+    const btn = $('[data-audit-send]'); btn.disabled = true; btn.textContent = 'Надсилаємо…';
+    const brief = `Veblix Flow аудит: відвідування ${last.visits}, заявки ${last.leads} (${last.rLeads.toFixed(1)}%), розмови ${last.qual} (${last.rQual.toFixed(0)}%), продажі ${last.sales} (${last.rSale.toFixed(0)}%)` +
+      (last.check ? `, чек ₴${last.check}` : '') + (last.resp !== null ? `, перша відповідь ${last.resp} хв` : '');
+    let ok = true;
+    try {
+      const r = await fetch('/.netlify/functions/submit-lead', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, contact, plan: 'Veblix Flow · аудит цифр', brief, company: '' }),
+      });
+      ok = r.ok;
+    } catch (_) { ok = false; }
+    btn.disabled = false; btn.textContent = 'Надіслати аудит →';
+    auditMsg.hidden = false;
+    auditMsg.innerHTML = ok
+      ? 'Дякуємо! Аудит отримано — відповімо протягом 24 годин.'
+      : 'Не вдалося надіслати звідси. Напишіть нам напряму: <a href="https://t.me/madbod_77" target="_blank" rel="noopener" style="color:var(--signal-2)">t.me/madbod_77</a>';
+  });
+})();
