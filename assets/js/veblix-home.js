@@ -116,9 +116,10 @@
   });
 
   // ── статичний фолбек ──
-  function goStatic() {
+  function goStatic(reason = 'media-error') {
     if (staticMode) return;
     staticMode = true;
+    hero.dataset.staticReason = reason;
     hero.classList.add('is-static');
     track.classList.add('is-static');
     showPoster(true);
@@ -127,6 +128,7 @@
 
   // ── ініціалізація ──
   if (staticMode) {
+    hero.dataset.staticReason = 'reduced-motion';
     hero.classList.add('is-static');
     track.classList.add('is-static');
     showPoster(true);
@@ -138,7 +140,24 @@
       if (isFinite(video.duration) && video.duration > 1) dur = video.duration;
       onScroll();
     });
-    video.addEventListener('error', goStatic);
+    // Chrome can briefly emit a media error while replacing a cached byte-range
+    // response, then successfully load metadata from the fresh MP4.  Do not
+    // collapse the whole scroll track on that transient event; verify that the
+    // element is still genuinely unusable first.
+    video.addEventListener('error', () => {
+      window.setTimeout(() => {
+        const code = video.error?.code || 0;
+        const hasMetadata = Number.isFinite(video.duration) && video.duration > 1;
+        // MEDIA_ERR_NETWORK (2) is commonly raised when a scroll seek cancels
+        // an in-flight byte-range request. Metadata remains valid and the next
+        // currentTime assignment recovers, so treating it as fatal would make
+        // the entire hero disappear during a normal fast scroll.
+        const fatal = (code && code !== 2) || (!hasMetadata && video.readyState === 0);
+        if (fatal) {
+          goStatic(`media-error:${code}:ready-${video.readyState}`);
+        }
+      }, 700);
+    });
     measure();
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', () => { measure(); onScroll(); });

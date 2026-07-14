@@ -40,7 +40,7 @@ img,video{max-width:100%;display:block}
 .vh-hero{position:sticky;top:0;height:100svh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;isolation:isolate}
 .vh-track.is-static .vh-hero{position:relative;height:auto;min-height:100svh}
 .vh-hero__media{position:absolute;inset:0;z-index:0}
-.vh-hero__video,.vh-hero__poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.vh-hero__video,.vh-hero__poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:62% center}
 .vh-hero__video{z-index:0;filter:brightness(1.14) saturate(1.16) contrast(1.04);transform:scale(1.015)}
 .vh-hero__poster{z-index:1}
 /* Author-level img{display:block} otherwise overrides the browser's [hidden] rule
