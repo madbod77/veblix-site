@@ -9,6 +9,7 @@ __pycache__/
 *.pyc
 .env
 .env.*
+!.env.example
 *.db
 *.sqlite
 *.sqlite3
@@ -22,3 +23,7 @@ __pycache__/
 *.mp3
 *.wav
 *.m4a
+
+# hero-відео нової головної — деплоїмо
+!assets/video/veblix-hero.mp4
+!video/*.mp4

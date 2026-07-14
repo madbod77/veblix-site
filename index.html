@@ -3,553 +3,107 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="description" content="Veblix — студія, що перетворює вашу ідею на готовий сайт під ключ. Унікальний дизайн, адаптив під телефон, планшет і комп'ютер, допомогу з підключенням власного домену .com. Тарифи від $120." />
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#fbfbfd" />
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0c15" />
-<meta name="apple-mobile-web-app-title" content="Veblix" />
-<meta name="format-detection" content="telephone=no" />
-<meta property="og:title" content="Veblix — ідея у готовий сайт під ключ" />
-<meta property="og:description" content="Преміальні сайти з 3D-анімаціями, адаптивом і допомогою з підключенням домену .com. Від $120." />
-<meta property="og:type" content="website" />
-<meta property="og:locale" content="uk_UA" />
-<meta property="og:site_name" content="Veblix" />
-<meta name="twitter:card" content="summary" />
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  "name": "Veblix",
-  "description": "Веб-студія: унікальні сайти під ключ з 3D-анімаціями, адаптивом під телефон, планшет і комп'ютер та допомогою з підключенням домену .com.",
-  "areaServed": "UA",
-  "priceRange": "$120 - $500+",
-  "sameAs": ["https://t.me/madbod_77", "https://t.me/Bogachinho7"],
-  "makesOffer": [
-    {"@type": "Offer", "name": "Spark — односторінковий лендинг", "price": "120", "priceCurrency": "USD"},
-    {"@type": "Offer", "name": "Orbit — багатосекційний бізнес-сайт", "price": "250", "priceCurrency": "USD"},
-    {"@type": "Offer", "name": "Supernova — магазин або преміум-кастом", "price": "500", "priceCurrency": "USD"}
-  ]
-}
-</script>
-<title>Veblix — ідея у готовий сайт під ключ</title>
+<meta name="description" content="Veblix будує бізнес шарами — від першої зрозумілої сторінки до щомісячного рішення з реальних даних." />
+<meta name="theme-color" content="#0A0C15" />
+<title>Veblix — будуємо бізнес шарами</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="brand/favicon.png" />
-<link rel="apple-touch-icon" href="brand/favicon.png" />
-<link rel="stylesheet" href="styles.css?v=29" />
-<script>
-  // Справжній адаптивний сайт — скидаємо device-lock, якщо лишився з device-варіанту.
-  try { localStorage.removeItem('novaDevice'); } catch(_) {}
-  // Кіно-слайдер — ЗАВЖДИ темна (чорна) тема під чорне відео. Тогл прибрано,
-  // старий збережений вибір ('light') ігноруємо й чистимо.
-  document.documentElement.setAttribute('data-theme', 'dark');
-  try { localStorage.removeItem('novaTheme'); } catch(_) {}
-</script>
-<style>
-  /* Сітка робіт (портфоліо) */
-  .wgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(16px,2.2vw,26px);margin-top:clamp(30px,5vw,54px)}
-  .wgrid .work__screen img{width:100%;height:auto;aspect-ratio:1200/750;object-fit:cover;object-position:top center;display:block}
-  .wgrid__cta{display:flex;align-items:center;border-radius:var(--r-card);overflow:hidden;cursor:pointer;
-    border:1px solid var(--glass-brd);
-    background:radial-gradient(130% 150% at 100% 0%,rgba(91,108,255,.24),transparent 60%),var(--surface);
-    box-shadow:var(--shadow-sm);transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s var(--ease)}
-  .wgrid__cta:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:var(--line-2)}
-  .wgrid__ctabody{padding:clamp(22px,3.4vw,40px)}
-  .wgrid__ctabody h3{font-family:var(--font-display);font-weight:800;font-size:clamp(23px,3vw,34px);margin:10px 0 10px;line-height:1.08;letter-spacing:-.01em}
-  .wgrid__ctabody p{color:var(--muted);margin:0 0 18px;max-width:44ch;font-size:15px}
-  @media (max-width:760px){ .wgrid{grid-template-columns:1fr;gap:16px} }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/veblix-home.css?v=4" />
 </head>
 <body>
 
-<!-- Фонові шари -->
-<div class="bg-grid" aria-hidden="true"></div>
-<div class="bg-noise" aria-hidden="true"></div>
-<div class="bg-orb bg-orb--1" aria-hidden="true"></div>
-<div class="bg-orb bg-orb--2" aria-hidden="true"></div>
-<div class="bg-orb bg-orb--3" aria-hidden="true"></div>
-<div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
-
-<!-- HEADER -->
-<header class="header" id="header">
-  <div class="container header__inner">
-    <a href="#top" class="logo">
-      <img src="brand/veblix-logo.png" alt="Veblix" class="logo__wordmark" width="240" height="100" decoding="async">
-    </a>
-
-    <nav class="nav" id="nav">
-      <a href="#cinema">Студія</a>
-      <a href="#works">Роботи</a>
-      <a href="animations.html">Анімації</a>
-      <a href="#cinema-story">Процес</a>
-      <a href="#pricing">Тарифи</a>
-      <a href="#faq">FAQ</a>
-    </nav>
-
-    <a href="#order" class="btn btn--primary header__cta">Замовити сайт</a>
-
-    <button class="burger" id="burger" aria-label="Меню" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
+<!-- ===== NAV ===== -->
+<header class="vh-nav">
+  <a class="vh-brand" href="/">VEB<b>LIX</b></a>
+  <nav class="vh-navlinks" aria-label="Головна навігація">
+    <a href="#offers">Пропозиції</a>
+    <a href="websites.html">Сайти</a>
+  </nav>
+  <div class="vh-navright">
+    <span class="vh-lang" role="group" aria-label="Мова"><b>UA</b> · EN</span>
+    <a class="vh-btn" href="#offers">Обрати формат →</a>
   </div>
 </header>
 
-<main id="top">
-
-<!-- CINEMA — повноекранний scroll-слайдер: ідея → фрагменти → пристрої -->
-<section class="cinema" id="cinema" data-frames="238" data-frames-m="60" aria-label="Від ідеї до готового сайту">
-  <div class="cinema__sticky">
-    <img class="cinema__fallback" id="cinema-fallback" src="video/veblix-hero-poster.webp?v=2" alt="Ідея перетворюється на сайт на ноутбуці, планшеті й телефоні" loading="eager" decoding="async">
-    <video class="cinema__video" id="cinema-video" autoplay muted playsinline preload="auto" poster="video/veblix-hero-poster.webp?v=2">
-      <source src="video/veblix-hero.mp4?v=2" type="video/mp4">
+<!-- ===== HERO SLIDER ===== -->
+<section class="vh-hero" id="hero" aria-roledescription="слайдер" aria-label="Послуги Veblix у трьох сценах" tabindex="-1">
+  <!-- Кінематографічний фон: відео (Higgsfield Omni) або постер на reduced-motion / помилку -->
+  <div class="vh-hero__media">
+    <video class="vh-hero__video" autoplay muted playsinline loop preload="auto" poster="assets/img/hero-poster.jpg" aria-hidden="true">
+      <source src="assets/video/veblix-hero.mp4" type="video/mp4" />
     </video>
-    <div class="cinema__scrim" aria-hidden="true"></div>
+    <img class="vh-hero__poster" src="assets/img/scene-01.jpg" alt="" aria-hidden="true" hidden />
+    <div class="vh-hero__scrim"></div>
+  </div>
 
-    <div class="cine-cap cine-cap--center" data-from="0.00" data-to="0.12">
-      <span class="cine-eyebrow">VEBLIX</span>
-      <h1>Усе починається<br>з <span class="grad">ідеї</span>.</h1>
-      <p class="cine-price">Найдешевші ціни на ринку — сайт під ключ <b>від $120</b>.</p>
-    </div>
-    <div class="cine-cap cine-cap--center" data-from="0.15" data-to="0.27">
-      <h2>Ми розбираємо її<br>на деталі.</h2>
-    </div>
-    <div class="cine-cap cine-cap--center" data-from="0.30" data-to="0.40">
-      <h2>Продумуємо<br>кожен фрагмент.</h2>
-    </div>
-    <div class="cine-cap cine-cap--center" data-from="0.45" data-to="0.65">
-      <h2>Один сайт.<br><span class="grad">Три пристрої.</span></h2>
-      <p>Телефон · планшет · комп'ютер — однаково бездоганно.</p>
-    </div>
-    <div class="cine-cap cine-cap--center" data-from="0.69" data-to="0.82">
-      <h2>Бездоганно<br>з усіх боків.</h2>
-    </div>
-    <div class="cine-cap cine-cap--center" data-from="0.86" data-to="1.01">
-      <h2>Veblix — <span class="grad">ідея під ключ</span>.</h2>
-      <div class="cine-cta">
-        <a href="#order" class="btn btn--primary btn--lg"><span>Замовити сайт</span></a>
-        <a href="#works" class="btn btn--glass btn--lg">Подивитись роботи</a>
-      </div>
+  <div class="vh-hero__inner">
+    <div class="vh-hero__copy">
+      <p class="vh-eyebrow">Шлях засновника</p>
+      <h1 class="vh-hero__title">Veblix будує<br>бізнес&nbsp;шарами</h1>
+      <p class="vh-hero__sub">Від першої зрозумілої сторінки до щомісячного рішення з реальних даних. Не пакет — маршрут: береш той шар, якого бракує зараз.</p>
+      <a class="vh-btn vh-btn--lg" href="#offers">Переглянути пропозиції →</a>
     </div>
 
-    <div class="cine-hint" aria-hidden="true">прокрутіть</div>
+    <!-- Підпис активної сцени (синхронно з відео) -->
+    <div class="vh-scene" aria-live="polite">
+      <span class="vh-scene__tag" data-scene-tag>01 · Сайт</span>
+      <p class="vh-scene__thought" data-scene-thought>Сайт веде людину до однієї зрозумілої дії.</p>
+    </div>
+  </div>
+
+  <!-- HUD: керування + прогрес -->
+  <div class="vh-hud">
+    <button class="vh-hud__arrow" data-prev aria-label="Попередня сцена">‹</button>
+    <ol class="vh-hud__track" role="tablist" aria-label="Сцени">
+      <li><button class="vh-hud__node is-active" role="tab" aria-selected="true" data-go="0" aria-label="Сцена 1: Сайт"><span>01</span> Сайт</button></li>
+      <li><button class="vh-hud__node" role="tab" aria-selected="false" data-go="1" aria-label="Сцена 2: Бот"><span>02</span> Бот</button></li>
+      <li><button class="vh-hud__node vh-hud__node--mint" role="tab" aria-selected="false" data-go="2" aria-label="Сцена 3: Автоматизація та аналітика"><span>03</span> Автоматизація та аналітика</button></li>
+    </ol>
+    <div class="vh-hud__side">
+      <span class="vh-hud__count"><b data-scene-num>01</b> / <span data-scene-total>03</span></span>
+      <button class="vh-hud__arrow" data-next aria-label="Наступна сцена">›</button>
+    </div>
+    <div class="vh-hud__progress"><i data-progress></i></div>
   </div>
 </section>
 
-<!-- Marquee -->
-<section class="marquee-strip">
-  <div class="container marquee">
-    <div class="marquee__track">
-      <span>АДАПТИВ</span><span class="dot-sep">✦</span>
-      <span>ВЛАСНИЙ .COM</span><span class="dot-sep">✦</span>
-      <span>3D-АНІМАЦІЇ</span><span class="dot-sep">✦</span>
-      <span>УНІКАЛЬНИЙ ДИЗАЙН</span><span class="dot-sep">✦</span>
-      <span>SEO-ГОТОВНІСТЬ</span><span class="dot-sep">✦</span>
-      <span>ШВИДКІСТЬ</span><span class="dot-sep">✦</span>
-      <span>ПІД КЛЮЧ</span><span class="dot-sep">✦</span>
-      <span>АДАПТИВ</span><span class="dot-sep">✦</span>
-      <span>ВЛАСНИЙ .COM</span><span class="dot-sep">✦</span>
-      <span>3D-АНІМАЦІЇ</span><span class="dot-sep">✦</span>
-      <span>УНІКАЛЬНИЙ ДИЗАЙН</span><span class="dot-sep">✦</span>
-      <span>SEO-ГОТОВНІСТЬ</span><span class="dot-sep">✦</span>
-      <span>ШВИДКІСТЬ</span><span class="dot-sep">✦</span>
-      <span>ПІД КЛЮЧ</span><span class="dot-sep">✦</span>
-    </div>
+<!-- ===== ПОСИЛАННЯ НА НАПРЯМИ (єдиний блок під інтро) ===== -->
+<section class="vh-offers" id="offers">
+  <p class="vh-eyebrow vh-eyebrow--center">Куди далі</p>
+  <h2 class="vh-h2">Три напрями роботи з&nbsp;Veblix</h2>
+  <div class="vh-offers__grid">
+
+    <a class="vh-offer" href="websites.html">
+      <span class="vh-offer__badge">вже працює</span>
+      <h3 class="vh-offer__name">Сайти під ключ</h3>
+      <p class="vh-offer__desc">Наш сайтовик: преміальні сайти з 3D-анімаціями, адаптивом і формою заявки. Те, що вже приносить клієнтів.</p>
+      <span class="vh-offer__go">Перейти на сайтовик →</span>
+    </a>
+
+    <a class="vh-offer vh-offer--signal" href="offer-standard.html">
+      <span class="vh-offer__price">$1000</span>
+      <h3 class="vh-offer__name">Мега-пропозиція · Стандарт</h3>
+      <p class="vh-offer__desc">Уся система під ключ — сайт, канал розмови та автоматизація. Робоче, надійне, доступне.</p>
+      <span class="vh-offer__go">Дізнатися →</span>
+    </a>
+
+    <a class="vh-offer vh-offer--premium" href="offer-premium.html">
+      <span class="vh-offer__badge vh-offer__badge--premium">Premium</span>
+      <span class="vh-offer__price">$7500</span>
+      <h3 class="vh-offer__name">Мега-пропозиція · Преміум</h3>
+      <p class="vh-offer__desc">Та сама система на преміум-рівні: унікальний дизайн, глибша автоматизація, продукт і аналітика, пріоритетна підтримка.</p>
+      <span class="vh-offer__go">Дізнатися →</span>
+    </a>
+
   </div>
 </section>
 
-<!-- CINEMA-DESIGN — слайдер «Унікальний дизайн» -->
-<section class="cinema cinema--tall" id="cinema-story" aria-label="Дизайн, процес і оплата">
-  <div class="cinema__sticky">
-    <img class="cinema__fallback" src="video/combined-story-poster.webp" alt="Абстрактна анімація: унікальний дизайн, процес роботи та надійна оплата" loading="lazy" decoding="async">
-    <video class="cinema__video" autoplay muted loop playsinline preload="metadata" poster="video/combined-story-poster.webp">
-      <source src="video/combined-story.mp4?v=3" type="video/mp4">
-    </video>
-    <div class="cinema__scrim" aria-hidden="true"></div>
-
-    <div class="cine-cap cine-cap--center" data-from="0.00" data-to="0.22">
-      <span class="cine-eyebrow">Як ми працюємо</span>
-      <h2>Унікальний дизайн —<br><span class="grad">жодних шаблонів.</span></h2>
-    </div>
-    <div class="cine-cap cine-cap--center" data-from="0.24" data-to="0.44">
-      <h2>Власна графіка<br><span class="grad">і 3D-переходи.</span></h2>
-    </div>
-    <div class="cine-cap cine-cap--center" data-from="0.46" data-to="0.70">
-      <span class="cine-eyebrow">Процес</span>
-      <h2>Від брифу<br>до <span class="grad">запуску онлайн</span>.</h2>
-      <p>Бриф → дизайн → адаптив → ваш .com.</p>
-    </div>
-    <div class="cine-cap cine-cap--center" data-from="0.73" data-to="1.01">
-      <span class="cine-eyebrow">Оплата</span>
-      <h2>Передоплата 30%<br><span class="grad">решта — після прев’ю.</span></h2>
-      <p>Прев’ю — ваша гарантія якості.</p>
-    </div>
-  </div>
-</section>
-
-
-<!-- WORKS / SHOWCASE -->
-<section class="section" id="works" aria-label="Наші роботи">
-  <div class="container">
-    <header class="section__head reveal" style="text-align:center;max-width:680px;margin:0 auto">
-      <span class="eyebrow">Роботи</span>
-      <h2>Сайти, які ми <span class="grad">створюємо</span></h2>
-      <p>Живі проєкти та свіжі релізи. Натисніть, щоб роздивитись.</p>
-    </header>
-
-    <div class="wgrid">
-      <div class="work reveal" data-lightbox tabindex="0">
-        <div class="work__screen">
-          <div class="work__bar"><span class="dot dot--r"></span><span class="dot dot--y"></span><span class="dot dot--g"></span><span class="u">lakshmi · beauty studio</span></div>
-          <img src="works/lakshmi.webp" alt="Сайт Lakshmi — студія краси у Вишневому" width="1200" height="750" loading="lazy" decoding="async">
-        </div>
-        <div class="work__meta">
-          <div><b>Lakshmi</b><br><span>Студія краси · Вишневе</span></div>
-          <span class="work__open">Переглянути <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
-        </div>
-      </div>
-
-      <div class="work reveal" data-lightbox tabindex="0">
-        <div class="work__screen">
-          <div class="work__bar"><span class="dot dot--r"></span><span class="dot dot--y"></span><span class="dot dot--g"></span><span class="u">not habsburgs · studio</span></div>
-          <img src="works/nothabsburgs.webp" alt="Сайт NOT HABSBURGS — AI-кіностудія" width="1200" height="750" loading="lazy" decoding="async">
-        </div>
-        <div class="work__meta">
-          <div><b>NOT HABSBURGS</b><br><span>AI-кіностудія</span></div>
-          <span class="work__open">Переглянути <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
-        </div>
-      </div>
-
-      <a class="work work--live reveal" href="https://taniasite.netlify.app/" target="_blank" rel="noopener noreferrer">
-        <div class="work__screen">
-          <span class="work__live">Live</span>
-          <div class="work__bar"><span class="dot dot--r"></span><span class="dot dot--y"></span><span class="dot dot--g"></span><span class="u">taniasite.netlify.app</span></div>
-          <img src="works/deutschwerk.webp?v=2" alt="Сайт DEUTSCHWERK — мовна школа німецької у Відні" width="1200" height="750" loading="lazy" decoding="async">
-        </div>
-        <div class="work__meta">
-          <div><b>DEUTSCHWERK</b><br><span>Мовна школа · Німецька (Відень)</span></div>
-          <span class="work__open">Відкрити <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
-        </div>
-      </a>
-
-      <a class="wgrid__cta reveal" href="animations.html" aria-label="Сторінка з анімаціями">
-        <div class="wgrid__ctabody">
-          <span class="eyebrow">Veblix Motion</span>
-          <h3>Унікальні анімації<br>під ваш бренд</h3>
-          <p>Кінематографічні ролики, motion-фони, аеро- та промо-зйомка — приклади на окремій сторінці.</p>
-          <span class="work__open">Дивитись анімації <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- PRICING -->
-<section class="section" id="pricing">
-  <div class="container">
-    <header class="section__head reveal">
-      <span class="eyebrow">Тарифи</span>
-      <h2>Оберіть свій <span class="grad">формат</span></h2>
-      <p>Ціни в доларах із приблизною конвертацією в гривню. Усі тарифи включають адаптив і допомогу з підключенням власного домену .com.</p>
-    </header>
-
-    <div class="price-toggle-row reveal">
-      <div class="price-toggle" role="group" aria-label="Режим ціни">
-        <button class="price-toggle__btn is-active" data-mode="standard" type="button">Стандарт</button>
-        <button class="price-toggle__btn" data-mode="rush" type="button">Терміново · 48 год <span>×1.5</span></button>
-      </div>
-    </div>
-
-    <div class="plans">
-      <article class="plan tilt-card reveal" data-tilt-card data-plan="Spark">
-        <h3>Spark</h3>
-        <p class="plan__desc">Стильний односторінковий лендинг, який швидко продає.</p>
-        <div class="plan__price"><b class="plan__amount" data-price="120">$120</b><span class="per">/ сайт</span></div>
-        <div class="plan__uah" data-usd="120"></div>
-        <ul>
-          <li>Односторінковий лендинг</li>
-          <li>Адаптив: телефон · планшет · ПК</li>
-          <li>Допомога з підключенням .com</li>
-          <li>Базові анімації та форма заявки</li>
-          <li>1 раунд правок</li>
-        </ul>
-        <a href="#order" class="btn btn--ghost btn--full">Замовити Spark</a>
-      </article>
-
-      <article class="plan plan--featured tilt-card reveal" data-tilt-card data-plan="Orbit">
-        <span class="plan__badge">Найпопулярніший</span>
-        <h3>Orbit</h3>
-        <p class="plan__desc">Багатосекційний бізнес-сайт з характером і 3D.</p>
-        <div class="plan__price"><b class="plan__amount" data-price="250">$250</b><span class="per">/ сайт</span></div>
-        <div class="plan__uah" data-usd="250"></div>
-        <ul>
-          <li>До 5–7 секцій / сторінок</li>
-          <li>Адаптив: телефон · планшет · ПК</li>
-          <li>Допомога з підключенням .com</li>
-          <li>3D-переходи та преміальні анімації</li>
-          <li>Форми, інтеграція з Telegram</li>
-          <li>2 раунди правок</li>
-        </ul>
-        <a href="#order" class="btn btn--primary btn--full">Замовити Orbit</a>
-      </article>
-
-      <article class="plan reveal" data-plan="Supernova">
-        <span class="plan__sale">Знижка −33%</span>
-        <h3>Supernova</h3>
-        <p class="plan__desc">Преміум-кастом або інтернет-магазин без компромісів.</p>
-        <div class="plan__price"><s class="plan__old" data-old="750">від $750</s><b class="plan__amount" data-price="500" data-from="1">від $500</b></div>
-        <div class="plan__uah" data-usd="500" data-from="1"></div>
-        <ul>
-          <li>Магазин / складний кастом</li>
-          <li>Адаптив: телефон · планшет · ПК</li>
-          <li>Допомога з підключенням .com</li>
-          <li>Максимум 3D та інтерактиву</li>
-          <li>Інтеграції: оплати, CRM, каталог</li>
-          <li>3 раунди правок · пріоритет</li>
-        </ul>
-        <a href="#order" class="btn btn--ghost btn--full">Замовити Supernova</a>
-      </article>
-    </div>
-
-    <p class="plans__note reveal">Складніший проєкт? <b>Зробимо індивідуальний прорахунок</b> — напишіть нам у формі нижче.</p>
-  </div>
-</section>
-
-<!-- STATS -->
-<section class="stats">
-  <div class="container stats__grid">
-    <div class="stat reveal"><b data-count="120" data-suffix="+">0</b><span>сайтів запущено</span></div>
-    <div class="stat reveal"><b data-count="60" data-suffix="+">0</b><span>задоволених клієнтів</span></div>
-    <div class="stat reveal"><b data-count="5" data-suffix=" днів">0</b><span>середній термін</span></div>
-    <div class="stat reveal"><b>3</b><span>пристрої — один сайт</span></div>
-  </div>
-</section>
-
-<!-- TESTIMONIALS — карусель відгуків (TODO: заміни на реальні відгуки клієнтів) -->
-<section class="section" id="reviews" aria-label="Відгуки клієнтів">
-  <div class="container">
-    <header class="section__head reveal" style="text-align:center;max-width:640px;margin:0 auto">
-      <span class="eyebrow">Клієнти</span>
-      <h2>Реальні <span class="grad">відгуки</span></h2>
-    </header>
-
-    <div class="testi reveal">
-      <div class="testi__viewport">
-        <div class="testi__track" id="testi-track">
-          <figure class="testi__slide">
-            <div class="testi__stars" aria-hidden="true">★★★★★</div>
-            <blockquote>Сайт зробили за 4 дні — виглядає дорожче, ніж у конкурентів. Заявки пішли одразу.</blockquote>
-            <figcaption><b>Олег</b><span>власник кав'ярні</span></figcaption>
-          </figure>
-          <figure class="testi__slide">
-            <div class="testi__stars" aria-hidden="true">★★★★★</div>
-            <blockquote>Нарешті сайт, який не соромно показати. Усе адаптивно й швидко.</blockquote>
-            <figcaption><b>Марина</b><span>студія краси</span></figcaption>
-          </figure>
-          <figure class="testi__slide">
-            <div class="testi__stars" aria-hidden="true">★★★★★</div>
-            <blockquote>Прев'ю показали до оплати, правки внесли швидко. Рекомендую.</blockquote>
-            <figcaption><b>Андрій</b><span>інтернет-магазин</span></figcaption>
-          </figure>
-        </div>
-      </div>
-      <button class="testi__arrow testi__prev" type="button" aria-label="Попередній відгук">‹</button>
-      <button class="testi__arrow testi__next" type="button" aria-label="Наступний відгук">›</button>
-      <div class="testi__dots" id="testi-dots" aria-label="Навігація відгуків"></div>
-    </div>
-  </div>
-</section>
-
-<!-- CINEMA-BOT — слайдер «Заявка миттєво приходить вам» -->
-<section class="cinema cinema--short" id="cinema-bot" data-frames="61" data-frames-m="31" data-dir="slider/bot" aria-label="Telegram-бот для замовлень">
-  <div class="cinema__sticky">
-    <img class="cinema__fallback" src="video/sec-bot-poster.webp" alt="Смартфон зі сповіщенням про нову заявку" loading="lazy" decoding="async">
-    <video class="cinema__video" autoplay muted loop playsinline preload="metadata" poster="video/sec-bot-poster.webp">
-      <source src="video/sec-bot.mp4?v=1" type="video/mp4">
-    </video>
-    <div class="cinema__scrim" aria-hidden="true"></div>
-    <div class="cine-cap cine-cap--left" data-from="0.04" data-to="0.46">
-      <span class="cine-eyebrow">Telegram-бот — у подарунок</span>
-      <h2>Заявка з сайту —<br><span class="grad">миттєво у вас</span>.</h2>
-    </div>
-    <div class="cine-cap cine-cap--left" data-from="0.52" data-to="1.01">
-      <div class="tg-msg">
-        <div class="tg-msg__head">
-          <span class="tg-msg__ava"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg></span>
-          <b>Замовлення з сайту</b>
-          <span class="tg-msg__time">зараз</span>
-        </div>
-        <div class="tg-msg__body">🚀 <b>Нова заявка — Veblix</b><br>👤 Олег · кав'ярня<br>💎 Тариф: Orbit<br>📩 Контакт: @oleh</div>
-      </div>
-      <p>Відповідаєте за хвилини, а не години — і не губите жодного замовлення.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ORDER -->
-<section class="cta" id="order">
-  <div class="container cta__inner reveal">
-    <div class="cta__text">
-      <span class="eyebrow">Замовити сайт</span>
-      <h2>Опишіть ідею — <span class="grad">надішлемо прорахунок</span></h2>
-      <p>Залиште контакт і кілька слів про проєкт. Відповідаємо протягом 24 годин із ціною та терміном.</p>
-      <ul class="cta__bullets">
-        <li>Отримуєте прорахунок і дату запуску</li>
-        <li>Вносите 30% — ми стартуємо</li>
-        <li>Дивитесь живе прев'ю до повної оплати</li>
-      </ul>
-    </div>
-
-    <form class="cta__form" id="lead-form" novalidate>
-      <label>
-        <span>Ваше ім'я / бренд</span>
-        <input type="text" name="name" required placeholder="Напр. Coffee Lab" />
-      </label>
-      <label>
-        <span>Контакт (Telegram, email або телефон)</span>
-        <input type="text" name="contact" required placeholder="@username або ваш email" />
-      </label>
-      <label>
-        <span>Тариф</span>
-        <select name="plan">
-          <option>Spark — $120</option>
-          <option selected>Orbit — $250</option>
-          <option>Supernova — від $500</option>
-          <option>Ще не визначився</option>
-        </select>
-      </label>
-      <label>
-        <span>Опис проєкту — що за бізнес, які цілі, приклади</span>
-        <textarea name="brief" rows="3" placeholder="Напр. сайт для кав'ярні з онлайн-меню та бронюванням столиків…"></textarea>
-      </label>
-      <label class="cta__check">
-        <input type="checkbox" required />
-        <span>Погоджуюсь із <a href="terms.html">Публічною офертою</a> та <a href="privacy.html">Політикою конфіденційності</a>.</span>
-      </label>
-      <button type="submit" class="btn btn--primary btn--full">Надіслати заявку</button>
-      <p class="cta__success" id="cta-success" hidden>Дякуємо! Заявку отримано — відповімо протягом 24 годин.</p>
-    </form>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section class="section" id="faq">
-  <div class="container">
-    <header class="section__head reveal">
-      <span class="eyebrow">FAQ</span>
-      <h2>Часті <span class="grad">запитання</span></h2>
-    </header>
-
-    <div class="faq">
-      <details class="faq__item reveal" open>
-        <summary>Чи буде сайт зручним на телефоні?</summary>
-        <p>Так. Кожен сайт ми робимо адаптивним під <strong>телефон, планшет і комп'ютер</strong> — з окремою конфігурацією для кожного типу пристрою. Усе виглядає й працює бездоганно на будь-якому екрані.</p>
-      </details>
-      <details class="faq__item reveal">
-        <summary>Що з доменом і хостингом?</summary>
-        <p>Сайт публікуємо онлайн із HTTPS, а також <strong>допомагаємо підключити ваш власний домен .com</strong> і хостинг. Домен оплачується окремо у реєстратора.</p>
-      </details>
-      <details class="faq__item reveal">
-        <summary>Скільки часу займає робота?</summary>
-        <p>Лендинг (Spark) — зазвичай 2–4 дні, бізнес-сайт (Orbit) — 4–7 днів, складні проєкти (Supernova) — за індивідуальним планом. Точний термін фіксуємо в брифі до старту.</p>
-      </details>
-      <details class="faq__item reveal">
-        <summary>А якщо мені щось не сподобається?</summary>
-        <p>У кожен тариф входять правки (1 для Spark, 2 для Orbit, 3 для Supernova). Ми показуємо живе прев'ю <strong>до повної оплати</strong> й доопрацьовуємо, доки результат вас не влаштує.</p>
-      </details>
-      <details class="faq__item reveal">
-        <summary>Як відбувається оплата?</summary>
-        <p>Спочатку <strong>30% передоплати</strong> — ми беремо проєкт у роботу. Після того, як ви погодите готове прев'ю, вносите <strong>решту 70%</strong>, і ми публікуємо сайт онлайн. Реквізити надсилаємо у відповідь на заявку.</p>
-      </details>
-      <details class="faq__item reveal">
-        <summary>Кому належить сайт після запуску?</summary>
-        <p>Вам. Після повної оплати ви отримуєте всі файли, доступи й права на сайт і всі вихідні файли. Деталі — на сторінці <a href="rights.html">Права користувача</a>.</p>
-      </details>
-    </div>
-  </div>
-</section>
-
-</main>
-
-<!-- FOOTER -->
-<footer class="footer" id="contacts">
-  <div class="container footer__grid">
-    <div>
-      <a href="#top" class="logo">
-        <img src="brand/veblix-logo.png" alt="Veblix" class="logo__wordmark" width="240" height="100" decoding="async">
-      </a>
-      <p class="footer__motto">Перетворюємо ідеї на сайти, які працюють. Ідея → сайт під ключ.</p>
-    </div>
-    <div>
-      <h4>Сайт</h4>
-      <p><a href="#works">Роботи</a></p>
-      <p><a href="animations.html">Анімації</a></p>
-      <p><a href="#pricing">Тарифи</a></p>
-      <p><a href="#cinema-story">Як ми працюємо</a></p>
-      <p><a href="#order">Замовити</a></p>
-    </div>
-    <div>
-      <h4>Документи</h4>
-      <p><a href="privacy.html">Конфіденційність</a></p>
-      <p><a href="terms.html">Публічна оферта</a></p>
-      <p><a href="rights.html">Права користувача</a></p>
-    </div>
-    <div>
-      <h4>Звʼязок</h4>
-      <div class="socials">
-        <a href="https://t.me/madbod_77" target="_blank" rel="noopener" class="tilt-icon" aria-label="Telegram">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M21.9 4.3 18.7 19c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-4.9 9-8.1c.4-.3-.1-.5-.6-.2L4.4 12 .5 10.8c-1-.3-1-.9.2-1.4L20.6 3c.8-.3 1.5.2 1.3 1.3z"/></svg>
-        </a>
-          <a href="https://t.me/Bogachinho7" target="_blank" rel="noopener" class="tilt-icon" aria-label="Telegram @Bogachinho7"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M21.9 4.3 18.7 19c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-4.9 9-8.1c.4-.3-.1-.5-.6-.2L4.4 12 .5 10.8c-1-.3-1-.9.2-1.4L20.6 3c.8-.3 1.5.2 1.3 1.3z"/></svg></a>
-      </div>
-      <p class="footer__handle" style="margin-top:14px"><a href="https://t.me/madbod_77" target="_blank" rel="noopener">@madbod_77</a> · <a href="https://t.me/Bogachinho7" target="_blank" rel="noopener">@Bogachinho7</a></p>
-    </div>
-  </div>
-
-  <div class="container footer__bottom">
-    <p>© <span id="year">2026</span> Veblix. Усі права захищено.</p>
-    <p><a href="privacy.html">Конфіденційність</a> · <a href="terms.html">Оферта</a> · <a href="rights.html">Права</a></p>
-  </div>
+<footer class="vh-foot">
+  <span class="vh-brand">VEB<b>LIX</b></span>
+  <span class="vh-foot__bridge">Built by The AI Employee. Delivered by Veblix.</span>
 </footer>
 
-<!-- Sticky mobile CTA -->
-<div class="mobile-bar" id="mobile-bar" aria-label="Швидкі дії">
-  <a href="https://t.me/madbod_77" target="_blank" rel="noopener" class="mobile-bar__call" aria-label="Telegram">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M21.9 4.3 18.7 19c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-4.9 9-8.1c.4-.3-.1-.5-.6-.2L4.4 12 .5 10.8c-1-.3-1-.9.2-1.4L20.6 3c.8-.3 1.5.2 1.3 1.3z"/></svg>
-  </a>
-  <a href="#order" class="btn btn--primary">Замовити сайт</a>
-</div>
-
-<!-- Lightbox для робіт -->
-<div class="lightbox" id="lightbox" aria-hidden="true">
-  <div class="lightbox__overlay" data-lb-close></div>
-  <div class="lightbox__dialog" role="dialog" aria-modal="true" aria-label="Перегляд роботи">
-    <button class="lightbox__close" type="button" data-lb-close aria-label="Закрити"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-    <div class="lightbox__screen" id="lb-screen"></div>
-    <div class="lightbox__meta">
-      <div><b id="lb-title">Робота</b><span id="lb-sub"></span></div>
-      <a href="#order" class="btn btn--primary" id="lb-cta" data-lb-close>Замовити такий сайт</a>
-    </div>
-  </div>
-</div>
-
-<script src="config.js"></script>
-<!-- Meta Pixel — ID береться з config.js (VEBLIX_CONFIG.META_PIXEL_ID). Порожній ID = вимкнено. -->
-<script>
-(function(){
-  var id = (window.VEBLIX_CONFIG && window.VEBLIX_CONFIG.META_PIXEL_ID) || '';
-  if(!id) return;
-  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-  document,'script','https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', id);
-  fbq('track', 'PageView');
-})();
-</script>
-<!-- End Meta Pixel -->
-<script src="script.js?v=16"></script>
-<script src="slider.js?v=13" defer></script>
-<script src="lang.js?v=6" defer></script>
+<script src="assets/js/veblix-home.js?v=4" defer></script>
 </body>
 </html>

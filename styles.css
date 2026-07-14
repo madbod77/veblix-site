@@ -548,7 +548,7 @@ html[data-theme="dark"] .wc b:first-child{background:hsl(var(--h,235) 40% 18%)}
 .price-toggle__btn span{font-size:11.5px;font-weight:700;color:var(--accent-deep);margin-left:5px}
 .price-toggle__btn.is-active{color:var(--ink);background:var(--surface);box-shadow:var(--shadow-sm)}
 
-.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;align-items:stretch}
 .plan{
   position:relative;display:flex;flex-direction:column;
   padding:34px 30px;border-radius:var(--r-card);

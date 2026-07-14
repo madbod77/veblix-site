@@ -21,12 +21,13 @@
   "name": "Veblix",
   "description": "Веб-студія: унікальні сайти під ключ з 3D-анімаціями, адаптивом під телефон, планшет і комп'ютер та допомогою з підключенням домену .com.",
   "areaServed": "UA",
-  "priceRange": "$150 - $500+",
+  "priceRange": "$150 - $5000+",
   "sameAs": ["https://t.me/madbod_77", "https://t.me/Bogachinho7"],
   "makesOffer": [
     {"@type": "Offer", "name": "Spark — односторінковий лендинг", "price": "150", "priceCurrency": "USD"},
     {"@type": "Offer", "name": "Orbit — багатосекційний бізнес-сайт", "price": "250", "priceCurrency": "USD"},
-    {"@type": "Offer", "name": "Supernova — магазин або преміум-кастом", "price": "500", "priceCurrency": "USD"}
+    {"@type": "Offer", "name": "Supernova — магазин або преміум-кастом", "price": "500", "priceCurrency": "USD"},
+    {"@type": "Offer", "name": "Преміум — ексклюзивний сайт найвищого рівня", "price": "5000", "priceCurrency": "USD"}
   ]
 }
 </script>
@@ -36,7 +37,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="brand/favicon.png" />
 <link rel="apple-touch-icon" href="brand/favicon.png" />
-<link rel="stylesheet" href="styles.css?v=28" />
+<link rel="stylesheet" href="styles.css?v=30" />
 <script>
   // Справжній адаптивний сайт — скидаємо device-lock, якщо лишився з device-варіанту.
   try { localStorage.removeItem('novaDevice'); } catch(_) {}
@@ -60,7 +61,7 @@
   @media (max-width:760px){ .wgrid{grid-template-columns:1fr;gap:16px} }
 </style>
 </head>
-<body data-device="mobile">
+<body>
 
 <!-- Фонові шари -->
 <div class="bg-grid" aria-hidden="true"></div>
@@ -308,6 +309,23 @@
         </ul>
         <a href="#order" class="btn btn--ghost btn--full">Замовити Supernova</a>
       </article>
+
+      <article class="plan reveal" data-plan="Преміум">
+        <span class="plan__badge">Топ-рівень</span>
+        <h3>Преміум</h3>
+        <p class="plan__desc">Ексклюзивний сайт найвищого рівня — авторський дизайн і кастомні 3D.</p>
+        <div class="plan__price"><b class="plan__amount" data-price="5000" data-from="1">від $5000</b><span class="per">/ сайт</span></div>
+        <div class="plan__uah" data-usd="5000" data-from="1"></div>
+        <ul>
+          <li>Повністю авторський дизайн під бренд</li>
+          <li>Адаптив: телефон · планшет · ПК</li>
+          <li>Кастомні 3D-сцени та складні анімації</li>
+          <li>Тонка типографіка й арт-дирекшн</li>
+          <li>Максимальна продуктивність і SEO</li>
+          <li>Необмежені правки · пріоритетна підтримка</li>
+        </ul>
+        <a href="#order" class="btn btn--ghost btn--full">Замовити Преміум</a>
+      </article>
     </div>
 
     <p class="plans__note reveal">Складніший проєкт? <b>Зробимо індивідуальний прорахунок</b> — напишіть нам у формі нижче.</p>
@@ -321,6 +339,41 @@
     <div class="stat reveal"><b data-count="60" data-suffix="+">0</b><span>задоволених клієнтів</span></div>
     <div class="stat reveal"><b data-count="5" data-suffix=" днів">0</b><span>середній термін</span></div>
     <div class="stat reveal"><b>3</b><span>пристрої — один сайт</span></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS — карусель відгуків (TODO: заміни на реальні відгуки клієнтів) -->
+<section class="section" id="reviews" aria-label="Відгуки клієнтів">
+  <div class="container">
+    <header class="section__head reveal" style="text-align:center;max-width:640px;margin:0 auto">
+      <span class="eyebrow">Клієнти</span>
+      <h2>Реальні <span class="grad">відгуки</span></h2>
+    </header>
+
+    <div class="testi reveal">
+      <div class="testi__viewport">
+        <div class="testi__track" id="testi-track">
+          <figure class="testi__slide">
+            <div class="testi__stars" aria-hidden="true">★★★★★</div>
+            <blockquote>Сайт зробили за 4 дні — виглядає дорожче, ніж у конкурентів. Заявки пішли одразу.</blockquote>
+            <figcaption><b>Олег</b><span>власник кав'ярні</span></figcaption>
+          </figure>
+          <figure class="testi__slide">
+            <div class="testi__stars" aria-hidden="true">★★★★★</div>
+            <blockquote>Нарешті сайт, який не соромно показати. Усе адаптивно й швидко.</blockquote>
+            <figcaption><b>Марина</b><span>студія краси</span></figcaption>
+          </figure>
+          <figure class="testi__slide">
+            <div class="testi__stars" aria-hidden="true">★★★★★</div>
+            <blockquote>Прев'ю показали до оплати, правки внесли швидко. Рекомендую.</blockquote>
+            <figcaption><b>Андрій</b><span>інтернет-магазин</span></figcaption>
+          </figure>
+        </div>
+      </div>
+      <button class="testi__arrow testi__prev" type="button" aria-label="Попередній відгук">‹</button>
+      <button class="testi__arrow testi__next" type="button" aria-label="Наступний відгук">›</button>
+      <div class="testi__dots" id="testi-dots" aria-label="Навігація відгуків"></div>
+    </div>
   </div>
 </section>
 
@@ -379,6 +432,7 @@
           <option>Spark — $150</option>
           <option selected>Orbit — $250</option>
           <option>Supernova — від $500</option>
+          <option>Преміум — від $5000</option>
           <option>Ще не визначився</option>
         </select>
       </label>
@@ -498,8 +552,23 @@
 </div>
 
 <script src="config.js"></script>
-<script src="script.js?v=14"></script>
+<!-- Meta Pixel — ID береться з config.js (VEBLIX_CONFIG.META_PIXEL_ID). Порожній ID = вимкнено. -->
+<script>
+(function(){
+  var id = (window.VEBLIX_CONFIG && window.VEBLIX_CONFIG.META_PIXEL_ID) || '';
+  if(!id) return;
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', id);
+  fbq('track', 'PageView');
+})();
+</script>
+<!-- End Meta Pixel -->
+<script src="script.js?v=16"></script>
 <script src="slider.js?v=13" defer></script>
-<script src="lang.js?v=5" defer></script>
+<script src="lang.js?v=6" defer></script>
 </body>
 </html>

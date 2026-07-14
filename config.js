@@ -29,8 +29,8 @@
    ============================================================= */
 
 window.VEBLIX_CONFIG = {
-  TG_BOT_TOKEN: '8821102486:AAHcrvFc5GDoWSWVPZYn3hydOh4IdlD3BoM',
-  TG_CHAT_ID:   '1865092134',
+  TG_BOT_TOKEN: '',
+  TG_CHAT_ID:   '',
   UAH_RATE:     41.5,        // 1 USD ≈ … ₴
   PAY_REQUISITES: 'veblix.studio (PayPal / картка — уточнюй у відповіді)',
 

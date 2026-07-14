@@ -124,25 +124,18 @@
     const btn = form.querySelector('button[type=submit]');
     if (btn) { btn.disabled = true; btn.textContent = 'Надсилаємо…'; }
     const d = new FormData(form);
-    const now = new Date().toLocaleString('uk-UA', { timeZone: 'Europe/Kyiv', dateStyle: 'medium', timeStyle: 'short' });
-    const msg = [
-      '🚀 <b>Нова заявка — Veblix</b>', '',
-      `👤 <b>Імʼя / бренд:</b> ${esc(d.get('name'))}`,
-      `📩 <b>Контакт:</b> ${esc(d.get('contact'))}`,
-      `💎 <b>Тариф:</b> ${esc(d.get('plan'))}`, '',
-      '📝 <b>Опис:</b>', esc(d.get('brief') || '—'), '',
-      `<i>${now} (Київ)</i>`
-    ].join('\n');
+    // Заявка йде на серверний Netlify Function — Telegram-токен більше не в клієнті.
     let ok = true, err = '';
-    if (cfg.TG_BOT_TOKEN && cfg.TG_CHAT_ID) {
-      try {
-        const r = await fetch(`https://api.telegram.org/bot${cfg.TG_BOT_TOKEN}/sendMessage`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: cfg.TG_CHAT_ID, text: msg, parse_mode: 'HTML', disable_web_page_preview: true })
-        });
-        if (!r.ok) { ok = false; try { err = (await r.json()).description || ''; } catch (_) {} }
-      } catch (_) { ok = false; }
-    } else { await new Promise(r => setTimeout(r, 600)); }
+    try {
+      const r = await fetch('/.netlify/functions/submit-lead', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: d.get('name') || '', contact: d.get('contact') || '',
+          plan: d.get('plan') || '', brief: d.get('brief') || '', company: d.get('company') || ''
+        })
+      });
+      if (!r.ok) { ok = false; try { err = (await r.json()).error || ''; } catch (_) {} }
+    } catch (_) { ok = false; }
     if (btn) { btn.disabled = false; btn.textContent = 'Надіслати заявку'; }
     if (success) {
       success.hidden = false;

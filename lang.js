@@ -13,8 +13,8 @@
     'Замовити сайт':'Order a website','Замовити':'Order','Замовити такий сайт':'Order a site like this',
     // — Hero —
     'Усе починається':'It all starts','з':'with an','ідеї':'idea',
-    'Найдешевші ціни на ринку — сайт під ключ':'The lowest prices on the market — a turnkey website',
-    'від $120':'from $120',
+    'Сайт під ключ':'A turnkey website',
+    'від $150':'from $150',
     'Ми розбираємо її':'We break it down','на деталі.':'into details.',
     'Продумуємо':'We refine','кожен фрагмент.':'every fragment.',
     'Один сайт.':'One website.','Три пристрої.':'Three devices.',
@@ -65,6 +65,15 @@
     'Магазин / складний кастом':'Store / complex custom','Максимум 3D та інтерактиву':'Maximum 3D and interactivity',
     'Інтеграції: оплати, CRM, каталог':'Integrations: payments, CRM, catalog',
     '3 раунди правок · пріоритет':'3 rounds of revisions · priority','Замовити Supernova':'Order Supernova',
+    // — Преміум-тариф —
+    'Преміум':'Premium','Топ-рівень':'Top tier','від $5000':'from $5000','Замовити Преміум':'Order Premium',
+    'Преміум — від $5000':'Premium — from $5000',
+    'Ексклюзивний сайт найвищого рівня — авторський дизайн і кастомні 3D.':'An exclusive top-tier website — bespoke design and custom 3D.',
+    'Повністю авторський дизайн під бренд':'Fully bespoke design for your brand',
+    'Кастомні 3D-сцени та складні анімації':'Custom 3D scenes and complex animations',
+    'Тонка типографіка й арт-дирекшн':'Refined typography and art direction',
+    'Максимальна продуктивність і SEO':'Maximum performance and SEO',
+    'Необмежені правки · пріоритетна підтримка':'Unlimited revisions · priority support',
     'Складніший проєкт?':'A more complex project?','Зробимо індивідуальний прорахунок':"We'll prepare a custom quote",
     '— напишіть нам у формі нижче.':'— write to us in the form below.',
     // — Payment —
@@ -184,7 +193,7 @@
   // Окремі: title + meta
   const META = {
     title:'Veblix — your idea into a turnkey website',
-    desc:'Veblix — a studio that turns your idea into a turnkey website. Unique design, responsive for phone, tablet and computer, and help connecting your own .com domain. Plans from $120.'
+    desc:'Veblix — a studio that turns your idea into a turnkey website. Unique design, responsive for phone, tablet and computer, and help connecting your own .com domain. Plans from $150.'
   };
 
   // нормалізуємо пробіли та різні апострофи/лапки (', ’, ‘, ʼ, ′) до одного вигляду,

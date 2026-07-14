@@ -24,3 +24,7 @@
   for = "/*.html"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+
+# Серверні функції (форма заявки → Telegram; токен лише в Netlify env)
+[functions]
+  directory = "netlify/functions"
