@@ -37,7 +37,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="brand/favicon.png" />
 <link rel="apple-touch-icon" href="brand/favicon.png" />
-<link rel="stylesheet" href="styles.css?v=30" />
+<link rel="stylesheet" href="styles.css?v=31" />
 <script>
   // Справжній адаптивний сайт — скидаємо device-lock, якщо лишився з device-варіанту.
   try { localStorage.removeItem('novaDevice'); } catch(_) {}
@@ -74,11 +74,14 @@
 <!-- HEADER -->
 <header class="header" id="header">
   <div class="container header__inner">
-    <a href="#top" class="logo">
+    <a href="index.html" class="logo" aria-label="На головну">
       <img src="brand/veblix-logo.png" alt="Veblix" class="logo__wordmark" width="240" height="100" decoding="async">
     </a>
 
     <nav class="nav" id="nav">
+      <a href="index.html" class="nav__home" aria-label="На головну">
+        <span aria-hidden="true">←</span> <span>На головну</span>
+      </a>
       <a href="#cinema">Студія</a>
       <a href="#works">Роботи</a>
       <a href="animations.html">Анімації</a>
