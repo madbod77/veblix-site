@@ -24,6 +24,28 @@
       "sha256": "ed7c299466921a85f4d30c1ea643cf8ad4a71b6594d27afbf810de78159633c3"
     },
     {
+      "id": "GeminiOmniV2Raw",
+      "path": "public/assets/velira-open-line-omni-v2-raw.mp4",
+      "layerRole": "generated tactile base film for deterministic brand finishing",
+      "source": "Google Flow / Gemini Omni Flash generation f220fd2f-7af1-4691-8486-cb1fb9352082",
+      "provenance": "Single owner-authorized paid generation; 15 displayed Flow credits",
+      "license": "Project-generated asset",
+      "crop": "Full 10-second 16:9 output; no spatial crop",
+      "cutoutStatus": "n/a",
+      "sha256": "b4a3cf29a939f60ca5c47afd9e38a4d471273a0ca464cf0f5cac29b9345ac2b6"
+    },
+    {
+      "id": "OmniV2FinalPlate",
+      "path": "public/assets/velira-open-line-omni-v2-final-plate.png",
+      "layerRole": "stable final-frame hold beneath code-native logo and typography",
+      "source": "Frame extracted at 9.4 seconds from GeminiOmniV2Raw",
+      "provenance": "Deterministic FFmpeg still extraction from the tracked raw generation",
+      "license": "Project-generated derivative",
+      "crop": "Uncropped 1280x720 frame",
+      "cutoutStatus": "n/a",
+      "sha256": "1423a86209d101c07ef8ae839b306b2cf5bd08627280f74260797b18fef89bd0"
+    },
+    {
       "id": "OnestCyrillic",
       "path": "public/fonts/onest-cyrillic.woff2",
       "layerRole": "code-native Cyrillic typography",

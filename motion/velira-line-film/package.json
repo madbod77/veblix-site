@@ -9,7 +9,10 @@
     "validate:plan": "node scripts/validate-launch-plan.mjs",
     "render": "remotion render src/index.ts VeliraOpenLine out/velira-open-line.mp4 --codec=h264 --crf=18 --pixel-format=yuv420p --color-space=bt709 --image-format=png --concurrency=1",
     "render:assets": "remotion still src/index.ts VeliraAssetSheet out/velira-asset-sheet.png --frame=0 --image-format=png",
-    "render:storyboard": "remotion still src/index.ts VeliraStoryboard out/velira-storyboard.png --frame=0 --image-format=png"
+    "render:storyboard": "remotion still src/index.ts VeliraStoryboard out/velira-storyboard.png --frame=0 --image-format=png",
+    "render:storyboard:v2": "remotion still src/index.ts VeliraStoryboardV2 out/velira-storyboard-v2.png --frame=0 --image-format=png",
+    "render:omni:v2": "remotion render src/index.ts VeliraOmniV2Master out/velira-open-line-omni-v2-master.mp4 --codec=h264 --crf=16 --pixel-format=yuv420p --color-space=bt709 --image-format=png --concurrency=1",
+    "master:omni:v2": "ffmpeg -hide_banner -y -i out/velira-open-line-omni-v2-master.mp4 -i public/audio/velira-open-line.wav -map 0:v:0 -map 1:a:0 -c:v copy -af alimiter=limit=0.78:attack=5:release=50:level=disabled -c:a aac -b:a 192k -ar 48000 -t 10 -movflags +faststart -color_primaries bt709 -color_trc bt709 -colorspace bt709 ../../video/velira-open-line-omni-v2-final.mp4"
   },
   "dependencies": {
     "@remotion/cli": "4.0.499",
