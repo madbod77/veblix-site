@@ -933,8 +933,6 @@
   z-index: 1;
   background: var(--vl-navy);
   color: var(--vl-paper-soft);
-  box-shadow: 10px 12px 0 var(--vl-red);
-  transform: translateY(-12px);
 }
 
 .vw-plans article:not(.is-featured):hover { background: #fff; transform: translateY(-6px); }
@@ -1399,7 +1397,6 @@
   .vw-plans { grid-template-columns: 1fr; }
   .vw-plans article,
   .vw-plans article.is-featured { min-height: 0; padding: 19px 21px 25px; transform: none; }
-  .vw-plans article.is-featured { box-shadow: 7px 8px 0 var(--vl-red); }
   .vw-plans h3 { min-height: 0; margin: 63px 0 14px; }
   .vw-plans article > p { min-height: 0; }
   .vw-pricing__note { line-height: 1.7; }
