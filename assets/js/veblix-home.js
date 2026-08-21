@@ -298,6 +298,151 @@
     });
   });
 
+  /* One-shot signal route: every moving packet is sampled from the drawn SVG path. */
+  init('automation dispatch', () => {
+    const statuses = [
+      'ROUTE READY / 0 OF 4',
+      'CAPTURING / 1 OF 4',
+      'VALIDATING / 2 OF 4',
+      'SYNCING CRM / 3 OF 4',
+      'HANDOFF COMPLETE / 4 OF 4',
+    ];
+    const duration = 4800;
+    const smoothstep = (value) => value * value * (3 - (2 * value));
+
+    document.querySelectorAll('[data-dispatch]').forEach((dispatch) => {
+      const service = dispatch.closest('[data-service]');
+      const routes = Array.from(dispatch.querySelectorAll('[data-dispatch-route]'));
+      const activeRoutes = Array.from(dispatch.querySelectorAll('[data-dispatch-active]'));
+      const packets = Array.from(dispatch.querySelectorAll('[data-dispatch-packet]'));
+      const status = dispatch.querySelector('[data-dispatch-status]');
+      if (!service || !routes.length || routes.length !== activeRoutes.length || routes.length !== packets.length) return;
+
+      const routePairs = routes.map((route, index) => {
+        const length = route.getTotalLength();
+        const stops = (route.dataset.dispatchStops || '0.29 0.66')
+          .split(/\s+/)
+          .map(Number);
+        const activeRoute = activeRoutes[index];
+        activeRoute.style.strokeDasharray = `${length}`;
+        return { route, activeRoute, packet: packets[index], length, stops };
+      });
+      let animationFrame = 0;
+      let startedAt = 0;
+      let running = false;
+      let currentStep = -1;
+
+      const setStep = (step) => {
+        if (currentStep === step) return;
+        currentStep = step;
+        dispatch.dataset.dispatchStep = String(step);
+        if (status) status.textContent = statuses[step];
+      };
+
+      const routeProgressAt = (time, stops) => {
+        const firstStop = stops[0];
+        const secondStop = stops[1];
+        if (time < 0.12) return 0;
+        if (time < 0.28) return smoothstep((time - 0.12) / 0.16) * firstStop;
+        if (time < 0.42) return firstStop;
+        if (time < 0.58) return firstStop + (smoothstep((time - 0.42) / 0.16) * (secondStop - firstStop));
+        if (time < 0.72) return secondStop;
+        if (time < 0.88) return secondStop + (smoothstep((time - 0.72) / 0.16) * (1 - secondStop));
+        return 1;
+      };
+
+      const stepAt = (time) => {
+        if (time < 0.28) return 1;
+        if (time < 0.58) return 2;
+        if (time < 0.88) return 3;
+        return 4;
+      };
+
+      const draw = (routePair, progress) => {
+        const distance = routePair.length * clamp(progress);
+        const point = routePair.route.getPointAtLength(distance);
+        routePair.activeRoute.style.strokeDashoffset = `${routePair.length - distance}`;
+        routePair.packet.setAttribute('transform', `translate(${point.x} ${point.y})`);
+      };
+
+      const drawAll = (time) => {
+        routePairs.forEach((routePair) => draw(routePair, routeProgressAt(time, routePair.stops)));
+      };
+
+      const stop = () => {
+        if (animationFrame) window.cancelAnimationFrame(animationFrame);
+        animationFrame = 0;
+        running = false;
+      };
+
+      const reset = () => {
+        stop();
+        currentStep = -1;
+        dispatch.classList.remove('is-running', 'is-complete');
+        setStep(0);
+        routePairs.forEach((routePair) => draw(routePair, 0));
+      };
+
+      const renderComplete = () => {
+        stop();
+        setStep(4);
+        routePairs.forEach((routePair) => draw(routePair, 1));
+        dispatch.classList.remove('is-running');
+        dispatch.classList.add('is-complete');
+      };
+
+      const tick = (now) => {
+        if (!running) return;
+        if (!startedAt) startedAt = now;
+        const time = clamp((now - startedAt) / duration);
+        setStep(stepAt(time));
+        drawAll(time);
+
+        if (time < 1) {
+          animationFrame = window.requestAnimationFrame(tick);
+          return;
+        }
+        renderComplete();
+      };
+
+      const run = () => {
+        if (reduceMotion.matches) {
+          renderComplete();
+          return;
+        }
+        if (running) return;
+        reset();
+        running = true;
+        startedAt = 0;
+        dispatch.classList.add('is-running');
+        animationFrame = window.requestAnimationFrame(tick);
+      };
+
+      const sync = () => {
+        if (reduceMotion.matches) {
+          renderComplete();
+          return;
+        }
+        if (service.classList.contains('is-motion-active') && !document.hidden) run();
+        else reset();
+      };
+
+      const serviceObserver = new MutationObserver(sync);
+      serviceObserver.observe(service, { attributes: true, attributeFilter: ['class'] });
+
+      const onMotionPreferenceChange = () => sync();
+      if (typeof reduceMotion.addEventListener === 'function') {
+        reduceMotion.addEventListener('change', onMotionPreferenceChange);
+      } else {
+        reduceMotion.addListener(onMotionPreferenceChange);
+      }
+
+      document.addEventListener('visibilitychange', sync);
+      reset();
+      sync();
+    });
+  });
+
   /* Reveal once; service demos only stay active while visible. */
   init('intersection reveals', () => {
     const revealItems = Array.from(document.querySelectorAll('[data-reveal]'));
@@ -311,7 +456,7 @@
       motionItems.forEach((element) => element.classList.add('is-motion-active'));
     };
 
-    if (reduceMotion.matches || !('IntersectionObserver' in window)) {
+    if (!('IntersectionObserver' in window)) {
       showEverything();
       return;
     }
@@ -333,17 +478,27 @@
       });
     }, { threshold: 0.08, rootMargin: '8% 0px 8% 0px' });
 
-    revealItems.forEach((element) => revealObserver.observe(element));
+    if (reduceMotion.matches) {
+      revealItems.forEach((element) => element.classList.add('is-visible'));
+    } else {
+      revealItems.forEach((element) => revealObserver.observe(element));
+    }
     motionItems.forEach((element) => motionObserver.observe(element));
 
     const onMotionChange = (event) => {
-      if (!event.matches) return;
-      revealObserver.disconnect();
-      motionObserver.disconnect();
-      showEverything();
+      if (event.matches) {
+        revealObserver.disconnect();
+        revealItems.forEach((element) => element.classList.add('is-visible'));
+        return;
+      }
+      revealItems
+        .filter((element) => !element.classList.contains('is-visible'))
+        .forEach((element) => revealObserver.observe(element));
     };
     if (typeof reduceMotion.addEventListener === 'function') {
-      reduceMotion.addEventListener('change', onMotionChange, { once: true });
+      reduceMotion.addEventListener('change', onMotionChange);
+    } else {
+      reduceMotion.addListener(onMotionChange);
     }
   });
 
