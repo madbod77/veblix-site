@@ -1,5 +1,5 @@
 /* =========================================================
-   Veblix — двомовність UA/EN.
+   Velira — двомовність UA/EN.
    • Гео: Україна → українська; інша країна → англійська (IP через ipapi.co,
      fallback — мова браузера). Вибір користувача має пріоритет (localStorage).
    • Ручний перемикач UA/EN у шапці.
@@ -101,7 +101,7 @@
     'Відгуки клієнтів':'Client reviews','Попередній відгук':'Previous review','Наступний відгук':'Next review','Навігація відгуків':'Reviews navigation',
     // — Bot —
     'Telegram-бот — у подарунок':'Telegram bot — as a gift','Заявка з сайту —':'A lead from the site —','миттєво у вас':'instantly in your chat',
-    'Замовлення з сайту':'Order from the website','зараз':'now','Нова заявка — Veblix':'New lead — Veblix',
+    'Замовлення з сайту':'Order from the website','зараз':'now','Нова заявка — Velira':'New lead — Velira',
     "👤 Олег · кав'ярня":'👤 Oleh · coffee shop','💎 Тариф: Orbit':'💎 Plan: Orbit','📩 Контакт: @oleh':'📩 Contact: @oleh',
     'Відповідаєте за хвилини, а не години — і не губите жодного замовлення.':'You reply in minutes, not hours — and never lose a single order.',
     // — Order form —
@@ -139,7 +139,7 @@
     // — Footer —
     'Перетворюємо ідеї на сайти, які працюють. Ідея → сайт під ключ.':'We turn ideas into websites that work. Idea → turnkey website.',
     'Сайт':'Site','Документи':'Legal','Конфіденційність':'Privacy','Публічна оферта':'Public offer','Звʼязок':'Contact',
-    'Veblix. Усі права захищено.':'Veblix. All rights reserved.','Оферта':'Offer','Права':'Rights','Робота':'Work',
+    'Velira. Усі права захищено.':'Velira. All rights reserved.','Оферта':'Offer','Права':'Rights','Робота':'Work',
     // — Merged story section (design+process+pay) —
     'Унікальний дизайн —':'Unique design —','жодних шаблонів.':'no templates.',
     'Власна графіка':'Custom graphics','і 3D-переходи.':'and 3D transitions.',
@@ -152,7 +152,7 @@
     'під ваш бренд':'for your brand','Дивитись анімації':'See animations',
     'Кінематографічні ролики, motion-фони, аеро- та промо-зйомка — приклади на окремій сторінці.':'Cinematic reels, motion backgrounds, aerial and promo footage — examples on a separate page.',
     // — Animations page —
-    'Анімації':'Animations','На головну':'Home','Veblix Motion':'Veblix Motion',
+    'Анімації':'Animations','На головну':'Home','Velira Motion':'Velira Motion',
     'Унікальні анімації':'Unique animations','під кожен бренд':'for every brand',
     'Жодних шаблонів. Кожному клієнту — власний кінематографічний ролик: продукт, бренд, реклама чи аерозйомка. Створюємо під вашу ідею з нуля й прокачуємо до 4K.':'No templates. Every client gets their own cinematic reel: product, brand, ad or aerial. We craft it from scratch around your idea and upscale it to 4K.',
     '· аерозйомка':'· aerial',
@@ -178,7 +178,7 @@
     // — Attributes —
     'Меню':'Menu','Від ідеї до готового сайту':'From idea to a finished website',
     'Ноутбук, планшет і телефон з одним сайтом на чорному тлі':'Laptop, tablet and phone showing one website on a black background',
-    'Абстрактна дизайн-композиція у фірмових кольорах Veblix':'Abstract design composition in Veblix brand colors',
+    'Абстрактна дизайн-композиція у фірмових кольорах Velira':'Abstract design composition in Velira brand colors',
     'Наші роботи':'Our work','Сайт DEUTSCHWERK — мовна школа німецької у Відні':'DEUTSCHWERK website — German language school in Vienna',
     'Сайт Milly Edits — портфоліо відеомонтажу для TikTok':'Milly Edits website — video editing portfolio for TikTok',
     'Перемикач робіт':'Work switcher','Блискавична швидкість':'Lightning-fast speed',
@@ -192,8 +192,8 @@
   };
   // Окремі: title + meta
   const META = {
-    title:'Veblix — your idea into a turnkey website',
-    desc:'Veblix — a studio that turns your idea into a turnkey website. Unique design, responsive for phone, tablet and computer, and help connecting your own .com domain. Plans from $150.'
+    title:'Velira — your idea into a turnkey website',
+    desc:'Velira — a studio that turns your idea into a turnkey website. Unique design, responsive for phone, tablet and computer, and help connecting your own .com domain. Plans from $150.'
   };
 
   // нормалізуємо пробіли та різні апострофи/лапки (', ’, ‘, ʼ, ′) до одного вигляду,

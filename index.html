@@ -1,111 +1,233 @@
 <!DOCTYPE html>
-<html lang="uk" data-theme="dark">
+<html lang="uk" class="no-js">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="description" content="Veblix будує бізнес шарами — від першої зрозумілої сторінки до щомісячного рішення з реальних даних." />
-<meta name="theme-color" content="#0A0C15" />
-<title>Veblix — будуємо бізнес шарами</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/veblix-home.css?v=11" />
-<noscript><style>.vh-nav{opacity:1!important;transform:none!important;visibility:visible!important;pointer-events:auto!important}</style></noscript>
+<meta name="description" content="Velira створює сайти, Telegram-боти та автоматизації, які допомагають бізнесу не втрачати клієнтів між першим кліком і відповіддю." />
+<meta name="theme-color" content="#F4E8C5" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="uk_UA" />
+<meta property="og:site_name" content="Velira" />
+<meta property="og:title" content="Velira — сайти, Telegram-боти та автоматизації" />
+<meta property="og:description" content="Цифрові системи, які тримають лінію між бізнесом і клієнтом відкритою." />
+<meta property="og:image" content="assets/img/velira-phone-hero.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<title>Velira — сайти, Telegram-боти та автоматизації для бізнесу</title>
+<link rel="icon" type="image/jpeg" href="brand/velira-logo-original.jpg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<link rel="preload" as="image" href="assets/img/velira-phone-hero.jpg" fetchpriority="high" />
+<link rel="stylesheet" href="assets/css/veblix-home.css?v=24" />
+<noscript><style>.vl-intro{display:none!important}.vl-nav__links{display:flex!important}[data-reveal]{opacity:1!important;transform:none!important}</style></noscript>
 </head>
-<body>
+<body id="top">
+<a class="vl-skip" href="#main-content" data-ua="До головного вмісту" data-en="Skip to main content">До головного вмісту</a>
 
-<!-- ===== NAV ===== -->
-<header class="vh-nav is-slider-hidden">
-  <a class="vh-brand" href="/">VEB<b>LIX</b></a>
-  <nav class="vh-navlinks" aria-label="Головна навігація">
-    <a href="#offers">Пропозиції</a>
-    <a href="websites.html">Сайти</a>
-  </nav>
-  <div class="vh-navright">
-    <span class="vh-lang" role="group" aria-label="Мова"><b>UA</b> · EN</span>
-    <a class="vh-btn" href="#offers">Обрати формат →</a>
+<div class="vl-intro" data-intro aria-hidden="true">
+  <img src="brand/velira-logo-original.jpg" alt="" width="1280" height="1280" />
+  <div class="vl-intro__line"><i></i></div>
+</div>
+
+<header class="vl-nav" data-nav>
+  <a class="vl-brand" href="#top" aria-label="Velira — на головну" data-aria-label-ua="Velira — на головну" data-aria-label-en="Velira — home">
+    <span class="vl-brand__art"><img src="brand/velira-logo-original.jpg" alt="" width="1280" height="1280" /></span>
+  </a>
+
+  <button class="vl-nav__toggle" type="button" aria-expanded="false" aria-controls="primary-nav" data-menu-toggle>
+    <span></span><span></span><span></span>
+    <b class="sr-only" data-ua="Меню" data-en="Menu">Меню</b>
+  </button>
+
+  <div class="vl-nav__panel" id="primary-nav" data-menu-panel>
+    <nav class="vl-nav__links" aria-label="Головна навігація" data-aria-label-ua="Головна навігація" data-aria-label-en="Primary navigation">
+      <a href="#solutions" data-ua="Рішення" data-en="Solutions">Рішення</a>
+      <a href="#process" data-ua="Процес" data-en="Process">Процес</a>
+      <a href="#works" data-ua="Роботи" data-en="Work">Роботи</a>
+      <a href="flow.html">Flow demo</a>
+    </nav>
+    <div class="vl-lang" role="group" aria-label="Мова / Language">
+      <button type="button" class="is-active" data-lang="uk" aria-pressed="true">UA</button>
+      <span aria-hidden="true">/</span>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+    <a class="vl-button vl-button--nav" href="#contact">
+      <span data-ua="Обговорити проєкт" data-en="Discuss a project">Обговорити проєкт</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+    </a>
   </div>
 </header>
 
-<!-- ===== HERO SLIDER (scroll-driven, як animejs.com: скрол мотає відео і сцени) ===== -->
-<div class="vh-track" id="hero-track">
-<section class="vh-hero" id="hero" aria-roledescription="слайдер" aria-label="Послуги Veblix у трьох сценах" tabindex="-1">
-  <!-- Змістовний motion-design: сайт → бот → автоматизація скрабиться скролом; постер на reduced-motion / помилку -->
-  <div class="vh-hero__media">
-    <video class="vh-hero__video" muted playsinline preload="auto" poster="assets/img/hero-poster.jpg?v=2" aria-hidden="true">
-      <source src="assets/video/veblix-hero-mobile.mp4?v=2" type="video/mp4" media="(max-width: 820px) and (orientation: portrait)" />
-      <source src="assets/video/veblix-hero.mp4?v=6" type="video/mp4" />
-    </video>
-    <img class="vh-hero__poster" src="assets/img/scene-01.jpg?v=2" alt="" aria-hidden="true" hidden />
-    <div class="vh-hero__scrim"></div>
-  </div>
-
-  <div class="vh-hero__inner">
-    <div class="vh-hero__copy">
-      <p class="vh-eyebrow">Veblix будує бізнес шарами</p>
-      <!-- Активний слайд: назва послуги + думка (синхронно з відео) -->
-      <div class="vh-scene" aria-live="polite">
-        <h1 class="vh-hero__title" data-scene-title>Сайт</h1>
-        <p class="vh-hero__sub" data-scene-thought>Сайт веде людину до однієї зрозумілої дії.</p>
+<main id="main-content">
+  <section class="vl-hero" aria-labelledby="hero-title">
+    <div class="vl-rail vl-rail--top" aria-hidden="true">
+      <span>VELIRA.WEB</span><span>VELIRA.WEB</span><span>VELIRA.WEB</span><span>VELIRA.WEB</span>
+    </div>
+    <div class="vl-hero__grid">
+      <div class="vl-hero__copy">
+        <p class="vl-kicker">VELIRA / DIGITAL SYSTEMS</p>
+        <h1 class="vl-hero__title" id="hero-title">
+          <span data-hero-line data-ua="НЕ ВТРАЧАЙТЕ" data-en="STOP LOSING">НЕ ВТРАЧАЙТЕ</span>
+          <span class="vl-hero__shadow" data-hero-line data-ua="КЛІЄНТА" data-en="CLIENTS">КЛІЄНТА</span>
+          <span data-hero-line data-ua="МІЖ «ЦІКАВО»" data-en="BETWEEN “I’M IN”">МІЖ «ЦІКАВО»</span>
+          <span data-hero-line data-ua="І «ВІДПОВІЛИ»." data-en="AND “WE REPLIED.”">І «ВІДПОВІЛИ».</span>
+        </h1>
       </div>
-      <a class="vh-btn vh-btn--lg" href="#offers">Переглянути пропозиції →</a>
+
+      <div class="vl-phone-stage" data-phone-stage aria-hidden="true">
+        <div class="vl-phone-stage__orbit"></div>
+        <img src="assets/img/velira-phone-hero.jpg" width="1536" height="1024" alt="" fetchpriority="high" decoding="async" />
+        <div class="vl-phone-stage__badge"><i></i><span data-ua="ЛІНІЯ ВІДКРИТА" data-en="LINE OPEN">ЛІНІЯ ВІДКРИТА</span></div>
+      </div>
+
+      <div class="vl-hero__lede">
+        <p data-ua="Velira створює сайти, Telegram-боти та автоматизації, які пояснюють, відповідають і ведуть до дії — навіть коли команда зайнята." data-en="Velira builds websites, Telegram bots and automations that explain, respond and move people to action — even while your team is busy.">Velira створює сайти, Telegram-боти та автоматизації, які пояснюють, відповідають і ведуть до дії — навіть коли команда зайнята.</p>
+        <div class="vl-hero__actions">
+          <a class="vl-button" href="#contact"><span data-ua="Обговорити проєкт" data-en="Discuss a project">Обговорити проєкт</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a>
+          <a class="vl-text-link" href="#solutions"><span data-ua="Подивитися рішення" data-en="See the system">Подивитися рішення</span><b aria-hidden="true">↓</b></a>
+        </div>
+      </div>
+      <div class="vl-hero__note" aria-hidden="true"><span>01</span><i></i><span>CONNECTION<br />SYSTEM</span></div>
+    </div>
+    <div class="vl-rail vl-rail--bottom" aria-hidden="true">
+      <span>MODERN SOLUTIONS FOR MODERN PROBLEMS</span><span>VELIRA.WEB</span><span>KYIV / UKRAINE</span>
+    </div>
+  </section>
+
+  <div class="vl-marquee" data-marquee>
+    <p class="sr-only" data-ua="Послуги Velira: сайти, Telegram-боти та автоматизації." data-en="Velira services: websites, Telegram bots and automations.">Послуги Velira: сайти, Telegram-боти та автоматизації.</p>
+    <button class="vl-marquee__toggle" type="button" data-marquee-toggle aria-pressed="false" aria-label="Зупинити рух">Ⅱ</button>
+    <div class="vl-marquee__track" aria-hidden="true">
+      <span data-ua="САЙТИ" data-en="WEBSITES">САЙТИ</span><b>●</b><span data-ua="TELEGRAM-БОТИ" data-en="TELEGRAM BOTS">TELEGRAM-БОТИ</span><b>●</b><span data-ua="АВТОМАТИЗАЦІЇ" data-en="AUTOMATIONS">АВТОМАТИЗАЦІЇ</span><b>●</b><span data-ua="ТРИМАЄМО ЛІНІЮ ВІДКРИТОЮ" data-en="KEEPING THE LINE OPEN">ТРИМАЄМО ЛІНІЮ ВІДКРИТОЮ</span><b>●</b>
+      <span data-ua="САЙТИ" data-en="WEBSITES">САЙТИ</span><b>●</b><span data-ua="TELEGRAM-БОТИ" data-en="TELEGRAM BOTS">TELEGRAM-БОТИ</span><b>●</b><span data-ua="АВТОМАТИЗАЦІЇ" data-en="AUTOMATIONS">АВТОМАТИЗАЦІЇ</span><b>●</b><span data-ua="ТРИМАЄМО ЛІНІЮ ВІДКРИТОЮ" data-en="KEEPING THE LINE OPEN">ТРИМАЄМО ЛІНІЮ ВІДКРИТОЮ</span><b>●</b>
     </div>
   </div>
 
-  <!-- HUD: керування + прогрес -->
-  <div class="vh-hud">
-    <button class="vh-hud__arrow" data-prev aria-label="Попередня сцена">‹</button>
-    <ol class="vh-hud__track" role="tablist" aria-label="Сцени">
-      <li><button class="vh-hud__node is-active" role="tab" aria-selected="true" data-go="0" aria-label="Сцена 1: Сайт"><span>01</span> Сайт</button></li>
-      <li><button class="vh-hud__node" role="tab" aria-selected="false" data-go="1" aria-label="Сцена 2: Бот"><span>02</span> Бот</button></li>
-      <li><button class="vh-hud__node vh-hud__node--mint" role="tab" aria-selected="false" data-go="2" aria-label="Сцена 3: Автоматизація та аналітика"><span>03</span> Автоматизація та аналітика</button></li>
-    </ol>
-    <div class="vh-hud__side">
-      <span class="vh-hud__hint" aria-hidden="true"><span class="vh-hud__hint-desktop">прокрутіть ↓</span><span class="vh-hud__hint-mobile">свайпніть вгору ↑</span></span>
-      <span class="vh-hud__count"><b data-scene-num>01</b> / <span data-scene-total>03</span></span>
-      <button class="vh-hud__arrow" data-next aria-label="Наступна сцена">›</button>
-    </div>
-    <div class="vh-hud__progress"><i data-progress></i></div>
+  <div class="vl-story" data-story>
+    <svg class="vl-signal" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" data-signal-svg>
+      <path class="vl-signal__ghost" vector-effect="non-scaling-stroke" d="M89-2C96 5 94 10 82 13 62 18 16 11 9 22 3 32 24 36 42 36 69 36 96 35 91 48 87 58 50 54 27 61 5 68 4 76 18 80 40 87 78 76 91 87 99 94 86 101 67 104" />
+      <path class="vl-signal__draw" pathLength="1" vector-effect="non-scaling-stroke" data-signal-path d="M89-2C96 5 94 10 82 13 62 18 16 11 9 22 3 32 24 36 42 36 69 36 96 35 91 48 87 58 50 54 27 61 5 68 4 76 18 80 40 87 78 76 91 87 99 94 86 101 67 104" />
+    </svg>
+
+    <section class="vl-section vl-problem" id="problem" aria-labelledby="problem-title">
+      <div class="vl-wrap">
+        <header class="vl-section__head" data-reveal>
+          <p class="vl-index" data-ua="01 / ДЕ ОБРИВАЄТЬСЯ ЗВ’ЯЗОК" data-en="01 / WHERE THE LINE BREAKS">01 / ДЕ ОБРИВАЄТЬСЯ ЗВ’ЯЗОК</p>
+          <h2 id="problem-title"><span data-ua="ВИ ПРИВЕЛИ КЛІЄНТА." data-en="YOU BROUGHT THE CLIENT IN.">ВИ ПРИВЕЛИ КЛІЄНТА.</span><span data-ua="ДАЛІ ЙОГО МАЄ ВТРИМАТИ СИСТЕМА." data-en="THE SYSTEM HAS TO KEEP THEM.">ДАЛІ ЙОГО МАЄ ВТРИМАТИ СИСТЕМА.</span></h2>
+          <p data-ua="Реклама робить перший крок. Далі все вирішують ясність, швидкість і маршрут після кліку." data-en="Advertising makes the first move. What happens next depends on clarity, speed and the path after the click.">Реклама робить перший крок. Далі все вирішують ясність, швидкість і маршрут після кліку.</p>
+        </header>
+        <div class="vl-leaks">
+          <article class="vl-leak" data-reveal>
+            <div class="vl-leak__top"><span>01</span><i></i></div>
+            <div class="vl-leak__visual vl-leak__visual--browser" aria-hidden="true"><div class="vl-mini-browser"><b></b><b></b><b></b><span></span><i></i></div><svg viewBox="0 0 42 56"><path d="m5 4 30 29-15 3-7 15z" /></svg></div>
+            <h3 data-ua="НЕ ЗРОЗУМІВ" data-en="DIDN’T GET IT">НЕ ЗРОЗУМІВ</h3>
+            <p data-ua="Якщо за кілька секунд не ясно, що ви пропонуєте і що робити далі, вкладку закривають." data-en="If your offer and the next step are not clear in seconds, the tab gets closed.">Якщо за кілька секунд не ясно, що ви пропонуєте і що робити далі, вкладку закривають.</p>
+          </article>
+          <article class="vl-leak" data-reveal>
+            <div class="vl-leak__top"><span>02</span><i></i></div>
+            <div class="vl-leak__visual vl-leak__visual--delay" aria-hidden="true"><div class="vl-delay-bubble"><i></i><i></i><i></i></div><time>02:47:13</time></div>
+            <h3 data-ua="НЕ ДОЧЕКАВСЯ" data-en="DIDN’T WAIT">НЕ ДОЧЕКАВСЯ</h3>
+            <p data-ua="Поки повідомлення лежить без відповіді, хтось інший уже починає розмову." data-en="While the message sits unanswered, someone else has already started the conversation.">Поки повідомлення лежить без відповіді, хтось інший уже починає розмову.</p>
+          </article>
+          <article class="vl-leak" data-reveal>
+            <div class="vl-leak__top"><span>03</span><i></i></div>
+            <div class="vl-leak__visual vl-leak__visual--nodes" aria-hidden="true"><span>DM</span><span>TG</span><span>WEB</span><span>CRM</span><i></i><i></i><i></i></div>
+            <h3 data-ua="ЗАГУБИВСЯ" data-en="GOT LOST">ЗАГУБИВСЯ</h3>
+            <p data-ua="Коли звернення розсипані між Direct, Telegram, формами й таблицями, частина не доходить до команди." data-en="When leads are scattered across DMs, Telegram, forms and sheets, some never reach the team.">Коли звернення розсипані між Direct, Telegram, формами й таблицями, частина не доходить до команди.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="vl-manifest" aria-labelledby="manifest-title">
+      <div class="vl-wrap vl-manifest__inner">
+        <p class="vl-index" data-ua="НЕ РЕКЛАМА. СИСТЕМА." data-en="NOT THE AD. THE SYSTEM.">НЕ РЕКЛАМА. СИСТЕМА.</p>
+        <h2 id="manifest-title" data-reveal><span data-ua="ПРОБЛЕМА НЕ ОБОВ’ЯЗКОВО" data-en="THE PROBLEM ISN’T ALWAYS">ПРОБЛЕМА НЕ ОБОВ’ЯЗКОВО</span><span class="is-red" data-ua="В РЕКЛАМІ." data-en="YOUR ADVERTISING.">В РЕКЛАМІ.</span><span data-ua="ЧАСТО — У ТОМУ, ЩО" data-en="OFTEN, IT’S WHAT">ЧАСТО — У ТОМУ, ЩО</span><span data-ua="СТАЄТЬСЯ ПІСЛЯ КЛІКУ." data-en="HAPPENS AFTER THE CLICK.">СТАЄТЬСЯ ПІСЛЯ КЛІКУ.</span></h2>
+        <div class="vl-manifest__stamp" aria-hidden="true">SYSTEM<br />OVER<br />NOISE</div>
+      </div>
+    </section>
+
+    <section class="vl-section vl-solutions" id="solutions" aria-labelledby="solutions-title">
+      <div class="vl-wrap">
+        <header class="vl-section__head vl-section__head--split" data-reveal>
+          <div><p class="vl-index" data-ua="02 / ОДНА СИСТЕМА" data-en="02 / ONE SYSTEM">02 / ОДНА СИСТЕМА</p><h2 id="solutions-title"><span data-ua="ЩОБ ЗРОЗУМІЛИ." data-en="SO THEY GET IT.">ЩОБ ЗРОЗУМІЛИ.</span><span data-ua="НЕ ЧЕКАЛИ." data-en="DON’T WAIT.">НЕ ЧЕКАЛИ.</span><span data-ua="НЕ ЗАГУБИЛИСЯ." data-en="DON’T GET LOST.">НЕ ЗАГУБИЛИСЯ.</span></h2></div>
+          <p data-ua="Не продаємо набір інструментів. Проєктуємо один маршрут від першого екрана до дії команди." data-en="We do not sell a random tool stack. We design one route from the first screen to your team’s next action.">Не продаємо набір інструментів. Проєктуємо один маршрут від першого екрана до дії команди.</p>
+        </header>
+        <div class="vl-services">
+          <article class="vl-service" data-service data-reveal>
+            <div class="vl-service__copy"><div class="vl-service__meta"><span>01</span><span>WEBSITE</span></div><h3 data-ua="САЙТ / ЩОБ ЗРОЗУМІЛИ" data-en="WEBSITE / SO THEY GET IT">САЙТ / ЩОБ ЗРОЗУМІЛИ</h3><p data-ua="Чітко показує, хто ви, що даєте клієнту і який наступний крок. Виразний дизайн та motion підсилюють зміст, а не відволікають." data-en="It makes who you are, what you offer and the next step immediately clear. Design and motion strengthen the message instead of distracting from it.">Чітко показує, хто ви, що даєте клієнту і який наступний крок. Виразний дизайн та motion підсилюють зміст, а не відволікають.</p><p class="vl-service__tags">STRATEGY · COPY · UX/UI · DEVELOPMENT</p><a class="vl-arrow-link" href="websites.html"><span data-ua="Переглянути сайти" data-en="Explore websites">Переглянути сайти</span><b>↗</b></a></div>
+            <div class="vl-service__visual vl-site-demo" aria-hidden="true"><div class="vl-site-demo__window"><div class="vl-site-demo__bar"><i></i><i></i><i></i><span>velira.web</span></div><div class="vl-site-demo__page"><p>ONE CLEAR<br /><b>NEXT STEP.</b></p><span></span><span></span><button type="button" tabindex="-1">START →</button></div></div><svg class="vl-cursor" viewBox="0 0 52 68"><path d="M6 5 45 42l-19 3-9 17z" /></svg></div>
+          </article>
+          <article class="vl-service" data-service data-reveal>
+            <div class="vl-service__copy"><div class="vl-service__meta"><span>02</span><span>TELEGRAM BOT</span></div><h3 data-ua="БОТ / ЩОБ НЕ ЧЕКАЛИ" data-en="BOT / SO THEY DON’T WAIT">БОТ / ЩОБ НЕ ЧЕКАЛИ</h3><p data-ua="Бере на себе перші питання, збирає потрібні дані й передає розмову людині разом із контекстом." data-en="It handles the first questions, collects the right details and hands the conversation to a person with full context.">Бере на себе перші питання, збирає потрібні дані й передає розмову людині разом із контекстом.</p><p class="vl-service__tags">SCENARIOS · LEADS · ALERTS · INTEGRATIONS</p><a class="vl-arrow-link" href="#contact"><span data-ua="Обговорити бота" data-en="Discuss a bot">Обговорити бота</span><b>↗</b></a></div>
+            <div class="vl-service__visual vl-chat-demo" aria-hidden="true"><div class="vl-chat-demo__head"><i></i><span>VELIRA BOT</span><b>online</b></div><div class="vl-chat-demo__bubble is-in" data-ua="Вітаю! Що хочете покращити?" data-en="Hi! What would you like to improve?">Вітаю! Що хочете покращити?</div><div class="vl-chat-demo__bubble is-out" data-ua="Не втрачати нові заявки" data-en="Stop losing new leads">Не втрачати нові заявки</div><div class="vl-chat-demo__typing"><i></i><i></i><i></i></div><div class="vl-chat-demo__status">CONTEXT → TEAM ✓</div></div>
+          </article>
+          <article class="vl-service" data-service data-reveal>
+            <div class="vl-service__copy"><div class="vl-service__meta"><span>03</span><span>AUTOMATION</span></div><h3 data-ua="АВТОМАТИЗАЦІЯ / ЩОБ НЕ ЗАГУБИЛИСЯ" data-en="AUTOMATION / SO NOTHING GETS LOST">АВТОМАТИЗАЦІЯ / ЩОБ НЕ ЗАГУБИЛИСЯ</h3><p data-ua="З’єднує форми, таблиці, CRM і сповіщення в один маршрут — без ручного копіювання та хаосу." data-en="It connects forms, sheets, CRM and alerts into one route — without manual copying or chaos.">З’єднує форми, таблиці, CRM і сповіщення в один маршрут — без ручного копіювання та хаосу.</p><p class="vl-service__tags">LOGIC · DATA · STATUS · HANDOFF</p><a class="vl-arrow-link" href="flow.html"><span data-ua="Запустити live demo" data-en="Launch live demo">Запустити live demo</span><b>↗</b></a></div>
+            <div class="vl-service__visual vl-flow-demo" aria-hidden="true"><svg viewBox="0 0 560 320"><path class="vl-flow-demo__line" pathLength="1" d="M74 160h84c36 0 38-86 78-86h86c38 0 36 172 78 172h84" /><g transform="translate(36 126)"><rect width="90" height="68" rx="18" /><text x="45" y="40">FORM</text></g><g transform="translate(198 40)"><rect width="94" height="68" rx="18" /><text x="47" y="40">CHECK</text></g><g transform="translate(364 212)"><rect width="100" height="68" rx="18" /><text x="50" y="40">CRM</text></g><g transform="translate(456 126)"><circle cx="38" cy="34" r="32" /><text x="38" y="40">✓</text></g><circle class="vl-flow-demo__pulse" cx="74" cy="160" r="8" /></svg><span>LEAD ROUTE / ACTIVE</span></div>
+          </article>
+        </div>
+        <p class="vl-system-line" data-reveal><span data-ua="САЙТ ПОЯСНЮЄ." data-en="THE SITE EXPLAINS.">САЙТ ПОЯСНЮЄ.</span><span data-ua="БОТ ВІДПОВІДАЄ." data-en="THE BOT RESPONDS.">БОТ ВІДПОВІДАЄ.</span><span data-ua="СИСТЕМА НЕ ДАЄ ЗВЕРНЕННЮ ЗНИКНУТИ." data-en="THE SYSTEM KEEPS THE LEAD MOVING.">СИСТЕМА НЕ ДАЄ ЗВЕРНЕННЮ ЗНИКНУТИ.</span></p>
+      </div>
+    </section>
+
+    <section class="vl-section vl-process" id="process" aria-labelledby="process-title">
+      <div class="vl-wrap">
+        <header class="vl-section__head vl-section__head--split" data-reveal><div><p class="vl-index" data-ua="03 / ЯК МИ ПРАЦЮЄМО" data-en="03 / HOW WE WORK">03 / ЯК МИ ПРАЦЮЄМО</p><h2 id="process-title"><span data-ua="ВІД РОЗРИВУ —" data-en="FROM A BROKEN LINE —">ВІД РОЗРИВУ —</span><span data-ua="ДО ПРАЦЮЮЧОЇ ЛІНІЇ." data-en="TO A WORKING SYSTEM.">ДО ПРАЦЮЮЧОЇ ЛІНІЇ.</span></h2></div><p data-ua="Ви бачите логіку рішення ще до того, як вона стає кодом." data-en="You see the logic of the solution before it becomes code.">Ви бачите логіку рішення ще до того, як вона стає кодом.</p></header>
+        <ol class="vl-steps">
+          <li data-reveal><span>01</span><h3 data-ua="ЗНАХОДИМО" data-en="FIND">ЗНАХОДИМО</h3><p data-ua="Розбираємо, звідки приходить клієнт, що бачить і де зупиняється." data-en="We map where the client comes from, what they see and where they stop.">Розбираємо, звідки приходить клієнт, що бачить і де зупиняється.</p></li>
+          <li data-reveal><span>02</span><h3 data-ua="ПРОЄКТУЄМО" data-en="DESIGN">ПРОЄКТУЄМО</h3><p data-ua="Формуємо повідомлення, кроки, стани та потрібні інтеграції." data-en="We define the message, steps, states and integrations.">Формуємо повідомлення, кроки, стани та потрібні інтеграції.</p></li>
+          <li data-reveal><span>03</span><h3 data-ua="БУДУЄМО" data-en="BUILD">БУДУЄМО</h3><p data-ua="Збираємо погоджені компоненти в одну зрозумілу систему." data-en="We assemble the approved parts into one clear system.">Збираємо погоджені компоненти в одну зрозумілу систему.</p></li>
+          <li data-reveal><span>04</span><h3 data-ua="ПЕРЕВІРЯЄМО" data-en="VERIFY">ПЕРЕВІРЯЄМО</h3><p data-ua="Проходимо ключові сценарії на різних екранах і прибираємо обриви." data-en="We test key scenarios across screens and remove breaks before launch.">Проходимо ключові сценарії на різних екранах і прибираємо обриви.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="vl-section vl-works" id="works" aria-labelledby="works-title">
+      <div class="vl-wrap">
+        <header class="vl-section__head vl-section__head--split" data-reveal><div><p class="vl-index">04 / PROOF, NOT PROMISES</p><h2 id="works-title"><span data-ua="ПОКАЗУЄМО СИСТЕМУ." data-en="WE SHOW THE SYSTEM.">ПОКАЗУЄМО СИСТЕМУ.</span><span data-ua="НЕ ПРИКРАШАЄМО РЕЗУЛЬТАТ." data-en="WE DON’T INVENT RESULTS.">НЕ ПРИКРАШАЄМО РЕЗУЛЬТАТ.</span></h2></div><p data-ua="Вибрані дизайн-роботи, один live-реліз та інтерактивне демо. Без вигаданих відсотків." data-en="Selected design work, one live release and an interactive demo. No invented percentages.">Вибрані дизайн-роботи, один live-реліз та інтерактивне демо. Без вигаданих відсотків.</p></header>
+        <div class="vl-work-grid">
+          <a class="vl-work vl-work--wide" href="websites.html#works" data-reveal><div class="vl-work__media"><img src="works/lakshmi.webp" width="1200" height="750" loading="lazy" decoding="async" alt="Сайт Lakshmi — студія краси у Вишневому" data-alt-ua="Сайт Lakshmi — студія краси у Вишневому" data-alt-en="Lakshmi beauty studio website" /></div><div class="vl-work__meta"><span>LAKSHMI</span><span data-ua="Студія краси · сайт" data-en="Beauty studio · website">Студія краси · сайт</span><b>↗</b></div></a>
+          <a class="vl-work" href="websites.html#works" data-reveal><div class="vl-work__media"><img src="works/nothabsburgs.webp" width="1200" height="750" loading="lazy" decoding="async" alt="Сайт NOT HABSBURGS — AI-кіностудія" data-alt-ua="Сайт NOT HABSBURGS — AI-кіностудія" data-alt-en="NOT HABSBURGS AI film studio website" /></div><div class="vl-work__meta"><span>NOT HABSBURGS</span><span data-ua="AI-кіностудія · сайт" data-en="AI film studio · website">AI-кіностудія · сайт</span><b>↗</b></div></a>
+          <a class="vl-work" href="https://taniasite.netlify.app/" target="_blank" rel="noopener noreferrer" data-reveal><div class="vl-work__media"><em>LIVE</em><img src="works/deutschwerk.webp?v=2" width="1200" height="833" loading="lazy" decoding="async" alt="Сайт DEUTSCHWERK — мовна школа німецької у Відні" data-alt-ua="Сайт DEUTSCHWERK — мовна школа німецької у Відні" data-alt-en="DEUTSCHWERK German language school website in Vienna" /></div><div class="vl-work__meta"><span>DEUTSCHWERK</span><span data-ua="Мовна школа · live site" data-en="Language school · live site">Мовна школа · live site</span><b>↗</b></div></a>
+          <a class="vl-work vl-work--flow" href="flow.html" data-reveal><div class="vl-work__flow" aria-hidden="true"><span>FORM</span><i></i><span>BOT</span><i></i><span>CRM</span><b>✓</b></div><div class="vl-work__meta"><span>VELIRA FLOW</span><span data-ua="Автоматизація · інтерактивне демо" data-en="Automation · interactive demo">Автоматизація · інтерактивне демо</span><b>↗</b></div></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="vl-contact" id="contact" aria-labelledby="contact-title">
+      <div class="vl-wrap vl-contact__grid">
+        <div class="vl-contact__copy" data-reveal>
+          <p class="vl-index">LET’S TALK / 05</p>
+          <h2 id="contact-title"><span data-ua="НАСТУПНИЙ КЛІЄНТ" data-en="YOUR NEXT CLIENT">НАСТУПНИЙ КЛІЄНТ</span><span data-ua="УЖЕ В ДОРОЗІ." data-en="IS ALREADY ON THE WAY.">УЖЕ В ДОРОЗІ.</span><span class="is-red" data-ua="ПІДГОТУЙМО СИСТЕМУ." data-en="LET’S PREPARE THE SYSTEM.">ПІДГОТУЙМО СИСТЕМУ.</span></h2>
+          <p data-ua="Покажіть, як зараз до вас приходять звернення. Ми знайдемо слабке місце й запропонуємо найкоротший маршрут — лише те, що справді потрібно." data-en="Show us how leads reach you today. We’ll find the weak point and propose the shortest route — only what you genuinely need.">Покажіть, як зараз до вас приходять звернення. Ми знайдемо слабке місце й запропонуємо найкоротший маршрут — лише те, що справді потрібно.</p>
+          <a class="vl-telegram-link" href="https://t.me/madbod_77" target="_blank" rel="noopener"><span>TELEGRAM / @MADBOD_77</span><b>↗</b></a>
+          <p class="vl-contact__micro" data-ua="Почнемо з реальної задачі, а не з продажу всього одразу." data-en="We’ll start with the real problem, not by selling everything at once.">Почнемо з реальної задачі, а не з продажу всього одразу.</p>
+        </div>
+        <form class="vl-form" id="velira-lead-form" novalidate data-lead-form data-reveal>
+          <div class="vl-form__row">
+            <label><span data-ua="Ім’я / бренд" data-en="Name / brand">Ім’я / бренд</span><input type="text" name="name" autocomplete="name" required maxlength="200" placeholder="Як до вас звертатись" data-placeholder-ua="Як до вас звертатись" data-placeholder-en="How should we address you?" /></label>
+            <label><span data-ua="Telegram, email або телефон" data-en="Telegram, email or phone">Telegram, email або телефон</span><input type="text" name="contact" autocomplete="email" required maxlength="200" placeholder="@username / email / +380…" data-placeholder-ua="@username / email / +380…" data-placeholder-en="@username / email / phone" /></label>
+          </div>
+          <label><span data-ua="Що потрібно" data-en="What do you need?">Що потрібно</span><select name="plan"><option value="Потрібна діагностика" data-ua="Потрібна діагностика" data-en="I need a diagnosis">Потрібна діагностика</option><option value="Сайт" data-ua="Сайт" data-en="Website">Сайт</option><option value="Telegram-бот" data-ua="Telegram-бот" data-en="Telegram bot">Telegram-бот</option><option value="Автоматизація" data-ua="Автоматизація" data-en="Automation">Автоматизація</option><option value="Комплексна система" data-ua="Комплексна система" data-en="Full system">Комплексна система</option></select></label>
+          <label><span data-ua="Де зараз обривається зв’язок?" data-en="Where does the line break today?">Де зараз обривається зв’язок?</span><textarea name="brief" rows="5" maxlength="2000" placeholder="Коротко опишіть задачу" data-placeholder-ua="Коротко опишіть задачу" data-placeholder-en="Briefly describe the problem"></textarea></label>
+          <label class="vl-form__consent"><input type="checkbox" name="consent" value="true" required /><span><i></i><b data-ua="Погоджуюсь на обробку даних згідно з політикою конфіденційності." data-en="I agree to data processing under the privacy policy.">Погоджуюсь на обробку даних згідно з політикою конфіденційності.</b> <a href="privacy.html" data-ua="Переглянути" data-en="Read it">Переглянути</a></span></label>
+          <label class="vl-form__trap" aria-hidden="true">Company<input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+          <div class="vl-form__foot"><button class="vl-button" type="submit" data-submit><span data-ua="Надіслати задачу" data-en="Send the brief">Надіслати задачу</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button><p class="vl-form__status" data-form-status role="status" aria-live="polite"></p></div>
+          <noscript><p><a href="https://t.me/madbod_77">Напишіть нам у Telegram →</a></p></noscript>
+        </form>
+      </div>
+    </section>
   </div>
-</section>
-</div>
+</main>
 
-<!-- ===== ПОСИЛАННЯ НА НАПРЯМИ (єдиний блок під інтро) ===== -->
-<section class="vh-offers" id="offers">
-  <p class="vh-eyebrow vh-eyebrow--center">Куди далі</p>
-  <h2 class="vh-h2">Три напрями роботи з&nbsp;Veblix</h2>
-  <div class="vh-offers__grid">
-
-    <a class="vh-offer" href="websites.html">
-      <span class="vh-offer__badge">вже працює</span>
-      <h3 class="vh-offer__name">Сайти під ключ</h3>
-      <p class="vh-offer__desc">Наш сайтовик: преміальні сайти з 3D-анімаціями, адаптивом і формою заявки. Те, що вже приносить клієнтів.</p>
-      <span class="vh-offer__go">Перейти на сайтовик →</span>
-    </a>
-
-    <a class="vh-offer vh-offer--signal" href="offer-standard.html">
-      <span class="vh-offer__price">$1000</span>
-      <h3 class="vh-offer__name">Мега-пропозиція · Стандарт</h3>
-      <p class="vh-offer__desc">Уся система під ключ — сайт, канал розмови та автоматизація. Робоче, надійне, доступне.</p>
-      <span class="vh-offer__go">Дізнатися →</span>
-    </a>
-
-    <a class="vh-offer vh-offer--premium" href="offer-premium.html">
-      <span class="vh-offer__badge vh-offer__badge--premium">Premium</span>
-      <span class="vh-offer__price">$7500</span>
-      <h3 class="vh-offer__name">Мега-пропозиція · Преміум</h3>
-      <p class="vh-offer__desc">Та сама система на преміум-рівні: унікальний дизайн, глибша автоматизація, продукт і аналітика, пріоритетна підтримка.</p>
-      <span class="vh-offer__go">Дізнатися →</span>
-    </a>
-
+<footer class="vl-footer">
+  <div class="vl-wrap">
+    <div class="vl-footer__top"><a class="vl-brand vl-brand--footer" href="#top" aria-label="Velira — нагору" data-aria-label-ua="Velira — нагору" data-aria-label-en="Velira — back to top"><span class="vl-brand__art"><img src="brand/velira-logo-original.jpg" alt="" width="1280" height="1280" /></span></a><p data-ua="ЗВ’ЯЗОК ІЗ КЛІЄНТОМ НЕ МАЄ ОБРИВАТИСЯ." data-en="THE LINE TO YOUR CLIENT SHOULD NEVER BREAK.">ЗВ’ЯЗОК ІЗ КЛІЄНТОМ НЕ МАЄ ОБРИВАТИСЯ.</p></div>
+    <div class="vl-footer__bottom"><span>© <span data-year>2026</span> VELIRA</span><div><a href="privacy.html" data-ua="Конфіденційність" data-en="Privacy">Конфіденційність</a><a href="terms.html" data-ua="Оферта" data-en="Terms">Оферта</a><a href="rights.html" data-ua="Права" data-en="Rights">Права</a></div><span>VELIRA.WEB / KYIV</span></div>
   </div>
-</section>
-
-<footer class="vh-foot">
-  <span class="vh-brand">VEB<b>LIX</b></span>
-  <span class="vh-foot__bridge">Built by The AI Employee. Delivered by Veblix.</span>
 </footer>
 
-<script src="assets/js/veblix-home.js?v=15" defer></script>
+<script src="assets/js/veblix-home.js?v=21" defer></script>
 </body>
 </html>

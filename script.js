@@ -1,8 +1,8 @@
 /* =========================================================
-   Veblix — interactions (чисто, без зайвого руху)
+   Velira — interactions (чисто, без зайвого руху)
    ========================================================= */
 (() => {
-  const cfg = window.VEBLIX_CONFIG || {};
+  const cfg = window.VELIRA_CONFIG || window.VEBLIX_CONFIG || {};
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* Meta Pixel — безпечний трекер подій (no-op, якщо піксель вимкнено в config.js) */
@@ -121,21 +121,34 @@
   const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   if (form) form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
     const btn = form.querySelector('button[type=submit]');
     if (btn) { btn.disabled = true; btn.textContent = 'Надсилаємо…'; }
     const d = new FormData(form);
     // Заявка йде на серверний Netlify Function — Telegram-токен більше не в клієнті.
     let ok = true, err = '';
+    const controller = new AbortController();
+    const requestTimeout = window.setTimeout(() => controller.abort(), 15000);
     try {
       const r = await fetch('/.netlify/functions/submit-lead', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: d.get('name') || '', contact: d.get('contact') || '',
-          plan: d.get('plan') || '', brief: d.get('brief') || '', company: d.get('company') || ''
-        })
+          plan: d.get('plan') || '', brief: d.get('brief') || '',
+          company: d.get('company') || '', consent: d.get('consent') === 'true'
+        }),
+        signal: controller.signal
       });
       if (!r.ok) { ok = false; try { err = (await r.json()).error || ''; } catch (_) {} }
-    } catch (_) { ok = false; }
+    } catch (error) {
+      ok = false;
+      if (error && error.name === 'AbortError') err = 'сервер не відповів вчасно';
+    } finally {
+      window.clearTimeout(requestTimeout);
+    }
     if (btn) { btn.disabled = false; btn.textContent = 'Надіслати заявку'; }
     if (success) {
       success.hidden = false;

@@ -1,7 +1,59 @@
-# NovaWeb — конфіг деплою Netlify (статичний сайт, корінь = publish)
+# Velira — конфіг Netlify (статичний сайт, корінь = publish)
 
 [build]
   publish = "."
+
+# Застарілі device-specific копії більше не є окремими публічними сторінками.
+[[redirects]]
+  from = "/desktop.html"
+  to = "/websites.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/tablet.html"
+  to = "/websites.html"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/mobile.html"
+  to = "/websites.html"
+  status = 301
+  force = true
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/assets/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, stale-while-revalidate=86400"
+
+[[headers]]
+  for = "/assets/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600, stale-while-revalidate=86400"
+
+[[headers]]
+  for = "/assets/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
 
 # Кадри scroll-відео, скріншоти робіт і бренд-асети незмінні — кешуємо на рік
 [[headers]]
@@ -21,6 +73,11 @@
 
 [[headers]]
   for = "/assets/video/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/video/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 

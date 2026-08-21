@@ -1,4 +1,4 @@
-/* Veblix Flow — двигун інтерактивного демо (усе client-side, вигадані дані).
+/* Velira Flow — двигун інтерактивного демо (усе client-side, вигадані дані).
    «Запустити» проганяє заявку по нодах: журнал пише кроки, CRM отримує ліда,
    аналітика (заявки/кваліфіковано/конверсія/графік/воронка) оновлюється. */
 (() => {
@@ -81,9 +81,9 @@
     const ys = (v) => H - P - (v / max) * (H - P * 2);
     const pts = chart.map((v, i) => `${xs(i)},${ys(v)}`).join(' ');
     const grid = [0, 6, 12, 18].map((v) =>
-      `<line x1="${P}" x2="${W - P}" y1="${ys(v)}" y2="${ys(v)}" stroke="rgba(255,255,255,.07)"/><text x="${P - 8}" y="${ys(v) + 4}" text-anchor="end" font-size="11" fill="#6A7085">${v}</text>`).join('');
-    const dots = chart.map((v, i) => `<circle cx="${xs(i)}" cy="${ys(v)}" r="3.5" fill="#3DDC97"/>`).join('');
-    svg.innerHTML = `${grid}<polyline points="${pts}" fill="none" stroke="#3DDC97" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>${dots}`;
+      `<line x1="${P}" x2="${W - P}" y1="${ys(v)}" y2="${ys(v)}" stroke="rgba(52,58,79,.12)"/><text x="${P - 8}" y="${ys(v) + 4}" text-anchor="end" font-size="11" fill="#829494">${v}</text>`).join('');
+    const dots = chart.map((v, i) => `<circle cx="${xs(i)}" cy="${ys(v)}" r="3.5" fill="#B81712"/>`).join('');
+    svg.innerHTML = `${grid}<polyline points="${pts}" fill="none" stroke="#B81712" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>${dots}`;
   }
 
   function updateKpis() {
@@ -113,7 +113,7 @@
 
     const lead = pick(LEADS);
     leadNo += 1;
-    const id = 'VLX-' + String(leadNo).padStart(4, '0');
+    const id = 'VLR-' + String(leadNo).padStart(4, '0');
     const t0 = performance.now();
 
     for (const s of STEPS) {
@@ -146,15 +146,15 @@
   /* ── стартовий стан ── */
   // кілька демо-рядків у «Запусках», щоб таблиця не була порожня
   [
-    ['VLX-0284', 'Олена',  '14:33:23', '1.8'],
-    ['VLX-0283', 'Тарас',  '11:02:41', '2.1'],
-    ['VLX-0282', 'Марина', '09:47:05', '1.6'],
+    ['VLR-0284', 'Олена',  '14:33:23', '1.8'],
+    ['VLR-0283', 'Тарас',  '11:02:41', '2.1'],
+    ['VLR-0282', 'Марина', '09:47:05', '1.6'],
   ].forEach(([id, name, t, d]) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `<td>${id} · ${name}</td><td>${t}</td><td>Сайт → форма</td><td class="ok">Кваліфіковано ✓</td><td>${d}с</td>`;
     runsBody.appendChild(tr);
   });
-  lastRun.textContent = 'VLX-0284 · 14:33:23';
+  lastRun.textContent = 'VLR-0284 · 14:33:23';
   drawChart();
   updateKpis();
 
@@ -299,9 +299,9 @@
     const line = (key, color) =>
       `<polyline points="${list.map((m, i) => `${xs(i)},${ys(m[key])}`).join(' ')}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>` +
       list.map((m, i) => `<circle cx="${xs(i)}" cy="${ys(m[key])}" r="3.5" fill="${color}"/>`).join('');
-    const labels = list.map((m, i) => `<text x="${xs(i)}" y="${H - 10}" text-anchor="middle" font-size="10" fill="#6A7085">${m.m.slice(2)}</text>`).join('');
-    svg.innerHTML = line('leads', '#3DDC97') + line('sales', '#8B93FF') + labels +
-      `<text x="${P}" y="16" font-size="11" fill="#3DDC97">— заявки</text><text x="${P + 90}" y="16" font-size="11" fill="#8B93FF">— продажі</text>`;
+    const labels = list.map((m, i) => `<text x="${xs(i)}" y="${H - 10}" text-anchor="middle" font-size="10" fill="#829494">${m.m.slice(2)}</text>`).join('');
+    svg.innerHTML = line('leads', '#B81712') + line('sales', '#6F9092') + labels +
+      `<text x="${P}" y="16" font-size="11" fill="#B81712">— заявки</text><text x="${P + 90}" y="16" font-size="11" fill="#6F9092">— продажі</text>`;
   }
   drawBizChart();
 
@@ -310,19 +310,39 @@
     e.preventDefault();
     if (!last) { auditMsg.hidden = false; auditMsg.textContent = 'Спершу натисніть «Порахувати».'; return; }
     const f = e.target;
+    if (!f.checkValidity()) {
+      f.reportValidity();
+      auditMsg.hidden = false;
+      auditMsg.textContent = 'Заповніть контактні поля та підтвердьте згоду.';
+      return;
+    }
     const name = f.elements.name.value.trim(), contact = f.elements.contact.value.trim();
     if (!name || !contact) { auditMsg.hidden = false; auditMsg.textContent = 'Вкажіть ім\'я і контакт.'; return; }
     const btn = $('[data-audit-send]'); btn.disabled = true; btn.textContent = 'Надсилаємо…';
-    const brief = `Veblix Flow аудит: відвідування ${last.visits}, заявки ${last.leads} (${last.rLeads.toFixed(1)}%), розмови ${last.qual} (${last.rQual.toFixed(0)}%), продажі ${last.sales} (${last.rSale.toFixed(0)}%)` +
+    const brief = `Velira Flow аудит: відвідування ${last.visits}, заявки ${last.leads} (${last.rLeads.toFixed(1)}%), розмови ${last.qual} (${last.rQual.toFixed(0)}%), продажі ${last.sales} (${last.rSale.toFixed(0)}%)` +
       (last.check ? `, чек ₴${last.check}` : '') + (last.resp !== null ? `, перша відповідь ${last.resp} хв` : '');
     let ok = true;
+    const controller = new AbortController();
+    const requestTimeout = window.setTimeout(() => controller.abort(), 15000);
     try {
       const r = await fetch('/.netlify/functions/submit-lead', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, contact, plan: 'Veblix Flow · аудит цифр', brief, company: '' }),
+        body: JSON.stringify({
+          name,
+          contact,
+          plan: 'Velira Flow · аудит цифр',
+          brief,
+          company: f.elements.company.value,
+          consent: f.elements.consent.checked,
+        }),
+        signal: controller.signal,
       });
       ok = r.ok;
-    } catch (_) { ok = false; }
+    } catch (_) {
+      ok = false;
+    } finally {
+      window.clearTimeout(requestTimeout);
+    }
     btn.disabled = false; btn.textContent = 'Надіслати аудит →';
     auditMsg.hidden = false;
     auditMsg.innerHTML = ok

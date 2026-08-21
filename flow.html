@@ -1,31 +1,31 @@
 <!DOCTYPE html>
-<html lang="uk" data-theme="dark">
+<html lang="uk" data-theme="light">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="description" content="Veblix Flow — живе демо: як автоматизація приймає заявку, кваліфікує ліда і рахує аналітику вашого бізнесу." />
-<meta name="theme-color" content="#0A0C15" />
-<title>Veblix Flow — демо автоматизації та аналітики</title>
+<meta name="description" content="Velira Flow — живе демо: як автоматизація приймає заявку, кваліфікує ліда і рахує аналітику вашого бізнесу." />
+<meta name="theme-color" content="#F3E7C5" />
+<title>Velira Flow — демо автоматизації та аналітики</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/veblix-flow.css?v=2" />
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/veblix-flow.css?v=6" />
 </head>
 <body class="fl">
 
 <!-- ===== TOP BAR ===== -->
 <header class="fl-top">
   <div class="fl-top__brand">
-    <span class="fl-logo" aria-hidden="true">V</span>
+    <img class="fl-logo" src="brand/velira-logo-original.jpg" alt="Velira" width="1280" height="1280">
     <div>
-      <p class="fl-top__name">Veblix Flow</p>
+      <p class="fl-top__name">Velira Flow</p>
       <p class="fl-top__crumb">Сайт → Telegram → CRM</p>
     </div>
   </div>
   <div class="fl-top__right">
     <span class="fl-badge fl-badge--live"><i></i>Активна</span>
     <button class="vh-btn" type="button" data-run>Запустити</button>
-    <a class="fl-top__back" href="/">← На сайт</a>
+    <a class="fl-top__back" href="index.html">← На сайт</a>
   </div>
 </header>
 
@@ -42,7 +42,7 @@
     </nav>
     <div class="fl-side__foot">
       <p>Demo workspace</p>
-      <p>bogdan@veblix</p>
+      <p>bogdan@velira</p>
     </div>
   </aside>
 
@@ -61,31 +61,31 @@
 
       <div class="fl-canvas" aria-label="Схема сценарію">
         <ol class="fl-flow">
-          <li class="fl-node" data-node="0" style="--node:#5B6CFF">
+          <li class="fl-node" data-node="0" style="--node:#C91C16">
             <span class="fl-node__check" aria-hidden="true">✓</span>
             <span class="fl-node__icon">F</span>
             <b>Форма</b><i>webhook</i>
           </li>
           <li class="fl-conn" aria-hidden="true"><i></i></li>
-          <li class="fl-node" data-node="1" style="--node:#FFB65C">
+          <li class="fl-node" data-node="1" style="--node:#6F9092">
             <span class="fl-node__check" aria-hidden="true">✓</span>
             <span class="fl-node__icon">✓</span>
             <b>Перевірка</b><i>контакту</i>
           </li>
           <li class="fl-conn" aria-hidden="true"><i></i></li>
-          <li class="fl-node" data-node="2" style="--node:#4EA8DE">
+          <li class="fl-node" data-node="2" style="--node:#35405B">
             <span class="fl-node__check" aria-hidden="true">✓</span>
             <span class="fl-node__icon">✈</span>
             <b>Telegram</b><i>2 питання</i>
           </li>
           <li class="fl-conn" aria-hidden="true"><i></i></li>
-          <li class="fl-node" data-node="3" style="--node:#B08BFF">
+          <li class="fl-node" data-node="3" style="--node:#D84A3F">
             <span class="fl-node__check" aria-hidden="true">✓</span>
             <span class="fl-node__icon">C</span>
             <b>CRM</b><i>створити лід</i>
           </li>
           <li class="fl-conn" aria-hidden="true"><i></i></li>
-          <li class="fl-node" data-node="4" style="--node:#3DDC97">
+          <li class="fl-node" data-node="4" style="--node:#7E9A9A">
             <span class="fl-node__check" aria-hidden="true">✓</span>
             <span class="fl-node__icon">М</span>
             <b>Менеджер</b><i>повідомити</i>
@@ -102,7 +102,7 @@
         </article>
 
         <article class="fl-card fl-lead" data-lead hidden>
-          <h2>CRM · <span data-lead-id>VLX-0000</span></h2>
+          <h2>CRM · <span data-lead-id>VLR-0000</span></h2>
           <div class="fl-lead__who">
             <span class="fl-lead__ava" data-lead-ava>О</span>
             <div><b data-lead-name>—</b><i data-lead-handle>—</i></div>
@@ -138,15 +138,15 @@
       <header class="fl-panel__head">
         <div>
           <h1>Аналітика продажів <span class="fl-badge fl-badge--demo">демо-дані</span></h1>
-          <p class="fl-sub">01–30 червня · оновлюється після кожного запуску сценарію</p>
+          <p class="fl-sub">Демонстраційні дані за 01–30 червня · змінюються після кожного запуску сценарію</p>
         </div>
       </header>
 
       <div class="fl-kpis">
-        <article class="fl-kpi" style="--kpi:#8B93FF"><b data-kpi-leads>48</b><span class="fl-kpi__delta" data-kpi-leads-d>+14%</span><i>Заявок</i></article>
-        <article class="fl-kpi" style="--kpi:#3DDC97"><b data-kpi-qual>27</b><span class="fl-kpi__delta" data-kpi-qual-d>+8%</span><i>Кваліфіковано</i></article>
-        <article class="fl-kpi" style="--kpi:#4EA8DE"><b data-kpi-conv>56%</b><span class="fl-kpi__delta" data-kpi-conv-d>+5%</span><i>Конверсія</i></article>
-        <article class="fl-kpi" style="--kpi:#FFB65C"><b data-kpi-first>38с</b><span class="fl-kpi__delta">−12с</span><i>Перша відповідь</i></article>
+        <article class="fl-kpi" style="--kpi:#C91C16"><b data-kpi-leads>48</b><span class="fl-kpi__delta" data-kpi-leads-d>+14%</span><i>Заявок</i></article>
+        <article class="fl-kpi" style="--kpi:#6F9092"><b data-kpi-qual>27</b><span class="fl-kpi__delta" data-kpi-qual-d>+8%</span><i>Кваліфіковано</i></article>
+        <article class="fl-kpi" style="--kpi:#35405B"><b data-kpi-conv>56%</b><span class="fl-kpi__delta" data-kpi-conv-d>+5%</span><i>Конверсія</i></article>
+        <article class="fl-kpi" style="--kpi:#B81712"><b data-kpi-first>38с</b><span class="fl-kpi__delta">−12с</span><i>Перша відповідь</i></article>
       </div>
 
       <div class="fl-grid2 fl-grid2--stats">
@@ -169,8 +169,8 @@
         <span class="fl-reco__mark" aria-hidden="true">!</span>
         <div>
           <h2>Рекомендація на наступний місяць</h2>
-          <p><b>Приберіть поле «Коментар» на мобільних — воно дає 18% відмов.</b></p>
-          <p class="fl-sub">Запустіть A/B тест на 14 днів і порівняйте конверсію.</p>
+          <p><b>Приклад гіпотези: приберіть поле «Коментар» на мобільних і перевірте, чи зменшаться відмови.</b></p>
+          <p class="fl-sub">Це демонстраційна рекомендація. У реальному проєкті висновок потребує A/B тесту та ваших даних.</p>
         </div>
       </article>
     </section>
@@ -223,16 +223,18 @@
           <p class="fl-sub" data-biz-chart-hint>Збережіть два і більше місяців — з'явиться графік динаміки.</p>
         </article>
         <article class="fl-card">
-          <h2>Аудит від Veblix</h2>
+          <h2>Аудит від Velira</h2>
           <p class="fl-sub" style="margin-bottom:12px">Надішлемо ваші цифри Богдану — повернемось із планом, який виток закривати першим і чим (сайт, бот чи автоматизація).</p>
           <form class="fl-form" data-audit-form novalidate>
-            <label><span>Ім'я</span><input type="text" name="name" placeholder="Як до вас звертатись" required></label>
-            <label><span>Telegram або телефон</span><input type="text" name="contact" placeholder="@username" required></label>
+            <label><span>Ім'я</span><input type="text" name="name" maxlength="200" placeholder="Як до вас звертатись" required></label>
+            <label><span>Telegram або телефон</span><input type="text" name="contact" maxlength="200" placeholder="@username" required></label>
+            <label class="fl-form__trap" aria-hidden="true"><span>Company</span><input type="text" name="company" tabindex="-1" autocomplete="off"></label>
+            <label class="fl-form__consent"><input type="checkbox" name="consent" value="true" required><span>Погоджуюсь на обробку даних згідно з <a href="privacy.html">політикою конфіденційності</a>.</span></label>
             <div class="fl-form__row">
               <button class="vh-btn" type="submit" data-audit-send>Надіслати аудит →</button>
               <button class="fl-ghostbtn" type="button" data-biz-save>Зберегти місяць</button>
             </div>
-            <p class="fl-form__err" data-audit-msg hidden></p>
+            <p class="fl-form__err" data-audit-msg role="status" aria-live="polite" hidden></p>
           </form>
         </article>
       </div>
@@ -246,6 +248,6 @@
   <a class="vh-btn" href="https://t.me/madbod_77" target="_blank" rel="noopener">Хочу таке для свого бізнесу →</a>
 </footer>
 
-<script src="assets/js/veblix-flow.js?v=2" defer></script>
+<script src="assets/js/veblix-flow.js?v=4" defer></script>
 </body>
 </html>
