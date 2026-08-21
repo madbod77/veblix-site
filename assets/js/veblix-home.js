@@ -259,12 +259,51 @@
     render();
   });
 
+  init('clarity motion router', () => {
+    document.querySelectorAll('[data-clarity-machine]').forEach((machine) => {
+      const buttons = Array.from(machine.querySelectorAll('[data-clarity-step]'));
+      const status = machine.querySelector('[data-clarity-status]');
+      if (!buttons.length) return;
+
+      const selectStep = (step) => {
+        if (!buttons.some((button) => button.dataset.clarityStep === step)) return;
+        machine.dataset.step = step;
+        buttons.forEach((button) => {
+          button.setAttribute('aria-pressed', button.dataset.clarityStep === step ? 'true' : 'false');
+        });
+        if (status) status.textContent = `${String(step).padStart(2, '0')} / 03`;
+      };
+
+      machine.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-clarity-step]');
+        if (!button || !machine.contains(button)) return;
+        selectStep(button.dataset.clarityStep);
+      });
+
+      machine.addEventListener('keydown', (event) => {
+        const button = event.target.closest('[data-clarity-step]');
+        if (!button || !['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        const current = buttons.indexOf(button);
+        let next = current;
+        if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = buttons.length - 1;
+        else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = (current - 1 + buttons.length) % buttons.length;
+        else next = (current + 1) % buttons.length;
+        buttons[next].focus();
+        selectStep(buttons[next].dataset.clarityStep);
+      });
+
+      selectStep(machine.dataset.step || '1');
+    });
+  });
+
   /* Reveal once; service demos only stay active while visible. */
   init('intersection reveals', () => {
     const revealItems = Array.from(document.querySelectorAll('[data-reveal]'));
     const services = Array.from(document.querySelectorAll('[data-service]'));
     const motionItems = Array.from(document.querySelectorAll(
-      '.vl-phone-stage, .vl-marquee, .vl-leak, .vl-service',
+      '.vl-phone-stage, .vl-marquee, .vl-leak, .vl-service, .vw-clarity-machine',
     ));
     const showEverything = () => {
       revealItems.forEach((element) => element.classList.add('is-visible'));
