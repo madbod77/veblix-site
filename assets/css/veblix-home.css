@@ -2002,6 +2002,32 @@ h3 {
   }
 }
 
+/* Keep the manifest editorial without letting its width-driven type and
+   spacing turn one statement into a full extra screen on desktop. */
+@media (min-width: 933px) {
+  .vl-manifest {
+    padding-block: clamp(72px, 7vw, 120px);
+  }
+
+  .vl-manifest__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .vl-manifest h2 {
+    max-width: calc(100% - 150px);
+    font-size: clamp(54px, 5.7vw, 82px);
+    line-height: 0.86;
+  }
+
+  .vl-manifest__stamp {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 19px 16px;
+    font-size: clamp(14px, 1.35vw, 18px);
+  }
+}
+
 /* Mobile navigation + stacked editorial grid */
 @media (max-width: 932px) {
   :root {
