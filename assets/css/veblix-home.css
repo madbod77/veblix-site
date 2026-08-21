@@ -515,6 +515,7 @@ h3 {
   transform: translate3d(0, var(--phone-y), 0) rotate(var(--phone-rotate)) scale(var(--phone-scale));
   transform-origin: 54% 56%;
   will-change: transform;
+  mix-blend-mode: darken;
 }
 
 .vl-phone-stage > img {
@@ -525,8 +526,8 @@ h3 {
   aspect-ratio: 3 / 2;
   object-fit: cover;
   object-position: center;
-  mix-blend-mode: multiply;
-  filter: saturate(1.04) contrast(1.03);
+  mix-blend-mode: normal;
+  filter: brightness(1.08);
 }
 
 .vl-phone-stage__orbit {
