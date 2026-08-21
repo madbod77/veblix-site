@@ -1,0 +1,79 @@
+{
+  "title": "VELIRA — OPEN LINE",
+  "mode": "launch-motion",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "durationInFrames": 300,
+  "durationSeconds": 10,
+  "aspectRatio": "16:9",
+  "audio": {
+    "voiceOver": false,
+    "music": false,
+    "design": "One analog ring, one dial return, three relay locks, one terminal confirmation, low room hum."
+  },
+  "scenes": [
+    {
+      "id": "SignalAwakes",
+      "from": 0,
+      "duration": 90,
+      "time": "0.00–3.00",
+      "primaryMessage": "The next client is already on the line.",
+      "exactText": ["КЛІЄНТ НА", "ЛІНІЇ."],
+      "focalSubject": "PhoneHero",
+      "evidenceObject": "A single signal pulse physically begins at the telephone cable connection.",
+      "visualVerb": "dial",
+      "entry": "Cream paper field opens from navy; the approved phone lands into the right side.",
+      "readableHold": "Headline and phone hold while the isolated dial makes one restrained mechanical return.",
+      "exit": "The one red cable extends toward the center and pulls the camera into the route.",
+      "heroFrame": 45,
+      "qaFrames": [12, 45, 78],
+      "assets": ["PhoneHero", "OnestCyrillic", "OriginalSoundDesign"],
+      "continuityOut": "One phone remains seated on the right; one cable and one pulse travel toward the center."
+    },
+    {
+      "id": "SignalRoutes",
+      "from": 90,
+      "duration": 120,
+      "time": "3.00–7.00",
+      "primaryMessage": "One system moves the request from website to conversation to CRM.",
+      "exactText": ["ЗАЯВКА РУХАЄТЬСЯ.", "САЙТ", "TELEGRAM", "CRM"],
+      "focalSubject": "One cream signal packet",
+      "evidenceObject": "The packet touches and mechanically locks exactly three ordered system stations.",
+      "visualVerb": "route",
+      "entry": "The camera continues along the same cable from the phone scene.",
+      "readableHold": "Each station stays readable after pulse contact; all activated states remain visible.",
+      "exit": "The packet enters CRM and the navy CRM field begins expanding from that physical point.",
+      "heroFrame": 60,
+      "qaFrames": [12, 60, 108],
+      "assets": ["OnestCyrillic", "OnestLatin", "OriginalSoundDesign"],
+      "continuityIn": "One phone remains seated on the right; one cable and one pulse travel toward the center.",
+      "continuityOut": "All three stations are locked; the same unbranched cable reaches CRM and the pulse is absorbed."
+    },
+    {
+      "id": "LineLocks",
+      "from": 210,
+      "duration": 90,
+      "time": "7.00–10.00",
+      "primaryMessage": "Velira keeps the line open.",
+      "exactText": ["ЛІНІЯ ВІДКРИТА.", "САЙТИ · БОТИ · АВТОМАТИЗАЦІЯ", "ОБГОВОРИТИ ПРОЄКТ  →"],
+      "focalSubject": "LogoOriginal",
+      "evidenceObject": "The exact owner-supplied logo plate sits above one settled red underline.",
+      "visualVerb": "lock",
+      "entry": "The CRM field expands into navy and the cable straightens into one underline.",
+      "readableHold": "Original logo and CTA remain perfectly still for the last 24 frames.",
+      "exit": "No exit; stable final brand lockup.",
+      "heroFrame": 45,
+      "qaFrames": [12, 45, 78],
+      "assets": ["LogoOriginal", "OnestCyrillic", "OnestLatin", "OriginalSoundDesign"],
+      "continuityIn": "All three stations are locked; the same unbranched cable reaches CRM and the pulse is absorbed.",
+      "continuityOut": "One original logo plate is unobstructed; one red line is settled; final CTA is readable and static."
+    }
+  ],
+  "boundaryQaFrames": [88, 92, 208, 212],
+  "storyboardFrames": [45, 150, 255],
+  "safeMargins": {
+    "horizontal": 80,
+    "vertical": 64
+  }
+}

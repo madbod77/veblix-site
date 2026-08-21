@@ -1,0 +1,51 @@
+REFERENCE ROLES:
+attached ingredient [PhoneIdentity] [PhoneIdentity] (identity): inherit exact phone geometry, seated handset, transparent dial, red enamel, black trim, feet, and its single photographed coiled red cord; do not inherit crop, background, framing, duplicate reflections, any second cable, or any new free end.
+
+OUTPUT CONTRACT:
+Create one 10-second 16:9 video with native synchronized audio. Single continuous unbroken shot; single unbroken scene; no scene cuts.
+
+STORY:
+One tactile telephone line carries a client signal into Velira's system.
+Primary action: One pulse follows one unbranched cable and activates three ordered stages.
+Required final state: Phone and stages stable; terminal teal; cable settled; blank square logo-safe plate front-parallel, axis-aligned, unobstructed, and motionless.
+
+PROP LOCKS:
+Phone: exactly 1 instance; One glossy red rotary telephone matching PhoneIdentity; one seated handset and one dial.
+Cable: exactly 1 instance; One opaque signal-red cable continuing from the photographed cord into the system; no branch or duplicate.
+SystemStages: exactly 3 instances; Three unlabelled editorial objects: browser, conversation, status.
+LogoSafePlate: exactly 1 instance; One blank square cream plate, front-parallel and axis-aligned, for the post-production logo.
+
+WORLD AND LOOK:
+Warm #F4E8C5 paper studio with #303647 navy, sparse #C80D0A red, #668C8F teal, and no people.
+Tactile editorial motion, 50 mm perspective, crisp grid, paper fibre, coherent enamel highlights and shadows, precise mechanical easing.
+
+SHOT PLAN:
+[0-2.8s] Begin in the paper studio. Props present: Phone, Cable. Three-quarter close; phone right, space left. Phone still; handset seated; cable resting. One ring nudges the handset; one pulse extends the cable. Camera: Slow lateral track along cable; focus on connection. Light/material response: High-left light; coherent enamel response. Synchronized sound: Ring 0.55s; dry click 1.75s. End state: Phone still; handset seated; one pulse on one cable.
+[2.8-6.8s] Continue from the same camera origin. Props present: Cable, SystemStages. Lateral view of one cable and three editorial stages. Phone still; handset seated; one pulse on one cable. Pulse contacts browser, conversation, then status; each locks; terminal turns teal. Camera: Same lateral track; focus follows contact. Light/material response: Same high-left light. Synchronized sound: Three dry contact ticks. End state: Three stages active; cable unbranched; pulse absorbed; terminal teal.
+[6.8-10s] Continue as the third stage expands. Props present: Cable, SystemStages, LogoSafePlate. Front-facing lockup; blank cream logo-safe plate left of centre, cable underline. Three stages active; cable unbranched; pulse absorbed; terminal teal. Navy expands; cable becomes an underline; the blank plate enters without rotation or deformation and stops by 7.8s. Camera: Track decelerates into a locked frame. Light/material response: Even plate light; coherent cable highlight and contact shadow. Synchronized sound: Terminal chime 7.1s; room tone fades. End state: Phone and stages stable; terminal teal; cable settled; blank square logo-safe plate front-parallel, axis-aligned, unobstructed, and motionless.
+
+AUDIO:
+Ambient bed: Low warm studio room tone that fades to near-silence before the final hold.
+Music: none.
+No dialogue.
+Captions: none.
+
+CONTINUITY AND PHYSICS:
+- Exact counts: one pulse and the declared props.
+- Cable continuous and unbranched from phone to terminal.
+- Stages activate only on pulse contact and stay active.
+- One high-left key light; coherent reflections and shadows.
+- Logo-safe plate remains square, front-parallel, blank, and motionless after 7.8s for the post-production logo.
+- Handset moves millimetres with mass and settling.
+- Pulse stays on the cable and transfers energy on contact.
+- Cable has gentle tension and no overshoot.
+
+CRITICAL EXCLUSIONS:
+No people, hands, mascots, extra props, generated text, or captions.
+No second cable-like shadow, ghost, branch, gap, duplicate, transparency, or colour change; one soft attached contact shadow is allowed.
+No object duplication, morphing, camera jumps, spins, or scene changes.
+No gradients, glass, neon, particles, flares, HUD noise, floating cards, icons, or metrics.
+Do not generate any logo, symbol, wordmark, lettering, pseudo-text, or marks on the blank logo-safe plate; reject a deformed plate rather than warping the owner logo to fit it.
+
+REFERENCE GUIDANCE:
+Use the given images as references for video generation; they must not be used as literal initial frames.

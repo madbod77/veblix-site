@@ -24,6 +24,9 @@ __pycache__/
 *.wav
 *.m4a
 
+# deterministic source audio for the Velira Open Line motion film
+!motion/velira-line-film/public/audio/velira-open-line.wav
+
 # hero-відео нової головної — деплоїмо
 !assets/video/veblix-hero.mp4
 !assets/video/veblix-hero-mobile.mp4

@@ -1,0 +1,49 @@
+{
+  "project": "Velira — Open Line",
+  "mode": "launch-motion",
+  "sourceOfTruth": "/Users/macbook/veblix-bridge/worktrees/veblix-site-codex/DESIGN.md",
+  "visualIdea": "One physical red telephone cable carries a client signal through a complete business system.",
+  "palette": {
+    "paper": "#F4E8C5",
+    "navy": "#303647",
+    "teal": "#668C8F",
+    "signalRed": "#C80D0A",
+    "peach": "#E8C3A8",
+    "ink": "#101114",
+    "creamWhite": "#FFF9EA"
+  },
+  "type": {
+    "family": "Onest",
+    "behavior": "Oversized editorial uppercase, tight display tracking, short labels, exact code-native Ukrainian text."
+  },
+  "imageLanguage": [
+    "Approved glossy red rotary telephone photography",
+    "Warm tactile paper field",
+    "Hard twelve-column editorial alignment",
+    "One signal-red line used as a causal object, never decoration"
+  ],
+  "motionLanguage": {
+    "verbs": ["dial", "unspool", "route", "lock"],
+    "camera": "Restrained continuous lateral travel with a shallow 5 percent push-in; no handheld motion.",
+    "transitions": ["path-led reveal", "mechanical lock", "solid field expansion"],
+    "timing": "Fast tactile arrivals, readable holds, stable final 24-frame lockup."
+  },
+  "audioLanguage": "Sparse analog telephone and relay punctuation over a low studio hum; no voice-over and no music bed.",
+  "mustPreserve": [
+    "Use the original logo JPEG only; crop and scale its complete presentation without redrawing or recoloring it.",
+    "Exactly one phone, one cable and one signal packet.",
+    "The cable never branches and never gains a parallel translucent shadow line.",
+    "The phone remains a still approved photograph; motion comes from camera, masks and an isolated dial crop."
+  ],
+  "avoid": [
+    "generic gradients",
+    "glassmorphism",
+    "neon or cyberpunk glow",
+    "particles and lens flares",
+    "floating dashboard cards",
+    "fake metrics",
+    "stock icons",
+    "robot mascots",
+    "logo construction or morphing"
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "project": "Velira — Open Line",
+  "assets": [
+    {
+      "id": "PhoneHero",
+      "path": "public/assets/velira-phone-hero.jpg",
+      "layerRole": "hero product photograph",
+      "source": "/Users/macbook/veblix-bridge/worktrees/veblix-site-codex/assets/img/velira-phone-hero.jpg",
+      "provenance": "Owner-approved Velira source-of-truth asset",
+      "license": "Owner supplied / project use",
+      "crop": "Right-side editorial crop; never reshape the phone",
+      "cutoutStatus": "Not cut out; the matching warm paper background is intentionally blended into the composition",
+      "sha256": "2afd5eb594150417166a74619d737c64254e5a90852890b1d6725fd5615467ca"
+    },
+    {
+      "id": "LogoOriginal",
+      "path": "public/assets/velira-logo-original.jpg",
+      "layerRole": "final rigid brand plate",
+      "source": "/Users/macbook/veblix-bridge/worktrees/veblix-site-codex/brand/velira-logo-original.jpg",
+      "provenance": "Owner-supplied original and logo source of truth",
+      "license": "Owner supplied / project use",
+      "crop": "Uniform outer-margin crop only; full symbol, wordmark and tagline remain intact",
+      "cutoutStatus": "Original white square retained deliberately as a physical logo plate",
+      "sha256": "ed7c299466921a85f4d30c1ea643cf8ad4a71b6594d27afbf810de78159633c3"
+    },
+    {
+      "id": "OnestCyrillic",
+      "path": "public/fonts/onest-cyrillic.woff2",
+      "layerRole": "code-native Cyrillic typography",
+      "source": "https://fonts.gstatic.com/s/onest/v9/gNMKW3F-SZuj7xmb-HY6EQ.woff2",
+      "provenance": "Google Fonts Onest v9",
+      "license": "SIL Open Font License 1.1",
+      "crop": "n/a",
+      "cutoutStatus": "n/a",
+      "sha256": "37bc16874135c16134679b1db25b87fe80eb9fcd4ef3666af7c531bfde204fe2"
+    },
+    {
+      "id": "OnestLatin",
+      "path": "public/fonts/onest-latin.woff2",
+      "layerRole": "code-native Latin typography",
+      "source": "https://fonts.gstatic.com/s/onest/v9/gNMKW3F-SZuj7xmf-HY.woff2",
+      "provenance": "Google Fonts Onest v9",
+      "license": "SIL Open Font License 1.1",
+      "crop": "n/a",
+      "cutoutStatus": "n/a",
+      "sha256": "67849bcc11e02177442da14ad954bfe1cc709553dad137b5003449b303e83fc3"
+    },
+    {
+      "id": "OriginalSoundDesign",
+      "path": "public/audio/velira-open-line.wav",
+      "layerRole": "master sound-design mix",
+      "source": "Procedurally synthesized for this project with FFmpeg",
+      "provenance": "Original generated audio; no third-party music",
+      "license": "Project-owned",
+      "crop": "10 seconds",
+      "cutoutStatus": "n/a",
+      "sha256": "5e4a987ffb5dc4f750a44dba6e49f6b22c62a67c09a3afa702caa2a760d2ec7d"
+    }
+  ]
+}

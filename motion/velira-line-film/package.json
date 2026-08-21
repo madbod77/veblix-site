@@ -1,0 +1,33 @@
+{
+  "name": "velira-line-film",
+  "version": "1.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "validate:plan": "node scripts/validate-launch-plan.mjs",
+    "render": "remotion render src/index.ts VeliraOpenLine out/velira-open-line.mp4 --codec=h264 --crf=18 --pixel-format=yuv420p --color-space=bt709 --image-format=png --concurrency=1",
+    "render:assets": "remotion still src/index.ts VeliraAssetSheet out/velira-asset-sheet.png --frame=0 --image-format=png",
+    "render:storyboard": "remotion still src/index.ts VeliraStoryboard out/velira-storyboard.png --frame=0 --image-format=png"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.499",
+    "@remotion/google-fonts": "4.0.499",
+    "@remotion/media": "4.0.499",
+    "@remotion/tailwind-v4": "4.0.499",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.499",
+    "svg-path-properties": "^2.0.0",
+    "tailwindcss": "4.0.0"
+  },
+  "devDependencies": {
+    "@remotion/eslint-config-flat": "4.0.499",
+    "@types/react": "19.2.7",
+    "@types/web": "0.0.166",
+    "eslint": "^9.39.5",
+    "prettier": "3.8.1",
+    "typescript": "5.9.3"
+  }
+}

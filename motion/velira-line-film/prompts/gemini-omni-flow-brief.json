@@ -1,0 +1,157 @@
+{
+  "schema_version": 2,
+  "surface": "flow",
+  "task": "reference_to_video",
+  "model": "Omni Flash",
+  "duration_seconds": 10,
+  "aspect_ratio": "16:9",
+  "output_count": 1,
+  "language": "English",
+  "shot_style": "continuous",
+  "timing_mode": "timecoded",
+  "premise": "One tactile telephone line carries a client signal into Velira's system.",
+  "primary_action": "One pulse follows one unbranched cable and activates three ordered stages.",
+  "final_state": "Phone and stages stable; terminal teal; cable settled; blank square logo-safe plate front-parallel, axis-aligned, unobstructed, and motionless.",
+  "flow_ui_projection": {
+    "path": "Video > Ingredients",
+    "model": "Omni Flash",
+    "duration": "10 seconds",
+    "orientation": "landscape 16:9",
+    "outputs": 1,
+    "attachments": ["PhoneIdentity"],
+    "creditGate": "Recheck the signed-in Flow cost and obtain explicit approval immediately before Generate."
+  },
+  "references": [
+    {
+      "id": "PhoneIdentity",
+      "role": "identity",
+      "path": "/Users/macbook/veblix-bridge/worktrees/veblix-site-codex/motion/velira-line-film/public/assets/velira-phone-hero.jpg",
+      "mime_type": "image/jpeg",
+      "inspection_status": "confirmed",
+      "attachment_mode": "ingredient",
+      "inherit": "exact phone geometry, seated handset, transparent dial, red enamel, black trim, feet, and its single photographed coiled red cord",
+      "exclude": "crop, background, framing, duplicate reflections, any second cable, or any new free end"
+    }
+  ],
+  "post_production": {
+    "required": true,
+    "logo_source": "/Users/macbook/veblix-bridge/worktrees/veblix-site-codex/motion/velira-line-film/public/assets/velira-logo-original.jpg",
+    "method": "Composite the owner-supplied JPEG as one rigid, uniformly scaled plate in Remotion; never ask Omni to synthesize, redraw, animate, or typeset the logo.",
+    "typography": "Composite all Ukrainian copy in Remotion with the vendored Onest font.",
+    "proof": "The delivered Remotion master uses the exact source JPEG with no internal alteration."
+  },
+  "subjects": [],
+  "props": [
+    {
+      "id": "Phone",
+      "count": 1,
+      "description": "One glossy red rotary telephone matching PhoneIdentity; one seated handset and one dial."
+    },
+    {
+      "id": "Cable",
+      "count": 1,
+      "description": "One opaque signal-red cable continuing from the photographed cord into the system; no branch or duplicate."
+    },
+    {
+      "id": "SystemStages",
+      "count": 3,
+      "description": "Three unlabelled editorial objects: browser, conversation, status."
+    },
+    {
+      "id": "LogoSafePlate",
+      "count": 1,
+      "description": "One blank square cream plate, front-parallel and axis-aligned, for the post-production logo."
+    }
+  ],
+  "world": "Warm #F4E8C5 paper studio with #303647 navy, sparse #C80D0A red, #668C8F teal, and no people.",
+  "global_look": "Tactile editorial motion, 50 mm perspective, crisp grid, paper fibre, coherent enamel highlights and shadows, precise mechanical easing.",
+  "continuity": [
+    "Exact counts: one pulse and the declared props.",
+    "Cable continuous and unbranched from phone to terminal.",
+    "Stages activate only on pulse contact and stay active.",
+    "One high-left key light; coherent reflections and shadows.",
+    "Logo-safe plate remains square, front-parallel, blank, and motionless after 7.8s for the post-production logo."
+  ],
+  "physics": [
+    "Handset moves millimetres with mass and settling.",
+    "Pulse stays on the cable and transfers energy on contact.",
+    "Cable has gentle tension and no overshoot."
+  ],
+  "shots": [
+    {
+      "start": 0,
+      "end": 2.8,
+      "transition": "Begin in the paper studio",
+      "roster": [],
+      "props_present": ["Phone", "Cable"],
+      "framing": "Three-quarter close; phone right, space left",
+      "starting_state": "Phone still; handset seated; cable resting",
+      "action": "One ring nudges the handset; one pulse extends the cable",
+      "reaction": "",
+      "camera": "Slow lateral track along cable; focus on connection",
+      "lighting_material": "High-left light; coherent enamel response",
+      "audio": "Ring 0.55s; dry click 1.75s",
+      "end_state": "Phone still; handset seated; one pulse on one cable"
+    },
+    {
+      "start": 2.8,
+      "end": 6.8,
+      "transition": "Continue from the same camera origin",
+      "roster": [],
+      "props_present": ["Cable", "SystemStages"],
+      "framing": "Lateral view of one cable and three editorial stages",
+      "starting_state": "Phone still; handset seated; one pulse on one cable",
+      "action": "Pulse contacts browser, conversation, then status; each locks; terminal turns teal",
+      "reaction": "",
+      "camera": "Same lateral track; focus follows contact",
+      "lighting_material": "Same high-left light",
+      "audio": "Three dry contact ticks",
+      "end_state": "Three stages active; cable unbranched; pulse absorbed; terminal teal"
+    },
+    {
+      "start": 6.8,
+      "end": 10,
+      "transition": "Continue as the third stage expands",
+      "roster": [],
+      "props_present": ["Cable", "SystemStages", "LogoSafePlate"],
+      "framing": "Front-facing lockup; blank cream logo-safe plate left of centre, cable underline",
+      "starting_state": "Three stages active; cable unbranched; pulse absorbed; terminal teal",
+      "action": "Navy expands; cable becomes an underline; the blank plate enters without rotation or deformation and stops by 7.8s",
+      "reaction": "",
+      "camera": "Track decelerates into a locked frame",
+      "lighting_material": "Even plate light; coherent cable highlight and contact shadow",
+      "audio": "Terminal chime 7.1s; room tone fades",
+      "end_state": "Phone and stages stable; terminal teal; cable settled; blank square logo-safe plate front-parallel, axis-aligned, unobstructed, and motionless"
+    }
+  ],
+  "audio": {
+    "bed": "Low warm studio room tone that fades to near-silence before the final hold.",
+    "music": "none",
+    "dialogue": [],
+    "captions": "none"
+  },
+  "visible_text": [],
+  "exclusions": [
+    "No people, hands, mascots, extra props, generated text, or captions.",
+    "No second cable-like shadow, ghost, branch, gap, duplicate, transparency, or colour change; one soft attached contact shadow is allowed.",
+    "No object duplication, morphing, camera jumps, spins, or scene changes.",
+    "No gradients, glass, neon, particles, flares, HUD noise, floating cards, icons, or metrics.",
+    "Do not generate any logo, symbol, wordmark, lettering, pseudo-text, or marks on the blank logo-safe plate; reject a deformed plate rather than warping the owner logo to fit it."
+  ],
+  "assumptions": [
+    "The requested Gemini surface is Google Flow standard because the user named Gemini Omni Flash without choosing API execution.",
+    "Landscape 16:9 and ten seconds are selected to match a premium website/portfolio motion graphic and the current Flow duration choices.",
+    "Critical Ukrainian typography and the exact logo are composited in deterministic Remotion post-production rather than generated by Omni.",
+    "No paid Flow generation or upscale is authorized in this task; the package stops at the manual credit gate."
+  ],
+  "safety_notes": [
+    "No people, minors, recognizable persons, dangerous actions, restricted content, or sensitive uploads are involved.",
+    "Recheck current Flow availability, displayed credits, and output settings immediately before any future billed generation."
+  ],
+  "provenance": {
+    "references": "Owner-approved local Velira assets inspected on 2026-08-21.",
+    "brandRules": "/Users/macbook/veblix-bridge/worktrees/veblix-site-codex/DESIGN.md",
+    "creativeDetails": "Directed for this task from the approved Velira phone-line narrative.",
+    "paidGeneration": "not performed"
+  }
+}
