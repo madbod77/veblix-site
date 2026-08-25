@@ -1,0 +1,18 @@
+{
+  "name": "velira-web",
+  "compatibility_date": "2026-08-25",
+  "main": "index.js",
+  "no_bundle": true,
+  "rules": [
+    {
+      "type": "ESModule",
+      "globs": ["**/*.js", "**/*.mjs"]
+    }
+  ],
+  "assets": {
+    "directory": "../client"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

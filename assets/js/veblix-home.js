@@ -630,8 +630,9 @@
         success: 'Дякуємо! Заявку отримано — зв’яжемося з вами найближчим часом.',
         preview: 'Локальний preview: форму перевірено, але заявку нікуди не надсилали.',
         rateLimit: 'Забагато спроб. Зачекайте хвилину й надішліть ще раз.',
-        timeout: 'Сервер не відповів вчасно. Спробуйте ще раз або напишіть у Telegram: @madbod_77.',
-        error: 'Не вдалося надіслати заявку. Спробуйте ще раз або напишіть у Telegram: @madbod_77.',
+        timeout: 'Сервер не відповів вчасно.',
+        error: 'Не вдалося автоматично надіслати заявку.',
+        telegram: 'Написати в Telegram: @madbod_77',
       },
       en: {
         submit: submitLabel?.dataset.en || 'Send the brief',
@@ -644,8 +645,9 @@
         success: 'Thank you! We received your brief and will contact you shortly.',
         preview: 'Local preview: the form was validated, but no lead was sent anywhere.',
         rateLimit: 'Too many attempts. Wait a minute and try again.',
-        timeout: 'The server took too long to respond. Try again or message us on Telegram: @madbod_77.',
-        error: 'We could not send the brief. Try again or message us on Telegram: @madbod_77.',
+        timeout: 'The server took too long to respond.',
+        error: 'We could not send the brief automatically.',
+        telegram: 'Message us on Telegram: @madbod_77',
       },
     };
     const strings = () => copy[currentLanguage] || copy.uk;
@@ -659,6 +661,15 @@
       if (submitLabel) submitLabel.textContent = state === 'sending' ? strings().sending : strings().submit;
       if (status) {
         status.textContent = statusKey ? strings()[statusKey] : '';
+        if ((statusKey === 'error' || statusKey === 'timeout') && strings().telegram) {
+          status.append(document.createTextNode(' '));
+          const telegramLink = document.createElement('a');
+          telegramLink.href = 'https://t.me/madbod_77';
+          telegramLink.target = '_blank';
+          telegramLink.rel = 'noopener noreferrer';
+          telegramLink.textContent = strings().telegram;
+          status.append(telegramLink);
+        }
         const assertive = state === 'error' || state === 'invalid';
         status.setAttribute('role', assertive ? 'alert' : 'status');
         status.setAttribute('aria-live', assertive ? 'assertive' : 'polite');

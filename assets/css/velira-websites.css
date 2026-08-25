@@ -886,6 +886,10 @@
   transform: rotate(8deg);
 }
 
+.vw-project--live .vw-browser__bar span {
+  margin-right: 56px;
+}
+
 /* Pricing */
 .vw-pricing {
   padding-block: clamp(120px, 12vw, 190px);
