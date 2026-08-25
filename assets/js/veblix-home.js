@@ -257,6 +257,174 @@
     });
   });
 
+  /* Client route: one viewport-triggered signal, three exact handoff states. */
+  init('client route motion', () => {
+    const routes = Array.from(document.querySelectorAll('[data-client-route]'));
+    if (!routes.length) return;
+
+    const duration = 4800;
+    const compactRoute = window.matchMedia('(max-width: 932px)');
+    const smoothstep = (value) => value * value * (3 - (2 * value));
+    const progressAt = (time) => {
+      if (time < 0.08) return 0;
+      if (time < 0.28) return smoothstep((time - 0.08) / 0.2) * 0.5;
+      if (time < 0.36) return 0.5;
+      if (time < 0.58) return 0.5 + (smoothstep((time - 0.36) / 0.22) * 0.5);
+      return 1;
+    };
+    const stepAt = (time) => {
+      if (time < 0.28) return 1;
+      if (time < 0.58) return 2;
+      return 3;
+    };
+
+    routes.forEach((route) => {
+      const path = route.querySelector('[data-route-path]');
+      const packet = route.querySelector('[data-route-packet]');
+      const mobileRail = route.querySelector('.vl-core-route__mobile-rail');
+      if (!path || !packet || !mobileRail || typeof path.getTotalLength !== 'function') return;
+
+      const length = path.getTotalLength();
+      let animationFrame = 0;
+      let measureFrame = 0;
+      let startedAt = 0;
+      let inView = false;
+      let running = false;
+      let finished = false;
+      let railLength = 0;
+      let lastProgress = 0;
+      let lastStep = 1;
+      let lastResolved = false;
+
+      path.style.strokeDasharray = `${length}`;
+
+      const stop = () => {
+        if (animationFrame) window.cancelAnimationFrame(animationFrame);
+        animationFrame = 0;
+        running = false;
+      };
+
+      const draw = (progress, step, resolved = false) => {
+        const safeProgress = clamp(progress);
+        lastProgress = safeProgress;
+        lastStep = step;
+        lastResolved = resolved;
+
+        route.style.setProperty('--route-progress-scale', safeProgress.toFixed(4));
+        route.style.setProperty('--route-packet-y', `${(safeProgress * railLength).toFixed(2)}px`);
+
+        if (!compactRoute.matches) {
+          const distance = length * safeProgress;
+          const point = path.getPointAtLength(distance);
+          path.style.strokeDashoffset = `${length - distance}`;
+          packet.setAttribute('transform', `translate(${point.x} ${point.y})`);
+        }
+
+        const nextStep = String(step);
+        if (route.dataset.routeStep !== nextStep) route.dataset.routeStep = nextStep;
+        if (route.classList.contains('is-route-complete') !== resolved) {
+          route.classList.toggle('is-route-complete', resolved);
+        }
+      };
+
+      const measureRail = () => {
+        railLength = compactRoute.matches ? mobileRail.getBoundingClientRect().height : 0;
+      };
+
+      const scheduleMeasure = () => {
+        if (measureFrame) return;
+        measureFrame = window.requestAnimationFrame(() => {
+          measureFrame = 0;
+          measureRail();
+          draw(lastProgress, lastStep, lastResolved);
+        });
+      };
+
+      const reset = () => {
+        stop();
+        startedAt = 0;
+        finished = false;
+        route.classList.remove('is-route-running', 'is-route-complete');
+        draw(0, 1);
+      };
+
+      const renderComplete = () => {
+        stop();
+        finished = true;
+        draw(1, 3, true);
+        route.classList.remove('is-route-running');
+      };
+
+      const tick = (now) => {
+        if (!running) return;
+        if (!startedAt) startedAt = now;
+        const time = clamp((now - startedAt) / duration);
+        draw(progressAt(time), stepAt(time), time >= 0.86);
+        if (time < 1) {
+          animationFrame = window.requestAnimationFrame(tick);
+          return;
+        }
+        renderComplete();
+      };
+
+      const run = () => {
+        if (reduceMotion.matches) {
+          renderComplete();
+          return;
+        }
+        if (running || finished) return;
+        measureRail();
+        reset();
+        running = true;
+        route.classList.add('is-route-running');
+        animationFrame = window.requestAnimationFrame(tick);
+      };
+
+      const sync = () => {
+        if (reduceMotion.matches) {
+          renderComplete();
+          return;
+        }
+        if (inView && !document.hidden) run();
+        else reset();
+      };
+
+      route.classList.add('is-route-ready');
+      measureRail();
+      reset();
+
+      if ('IntersectionObserver' in window) {
+        const routeObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            inView = entry.isIntersecting && entry.intersectionRatio >= 0.18;
+            sync();
+          });
+        }, { threshold: 0.18, rootMargin: '5% 0px 5% 0px' });
+        routeObserver.observe(route);
+      } else {
+        inView = true;
+        sync();
+      }
+
+      const onMotionPreferenceChange = () => {
+        if (!reduceMotion.matches) finished = false;
+        sync();
+      };
+      if (typeof reduceMotion.addEventListener === 'function') {
+        reduceMotion.addEventListener('change', onMotionPreferenceChange);
+      } else {
+        reduceMotion.addListener(onMotionPreferenceChange);
+      }
+      if (typeof compactRoute.addEventListener === 'function') {
+        compactRoute.addEventListener('change', scheduleMeasure);
+      } else {
+        compactRoute.addListener(scheduleMeasure);
+      }
+      window.addEventListener('resize', scheduleMeasure, { passive: true });
+      document.addEventListener('visibilitychange', sync);
+    });
+  });
+
   /* One-shot signal route: every moving packet is sampled from the drawn SVG path. */
   init('automation dispatch', () => {
     const statuses = [

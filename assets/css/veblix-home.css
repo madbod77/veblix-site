@@ -3102,6 +3102,8 @@ h3 {
 }
 
 .vl-core-route {
+  --route-progress-scale: 0;
+  --route-packet-y: 0px;
   position: relative;
   min-width: 0;
   margin: 0;
@@ -3157,12 +3159,15 @@ h3 {
   border-radius: 50%;
   background: var(--vl-red);
   box-shadow: 0 0 0 7px rgba(200, 13, 10, 0.13);
+}
+
+.vl-core-route.is-route-running .vl-core-route__hud i {
   animation: vl-core-pulse 1.5s ease-in-out infinite;
 }
 
 .vl-core-route__canvas {
   position: relative;
-  min-height: 460px;
+  min-height: 510px;
 }
 
 .vl-core-route__track {
@@ -3187,26 +3192,39 @@ h3 {
 }
 
 .vl-core-route__glow {
-  stroke: rgba(200, 13, 10, 0.22);
-  stroke-width: 22;
+  stroke: rgba(200, 13, 10, 0.12);
+  stroke-width: 10;
 }
 
 .vl-core-route__live {
   stroke: var(--vl-red);
-  stroke-width: 7;
-  stroke-dasharray: 1;
-  animation: vl-core-draw 5.6s var(--vl-ease-in-out) infinite;
+  stroke-width: 5;
 }
 
 .vl-core-route__packet {
   fill: var(--vl-paper-soft);
   filter: drop-shadow(0 0 11px rgba(200, 13, 10, 0.95));
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.vl-core-route.is-route-running .vl-core-route__packet,
+.vl-core-route.is-route-complete .vl-core-route__packet {
+  opacity: 1;
 }
 
 .vl-core-route__packet-ring {
   fill: rgba(200, 13, 10, 0.2);
   stroke: var(--vl-red);
   stroke-width: 2;
+}
+
+.vl-core-route.is-route-running .vl-core-route__packet-ring {
+  animation: vl-core-packet-ring 1.15s ease-in-out infinite;
+}
+
+.vl-core-route__mobile-rail {
+  display: none;
 }
 
 .vl-core-route__nodes {
@@ -3223,6 +3241,7 @@ h3 {
 }
 
 .vl-core-route__nodes li {
+  --route-node-y: 0px;
   position: relative;
   width: 100%;
   max-width: 190px;
@@ -3233,24 +3252,29 @@ h3 {
   box-shadow: 0 16px 42px rgba(0, 0, 0, 0.22), 6px 6px 0 rgba(200, 13, 10, 0.62);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
-  animation: vl-core-node 5.6s ease-in-out infinite;
+  opacity: 0.74;
+  transform: translateY(var(--route-node-y));
+  transition:
+    border-color 420ms var(--vl-ease),
+    background-color 420ms var(--vl-ease),
+    box-shadow 420ms var(--vl-ease),
+    opacity 320ms ease,
+    transform 520ms var(--vl-ease);
 }
 
 .vl-core-route__nodes li:nth-child(1) {
+  --route-node-y: 88px;
   justify-self: start;
-  transform: translateY(82px);
 }
 
 .vl-core-route__nodes li:nth-child(2) {
+  --route-node-y: -98px;
   justify-self: center;
-  transform: translateY(-92px);
-  animation-delay: 1.86s;
 }
 
 .vl-core-route__nodes li:nth-child(3) {
+  --route-node-y: 88px;
   justify-self: end;
-  transform: translateY(82px);
-  animation-delay: 3.72s;
 }
 
 .vl-core-route__nodes li::before {
@@ -3263,6 +3287,15 @@ h3 {
   border: 3px solid var(--vl-navy-deep);
   border-radius: 50%;
   background: var(--vl-red);
+  color: var(--vl-navy-deep);
+  font-size: 9px;
+  font-weight: 900;
+  line-height: 10px;
+  text-align: center;
+  transition:
+    background-color 300ms ease,
+    box-shadow 300ms ease,
+    transform 420ms var(--vl-ease);
 }
 
 .vl-core-route__nodes span,
@@ -3297,6 +3330,54 @@ h3 {
   line-height: 1.35;
 }
 
+.vl-core-route__nodes h3,
+.vl-core-route__nodes p,
+.vl-core-route__nodes i {
+  transition: color 320ms ease, opacity 320ms ease;
+}
+
+.vl-core-route[data-route-step="1"] .vl-core-route__nodes li:nth-child(1),
+.vl-core-route[data-route-step="2"] .vl-core-route__nodes li:nth-child(2),
+.vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(3) {
+  border-color: var(--vl-paper-soft);
+  background: rgba(44, 49, 64, 0.98);
+  box-shadow: 0 24px 58px rgba(200, 13, 10, 0.24), 9px 9px 0 var(--vl-red);
+  opacity: 1;
+  transform: translateY(calc(var(--route-node-y) - 6px)) scale(1.012);
+}
+
+.vl-core-route[data-route-step="1"] .vl-core-route__nodes li:nth-child(1)::before,
+.vl-core-route[data-route-step="2"] .vl-core-route__nodes li:nth-child(2)::before,
+.vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(3)::before {
+  background: var(--vl-paper-soft);
+  box-shadow: 0 0 0 5px rgba(200, 13, 10, 0.45), 0 0 24px var(--vl-red);
+  transform: scale(1.12);
+}
+
+.vl-core-route[data-route-step="2"] .vl-core-route__nodes li:nth-child(1),
+.vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(1),
+.vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(2),
+.vl-core-route.is-route-complete .vl-core-route__nodes li {
+  opacity: 0.92;
+}
+
+.vl-core-route[data-route-step="2"] .vl-core-route__nodes li:nth-child(1)::before,
+.vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(1)::before,
+.vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(2)::before,
+.vl-core-route.is-route-complete .vl-core-route__nodes li::before {
+  content: "✓";
+  background: var(--vl-paper-soft);
+  box-shadow: 0 0 0 3px var(--vl-red);
+}
+
+.vl-core-route[data-route-step] .vl-core-route__nodes li h3 {
+  color: var(--vl-paper-soft);
+}
+
+.vl-core-route[data-route-step] .vl-core-route__nodes li p {
+  color: rgba(255, 249, 234, 0.72);
+}
+
 .vl-core-route__status {
   min-height: 52px;
   border-top: 1px solid var(--vl-rule-light);
@@ -3306,6 +3387,47 @@ h3 {
 .vl-core-route__status strong {
   color: var(--vl-paper-soft);
   font-weight: 760;
+}
+
+.vl-core-route__status span,
+.vl-core-route__status strong {
+  opacity: 0.32;
+  transition: color 320ms ease, opacity 320ms ease, transform 420ms var(--vl-ease);
+}
+
+.vl-core-route[data-route-step="1"] .vl-core-route__status span:first-child,
+.vl-core-route[data-route-step="2"] .vl-core-route__status span:nth-child(2),
+.vl-core-route[data-route-step="3"] .vl-core-route__status strong,
+.vl-core-route.is-route-complete .vl-core-route__status strong {
+  color: var(--vl-paper-soft);
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.no-js .vl-core-route {
+  --route-progress-scale: 1;
+}
+
+.no-js .vl-core-route__packet {
+  display: none;
+}
+
+.no-js .vl-core-route__nodes li,
+.no-js .vl-core-route__status strong {
+  opacity: 1;
+}
+
+.no-js .vl-core-route[data-route-step] .vl-core-route__nodes li:nth-child(n) {
+  border-color: rgba(255, 249, 234, 0.62);
+  background: rgba(37, 42, 56, 0.92);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.22), 6px 6px 0 rgba(200, 13, 10, 0.62);
+  transform: translateY(var(--route-node-y)) !important;
+}
+
+.no-js .vl-core-route__nodes li::before {
+  content: "✓";
+  background: var(--vl-paper-soft);
+  box-shadow: 0 0 0 3px var(--vl-red);
 }
 
 .vl-final-cta {
@@ -3353,20 +3475,14 @@ h3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-@keyframes vl-core-draw {
-  0% { stroke-dashoffset: 1; opacity: 0.45; }
-  18%, 76% { stroke-dashoffset: 0; opacity: 1; }
-  100% { stroke-dashoffset: -1; opacity: 0.45; }
-}
-
 @keyframes vl-core-pulse {
   0%, 100% { opacity: 0.55; transform: scale(0.82); }
   50% { opacity: 1; transform: scale(1.15); }
 }
 
-@keyframes vl-core-node {
-  0%, 12%, 100% { border-color: rgba(255, 249, 234, 0.56); box-shadow: 0 16px 42px rgba(0, 0, 0, 0.22), 6px 6px 0 rgba(200, 13, 10, 0.48); }
-  18%, 31% { border-color: var(--vl-paper-soft); box-shadow: 0 20px 54px rgba(200, 13, 10, 0.2), 8px 8px 0 var(--vl-red); }
+@keyframes vl-core-packet-ring {
+  0%, 100% { fill: rgba(200, 13, 10, 0.16); stroke-width: 2; }
+  50% { fill: rgba(200, 13, 10, 0.3); stroke-width: 3; }
 }
 
 /* Homepage-scoped calm interactions ------------------------------------------
@@ -3462,57 +3578,129 @@ h3 {
   }
 
   .vl-core-route__canvas {
-    min-height: 560px;
-    padding: 46px clamp(22px, 7vw, 64px);
+    --route-pad-block: 54px;
+    --route-pad-inline: clamp(22px, 7vw, 64px);
+    --route-card-offset: 58px;
+    --route-card-height: 146px;
+    --route-card-half: 73px;
+    --route-rail-local: 17px;
+    --route-link-width: 41px;
+    --route-link-offset: -41px;
+    min-height: 760px;
+    padding: var(--route-pad-block) var(--route-pad-inline);
   }
 
-  .vl-core-route__canvas::before {
-    content: "";
+  .vl-core-route__mobile-rail {
+    display: block;
     position: absolute;
-    top: 65px;
-    bottom: 65px;
-    left: clamp(39px, calc(7vw + 17px), 81px);
-    z-index: 0;
-    width: 5px;
+    top: calc(var(--route-pad-block) + var(--route-card-half));
+    bottom: calc(var(--route-pad-block) + var(--route-card-half));
+    left: calc(var(--route-pad-inline) + var(--route-rail-local));
+    z-index: 1;
+    width: 2px;
     border-radius: 999px;
-    background: linear-gradient(180deg, rgba(255, 249, 234, 0.22), var(--vl-red), rgba(255, 249, 234, 0.22));
+    background: rgba(255, 249, 234, 0.2);
   }
 
-  .vl-core-route__canvas::after {
+  .vl-core-route__mobile-rail::before {
     content: "";
     position: absolute;
-    top: 68px;
-    left: clamp(33px, calc(7vw + 11px), 75px);
-    z-index: 4;
+    inset: 0 50% auto auto;
+    width: 4px;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--vl-red);
+    box-shadow: 0 0 18px rgba(200, 13, 10, 0.58);
+    transform: translateX(50%) scaleY(var(--route-progress-scale));
+    transform-origin: top center;
+    will-change: transform;
+  }
+
+  .vl-core-route__mobile-rail i {
+    position: absolute;
+    top: 0;
+    left: 50%;
     width: 17px;
     height: 17px;
     border: 4px solid var(--vl-navy-deep);
     border-radius: 50%;
     background: var(--vl-paper-soft);
-    box-shadow: 0 0 0 5px var(--vl-red), 0 0 22px var(--vl-red);
-    animation: vl-core-travel-mobile 5.6s var(--vl-ease-in-out) infinite;
+    box-shadow: 0 0 0 5px var(--vl-red), 0 0 22px rgba(200, 13, 10, 0.88);
+    opacity: 0;
+    transform: translate3d(-50%, calc(var(--route-packet-y) - 8.5px), 0);
+    transition: opacity 180ms ease;
+    will-change: transform;
+  }
+
+  .vl-core-route.is-route-running .vl-core-route__mobile-rail i,
+  .vl-core-route.is-route-complete .vl-core-route__mobile-rail i {
+    opacity: 1;
   }
 
   .vl-core-route__track { display: none; }
 
   .vl-core-route__nodes {
-    position: relative;
-    inset: auto;
+    position: absolute;
+    inset: var(--route-pad-block) var(--route-pad-inline);
     display: flex;
-    height: 100%;
+    height: auto;
     padding: 0;
     flex-direction: column;
     justify-content: space-between;
-    gap: 28px;
+    gap: 44px;
   }
 
   .vl-core-route__nodes li,
   .vl-core-route__nodes li:nth-child(n) {
-    width: calc(100% - 58px);
+    --route-node-y: 0px;
+    width: calc(100% - var(--route-card-offset));
     max-width: none;
-    min-height: 122px;
-    margin-left: 58px;
-    transform: none;
+    min-height: var(--route-card-height);
+    height: var(--route-card-height);
+    margin-left: var(--route-card-offset);
+    transform: translateY(0);
+  }
+
+  .vl-core-route__nodes li::before {
+    top: 50%;
+    right: auto;
+    left: calc(var(--route-link-offset) - 7px);
+    z-index: 3;
+    transform: translateY(-50%);
+  }
+
+  .vl-core-route__nodes li::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: var(--route-link-offset);
+    width: var(--route-link-width);
+    height: 2px;
+    background: rgba(255, 249, 234, 0.2);
+    transform: translateY(-50%);
+    transform-origin: left center;
+    transition: background-color 320ms ease, box-shadow 320ms ease;
+  }
+
+  .vl-core-route[data-route-step="1"] .vl-core-route__nodes li:nth-child(1)::after,
+  .vl-core-route[data-route-step="2"] .vl-core-route__nodes li:nth-child(2)::after,
+  .vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(3)::after,
+  .vl-core-route[data-route-step="2"] .vl-core-route__nodes li:nth-child(1)::after,
+  .vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(-n+2)::after,
+  .vl-core-route.is-route-complete .vl-core-route__nodes li::after {
+    background: var(--vl-red);
+    box-shadow: 0 0 12px rgba(200, 13, 10, 0.72);
+  }
+
+  .no-js .vl-core-route__nodes li::after {
+    background: var(--vl-red);
+    box-shadow: 0 0 12px rgba(200, 13, 10, 0.72);
+  }
+
+  .vl-core-route[data-route-step="1"] .vl-core-route__nodes li:nth-child(1)::before,
+  .vl-core-route[data-route-step="2"] .vl-core-route__nodes li:nth-child(2)::before,
+  .vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(3)::before {
+    transform: translateY(-50%) scale(1.12);
   }
 
   .vl-core-route__status span { display: none; }
@@ -3539,26 +3727,24 @@ h3 {
   }
 
   .vl-core-route__canvas {
-    min-height: 520px;
-    padding: 38px 20px;
-  }
-
-  .vl-core-route__canvas::before {
-    top: 55px;
-    bottom: 55px;
-    left: 36px;
-  }
-
-  .vl-core-route__canvas::after {
-    top: 58px;
-    left: 30px;
+    --route-pad-block: 46px;
+    --route-pad-inline: 18px;
+    --route-card-offset: 48px;
+    --route-card-height: 144px;
+    --route-card-half: 72px;
+    --route-rail-local: 16px;
+    --route-link-width: 32px;
+    --route-link-offset: -32px;
+    min-height: clamp(700px, 185vw, 820px);
+    padding: var(--route-pad-block) var(--route-pad-inline);
   }
 
   .vl-core-route__nodes li,
   .vl-core-route__nodes li:nth-child(n) {
-    width: calc(100% - 48px);
-    min-height: 112px;
-    margin-left: 48px;
+    width: calc(100% - var(--route-card-offset));
+    min-height: var(--route-card-height);
+    height: var(--route-card-height);
+    margin-left: var(--route-card-offset);
     padding: 15px;
   }
 
@@ -3595,13 +3781,6 @@ h3 {
   .vl-final-cta .vl-button { width: 100%; }
 }
 
-@keyframes vl-core-travel-mobile {
-  0% { transform: translateY(0); opacity: 0; }
-  10% { opacity: 1; }
-  82% { transform: translateY(380px); opacity: 1; }
-  100% { transform: translateY(390px); opacity: 0; }
-}
-
 /* Preserve the route story while reduced-motion users receive a static path. */
 @media (prefers-reduced-motion: reduce) {
   .vl-core-route__live {
@@ -3609,8 +3788,19 @@ h3 {
   }
 
   .vl-core-route__packet,
-  .vl-core-route__canvas::after {
+  .vl-core-route__mobile-rail i {
     display: none;
+  }
+
+  .vl-core-route {
+    --route-progress-scale: 1;
+  }
+
+  .vl-core-route__nodes li,
+  .vl-core-route__nodes li:nth-child(n) {
+    opacity: 1;
+    transform: translateY(var(--route-node-y)) !important;
+    transition: none;
   }
 
   .vl-home .vl-nav__toggle:hover,
