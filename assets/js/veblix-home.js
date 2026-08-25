@@ -257,46 +257,78 @@
     });
   });
 
-  /* Client route: one viewport-triggered signal, three exact handoff states. */
+  /* Client route: desktop keeps the cinematic pass; mobile is scrubbed by the
+     page's native scroll so every product owns a readable, stable beat. */
   init('client route motion', () => {
     const routes = Array.from(document.querySelectorAll('[data-client-route]'));
     if (!routes.length) return;
 
-    const duration = 4800;
+    const duration = 5600;
     const compactRoute = window.matchMedia('(max-width: 932px)');
+    const staticCompactRoute = window.matchMedia('(max-width: 932px) and (max-height: 560px) and (orientation: landscape)');
     const smoothstep = (value) => value * value * (3 - (2 * value));
-    const progressAt = (time) => {
+    const desktopProgressAt = (time) => {
       if (time < 0.08) return 0;
       if (time < 0.28) return smoothstep((time - 0.08) / 0.2) * 0.5;
       if (time < 0.36) return 0.5;
       if (time < 0.58) return 0.5 + (smoothstep((time - 0.36) / 0.22) * 0.5);
       return 1;
     };
-    const stepAt = (time) => {
+    const desktopStepAt = (time) => {
       if (time < 0.28) return 1;
       if (time < 0.58) return 2;
       return 3;
     };
+    const mobileSceneAt = (progress) => {
+      if (progress < 0.18) return 0;
+      if (progress < 0.38) return smoothstep((progress - 0.18) / 0.2);
+      if (progress < 0.62) return 1;
+      if (progress < 0.82) return 1 + smoothstep((progress - 0.62) / 0.2);
+      return 2;
+    };
+    const dispatchStatuses = [
+      'ROUTE READY / 0 OF 4',
+      'CAPTURING / 1 OF 4',
+      'VALIDATING / 2 OF 4',
+      'SYNCING CRM / 3 OF 4',
+      'HANDOFF COMPLETE / 4 OF 4',
+    ];
 
     routes.forEach((route) => {
+      const frame = route.querySelector('.vl-core-route__frame') || route;
       const path = route.querySelector('[data-route-path]');
       const packet = route.querySelector('[data-route-packet]');
       const mobileRail = route.querySelector('.vl-core-route__mobile-rail');
-      if (!path || !packet || !mobileRail || typeof path.getTotalLength !== 'function') return;
+      const chapters = Array.from(route.querySelectorAll('[data-route-chapter]'));
+      const routeDispatch = route.querySelector('[data-route-dispatch]');
+      const dispatchPath = routeDispatch?.querySelector('[data-route-dispatch-path]');
+      const dispatchActive = routeDispatch?.querySelector('[data-route-dispatch-active]');
+      const dispatchPacket = routeDispatch?.querySelector('[data-route-dispatch-packet]');
+      const dispatchStatus = routeDispatch?.querySelector('[data-route-dispatch-status]');
+      if (!path || !packet || !mobileRail || chapters.length !== 3 || typeof path.getTotalLength !== 'function') return;
 
       const length = path.getTotalLength();
+      const dispatchLength = dispatchPath && typeof dispatchPath.getTotalLength === 'function'
+        ? dispatchPath.getTotalLength()
+        : 0;
       let animationFrame = 0;
       let measureFrame = 0;
+      let scrollFrame = 0;
       let startedAt = 0;
       let inView = false;
       let running = false;
       let finished = false;
       let railLength = 0;
+      let stickyTop = 0;
+      let mobileTravel = 1;
       let lastProgress = 0;
       let lastStep = 1;
       let lastResolved = false;
 
       path.style.strokeDasharray = `${length}`;
+      if (dispatchActive && dispatchLength) {
+        dispatchActive.style.strokeDasharray = `${dispatchLength}`;
+      }
 
       const stop = () => {
         if (animationFrame) window.cancelAnimationFrame(animationFrame);
@@ -304,7 +336,7 @@
         running = false;
       };
 
-      const draw = (progress, step, resolved = false) => {
+      const setRouteState = (progress, step, resolved = false) => {
         const safeProgress = clamp(progress);
         lastProgress = safeProgress;
         lastStep = step;
@@ -313,13 +345,6 @@
         route.style.setProperty('--route-progress-scale', safeProgress.toFixed(4));
         route.style.setProperty('--route-packet-y', `${(safeProgress * railLength).toFixed(2)}px`);
 
-        if (!compactRoute.matches) {
-          const distance = length * safeProgress;
-          const point = path.getPointAtLength(distance);
-          path.style.strokeDashoffset = `${length - distance}`;
-          packet.setAttribute('transform', `translate(${point.x} ${point.y})`);
-        }
-
         const nextStep = String(step);
         if (route.dataset.routeStep !== nextStep) route.dataset.routeStep = nextStep;
         if (route.classList.contains('is-route-complete') !== resolved) {
@@ -327,31 +352,139 @@
         }
       };
 
-      const measureRail = () => {
-        railLength = compactRoute.matches ? mobileRail.getBoundingClientRect().height : 0;
+      const drawDesktop = (progress, step, resolved = false) => {
+        const safeProgress = clamp(progress);
+        const distance = length * safeProgress;
+        const point = path.getPointAtLength(distance);
+        path.style.strokeDashoffset = `${length - distance}`;
+        packet.setAttribute('transform', `translate(${point.x} ${point.y})`);
+        setRouteState(safeProgress, step, resolved);
+      };
+
+      const drawDispatch = (progress, active) => {
+        if (!routeDispatch || !dispatchPath || !dispatchActive || !dispatchPacket || !dispatchLength) return;
+        const safeProgress = clamp(progress);
+        const distance = dispatchLength * smoothstep(safeProgress);
+        const point = dispatchPath.getPointAtLength(distance);
+        dispatchActive.style.strokeDashoffset = `${dispatchLength - distance}`;
+        dispatchPacket.setAttribute('transform', `translate(${point.x} ${point.y})`);
+
+        let step = 0;
+        if (active || safeProgress > 0) step = Math.min(4, Math.max(1, Math.ceil(safeProgress * 4)));
+        const nextDispatchStep = String(step);
+        if (routeDispatch.dataset.dispatchStep !== nextDispatchStep) {
+          routeDispatch.dataset.dispatchStep = nextDispatchStep;
+        }
+        const isRunning = active && safeProgress < 0.985;
+        const isComplete = safeProgress >= 0.985;
+        if (routeDispatch.classList.contains('is-running') !== isRunning) {
+          routeDispatch.classList.toggle('is-running', isRunning);
+        }
+        if (routeDispatch.classList.contains('is-complete') !== isComplete) {
+          routeDispatch.classList.toggle('is-complete', isComplete);
+        }
+        if (dispatchStatus && dispatchStatus.textContent !== dispatchStatuses[step]) {
+          dispatchStatus.textContent = dispatchStatuses[step];
+        }
+      };
+
+      const drawMobile = (progress) => {
+        const safeProgress = clamp(progress);
+        const scene = mobileSceneAt(safeProgress);
+        const step = scene < 0.5 ? 1 : scene < 1.5 ? 2 : 3;
+        const resolved = safeProgress >= 0.985;
+
+        chapters.forEach((chapter, index) => {
+          const distance = index - scene;
+          const sceneIndex = Math.floor(scene);
+          const sceneFraction = scene - sceneIndex;
+          let opacity = 0;
+
+          /* Exit the current product before the next one enters. This keeps a
+             departing graphic from washing across the incoming explanation. */
+          if (index === sceneIndex) {
+            opacity = sceneFraction <= 0.12
+              ? 1
+              : 1 - smoothstep(clamp((sceneFraction - 0.12) / 0.36));
+          } else if (index === sceneIndex + 1 && sceneFraction >= 0.52) {
+            opacity = smoothstep(clamp((sceneFraction - 0.52) / 0.36));
+          }
+
+          const absoluteDistance = Math.abs(distance);
+          const scale = 1 - (Math.min(absoluteDistance, 1) * 0.04);
+          chapter.style.setProperty('--route-node-opacity', opacity.toFixed(4));
+          chapter.style.setProperty('--route-node-shift', `${(distance * 104).toFixed(2)}%`);
+          chapter.style.setProperty('--route-node-scale', scale.toFixed(4));
+        });
+
+        route.classList.toggle('is-route-running', safeProgress > 0.01 && !resolved);
+        setRouteState(safeProgress, step, resolved);
+
+        const dispatchProgress = clamp((safeProgress - 0.64) / 0.3);
+        drawDispatch(dispatchProgress, scene >= 1.45 && !resolved);
+      };
+
+      const measureMobile = () => {
+        if (!compactRoute.matches) {
+          railLength = 0;
+          stickyTop = 0;
+          mobileTravel = 1;
+          return;
+        }
+        railLength = mobileRail.getBoundingClientRect().height;
+        stickyTop = Number.parseFloat(window.getComputedStyle(frame).top) || 0;
+        mobileTravel = Math.max(1, route.offsetHeight - frame.offsetHeight);
+      };
+
+      const currentMobileProgress = () => {
+        const routeRect = route.getBoundingClientRect();
+        return clamp((stickyTop - routeRect.top) / mobileTravel);
+      };
+
+      const renderMobile = () => {
+        scrollFrame = 0;
+        if (!compactRoute.matches) return;
+        if (reduceMotion.matches || staticCompactRoute.matches) {
+          chapters.forEach((chapter) => {
+            chapter.style.setProperty('--route-node-opacity', '1');
+            chapter.style.setProperty('--route-node-shift', '0%');
+            chapter.style.setProperty('--route-node-scale', '1');
+          });
+          setRouteState(1, 3, true);
+          drawDispatch(1, false);
+          route.classList.remove('is-route-running');
+          return;
+        }
+        drawMobile(currentMobileProgress());
+      };
+
+      const scheduleMobileRender = () => {
+        if (!compactRoute.matches || reduceMotion.matches || staticCompactRoute.matches || !inView || scrollFrame) return;
+        scrollFrame = window.requestAnimationFrame(renderMobile);
       };
 
       const scheduleMeasure = () => {
         if (measureFrame) return;
         measureFrame = window.requestAnimationFrame(() => {
           measureFrame = 0;
-          measureRail();
-          draw(lastProgress, lastStep, lastResolved);
+          measureMobile();
+          if (compactRoute.matches) renderMobile();
+          else drawDesktop(lastProgress, lastStep, lastResolved);
         });
       };
 
-      const reset = () => {
+      const resetDesktop = () => {
         stop();
         startedAt = 0;
         finished = false;
         route.classList.remove('is-route-running', 'is-route-complete');
-        draw(0, 1);
+        drawDesktop(0, 1);
       };
 
-      const renderComplete = () => {
+      const renderDesktopComplete = () => {
         stop();
         finished = true;
-        draw(1, 3, true);
+        drawDesktop(1, 3, true);
         route.classList.remove('is-route-running');
       };
 
@@ -359,47 +492,60 @@
         if (!running) return;
         if (!startedAt) startedAt = now;
         const time = clamp((now - startedAt) / duration);
-        draw(progressAt(time), stepAt(time), time >= 0.86);
+        drawDesktop(desktopProgressAt(time), desktopStepAt(time), time >= 0.86);
         if (time < 1) {
           animationFrame = window.requestAnimationFrame(tick);
           return;
         }
-        renderComplete();
+        renderDesktopComplete();
       };
 
-      const run = () => {
+      const runDesktop = () => {
         if (reduceMotion.matches) {
-          renderComplete();
+          renderDesktopComplete();
           return;
         }
         if (running || finished) return;
-        measureRail();
-        reset();
+        measureMobile();
+        resetDesktop();
         running = true;
         route.classList.add('is-route-running');
         animationFrame = window.requestAnimationFrame(tick);
       };
 
       const sync = () => {
-        if (reduceMotion.matches) {
-          renderComplete();
+        if (compactRoute.matches) {
+          stop();
+          if (reduceMotion.matches || staticCompactRoute.matches) renderMobile();
+          else scheduleMobileRender();
           return;
         }
-        if (inView && !document.hidden) run();
-        else reset();
+        if (reduceMotion.matches) {
+          renderDesktopComplete();
+          return;
+        }
+        if (inView && !document.hidden) runDesktop();
+        else resetDesktop();
       };
 
       route.classList.add('is-route-ready');
-      measureRail();
-      reset();
+      measureMobile();
+      if (compactRoute.matches) renderMobile();
+      else resetDesktop();
 
       if ('IntersectionObserver' in window) {
         const routeObserver = new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
-            inView = entry.isIntersecting && entry.intersectionRatio >= 0.18;
+            const wasInView = inView;
+            inView = compactRoute.matches
+              ? entry.isIntersecting
+              : entry.isIntersecting && entry.intersectionRatio >= 0.18;
+            if (compactRoute.matches && wasInView && !inView && !reduceMotion.matches && !staticCompactRoute.matches) {
+              renderMobile();
+            }
             sync();
           });
-        }, { threshold: 0.18, rootMargin: '5% 0px 5% 0px' });
+        }, { threshold: [0, 0.18], rootMargin: '75% 0px 75% 0px' });
         routeObserver.observe(route);
       } else {
         inView = true;
@@ -415,12 +561,29 @@
       } else {
         reduceMotion.addListener(onMotionPreferenceChange);
       }
+      const onLayoutModeChange = () => {
+        stop();
+        finished = false;
+        chapters.forEach((chapter) => {
+          chapter.style.removeProperty('--route-node-opacity');
+          chapter.style.removeProperty('--route-node-shift');
+          chapter.style.removeProperty('--route-node-scale');
+        });
+        scheduleMeasure();
+        sync();
+      };
       if (typeof compactRoute.addEventListener === 'function') {
-        compactRoute.addEventListener('change', scheduleMeasure);
+        compactRoute.addEventListener('change', onLayoutModeChange);
       } else {
-        compactRoute.addListener(scheduleMeasure);
+        compactRoute.addListener(onLayoutModeChange);
+      }
+      if (typeof staticCompactRoute.addEventListener === 'function') {
+        staticCompactRoute.addEventListener('change', onLayoutModeChange);
+      } else {
+        staticCompactRoute.addListener(onLayoutModeChange);
       }
       window.addEventListener('resize', scheduleMeasure, { passive: true });
+      window.addEventListener('scroll', scheduleMobileRender, { passive: true });
       document.addEventListener('visibilitychange', sync);
     });
   });
