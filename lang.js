@@ -148,7 +148,7 @@
     'Прев’ю — ваша гарантія якості.':'The preview is your quality guarantee.',
     // — Works grid —
     'Живі проєкти та свіжі релізи. Натисніть, щоб роздивитись.':'Live projects and fresh releases. Tap to take a look.',
-    'Переглянути':'View','Студія краси · Вишневе':'Beauty studio · Vyshneve','AI-кіностудія':'AI film studio',
+    'Переглянути':'View','Б’юті-салон · сайт':'Beauty salon · website','AI-кіностудія':'AI film studio',
     'під ваш бренд':'for your brand','Дивитись анімації':'See animations',
     'Кінематографічні ролики, motion-фони, аеро- та промо-зйомка — приклади на окремій сторінці.':'Cinematic reels, motion backgrounds, aerial and promo footage — examples on a separate page.',
     // — Animations page —
@@ -179,7 +179,7 @@
     'Меню':'Menu','Від ідеї до готового сайту':'From idea to a finished website',
     'Ноутбук, планшет і телефон з одним сайтом на чорному тлі':'Laptop, tablet and phone showing one website on a black background',
     'Абстрактна дизайн-композиція у фірмових кольорах Velira':'Abstract design composition in Velira brand colors',
-    'Наші роботи':'Our work','Сайт DEUTSCHWERK — мовна школа німецької у Відні':'DEUTSCHWERK website — German language school in Vienna',
+    'Наші роботи':'Our work','Сайт SERVUS DEUTSCH — мовна школа німецької у Відні':'SERVUS DEUTSCH website — German language school in Vienna',
     'Сайт Milly Edits — портфоліо відеомонтажу для TikTok':'Milly Edits website — video editing portfolio for TikTok',
     'Перемикач робіт':'Work switcher','Блискавична швидкість':'Lightning-fast speed',
     'Світлові смуги швидкості у фірмових кольорах':'Light-speed streaks in brand colors','Як ми працюємо':'How we work',

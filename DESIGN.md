@@ -21,19 +21,23 @@ Velira keeps the line between a business and its next client open. The red telep
 
 - Hero object: the approved glossy red rotary telephone in `assets/img/velira-phone-hero.jpg`.
 - Logo source of truth: the owner-supplied original in `brand/velira-logo-original.jpg`. Do not redraw, reshape or reinterpret it; responsive use may only crop/scale the original presentation.
-- A single SVG signal line travels through the narrative and draws with scroll.
+- A single SVG signal line travels through the narrative and draws with scroll. One focused route scene may echo that signal to explain `site → bot → team`; avoid parallel decorative motion systems.
 - Reveals use masks, opacity and transforms only. Hover feedback stays within 160–260 ms.
 - No scroll hijacking, no generic gradients, no stock icons and no decorative WebGL.
 - `prefers-reduced-motion` receives the complete static story, with all content visible.
 
 ## Narrative
 
-1. Hero — do not lose the client between interest and reply.
-2. The three leaks — unclear page, late reply, scattered lead.
-3. One system — website, Telegram bot, automation.
-4. Process — find, design, build, verify.
-5. Proof — real named work and a live Velira Flow demo, without invented metrics.
-6. Contact — diagnose the real break before selling a full stack.
+The homepage is deliberately conversion-first. A visitor should understand the offer before seeing proof or process detail.
+
+1. Hero — do not lose clients after the click.
+2. One route — the site explains, the bot responds, the system delivers the lead to the team.
+3. Contact — diagnose the real break before selling a full stack.
+4. Supporting detail — a concise three-step process.
+5. Proof at the end — exactly three selected works, without invented metrics.
+6. Final CTA and footer.
+
+Do not reintroduce separate problem cards, a manifesto, a moving services marquee or three long service demos on the homepage. Their ideas are already expressed by the hero and route scene; deeper examples belong on focused pages.
 
 ## Runtime rules
 

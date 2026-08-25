@@ -4,13 +4,36 @@ const HTML_ROUTES = new Map([
   ['/websites', '/websites.html'],
   ['/flow', '/flow.html'],
   ['/privacy', '/privacy.html'],
+  ['/privacy-en', '/privacy-en.html'],
   ['/terms', '/terms.html'],
+  ['/terms-en', '/terms-en.html'],
   ['/rights', '/rights.html'],
+  ['/rights-en', '/rights-en.html'],
 ]);
 
 const LEGACY_ROUTES = new Set(['/desktop.html', '/tablet.html', '/mobile.html']);
 const MAX_BODY_BYTES = 16 * 1024;
 const TELEGRAM_TIMEOUT_MS = 8000;
+const RATE_WINDOW_MS = 60 * 1000;
+const MAX_PER_WINDOW = 5;
+const MAX_RATE_KEYS = 1000;
+const PRIVACY_VERSION = '2026-08-25-v2';
+const LEAD_SOURCES = new Set(['home', 'websites', 'flow']);
+const LEAD_LANGUAGES = new Set(['uk', 'en']);
+const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-ancestors 'self'",
+  "img-src 'self' data:",
+  "font-src 'self'",
+  "style-src 'self' 'unsafe-inline'",
+  "script-src 'self'",
+  "connect-src 'self'",
+  "form-action 'self'",
+  'upgrade-insecure-requests',
+].join('; ');
+const hits = new Map();
 
 const json = (body, status = 200, extraHeaders = {}) => new Response(JSON.stringify(body), {
   status,
@@ -28,8 +51,36 @@ const escapeHtml = (value) => String(value == null ? '' : value)
 
 const clip = (value, length) => String(value == null ? '' : value).slice(0, length).trim();
 
+function rateLimited(request) {
+  const ip = (request.headers.get('cf-connecting-ip')
+    || request.headers.get('x-forwarded-for')
+    || '').split(',')[0].trim();
+  if (!ip) return false;
+
+  const now = Date.now();
+  if (hits.size >= MAX_RATE_KEYS) {
+    for (const [key, values] of hits) {
+      if (!values.some((time) => now - time < RATE_WINDOW_MS)) hits.delete(key);
+    }
+    while (hits.size >= MAX_RATE_KEYS) hits.delete(hits.keys().next().value);
+  }
+
+  const recent = (hits.get(ip) || []).filter((time) => now - time < RATE_WINDOW_MS);
+  recent.push(now);
+  hits.set(ip, recent);
+  return recent.length > MAX_PER_WINDOW;
+}
+
 async function submitLead(request, env) {
   if (request.method !== 'POST') return json({ error: 'method not allowed' }, 405, { Allow: 'POST' });
+
+  const fetchSite = (request.headers.get('sec-fetch-site') || '').toLowerCase();
+  if (fetchSite === 'cross-site') return json({ error: 'cross-site request rejected' }, 403);
+
+  const contentType = (request.headers.get('content-type') || '').split(';')[0].trim().toLowerCase();
+  if (contentType !== 'application/json') {
+    return json({ error: 'очікується application/json' }, 415);
+  }
 
   const declaredLength = Number.parseInt(request.headers.get('content-length') || '', 10);
   if (Number.isFinite(declaredLength) && declaredLength > MAX_BODY_BYTES) {
@@ -56,9 +107,25 @@ async function submitLead(request, env) {
   const contact = clip(body.contact, 200);
   const plan = clip(body.plan, 120);
   const brief = clip(body.brief, 2000);
-  const consent = body.consent === true || body.consent === 'true' || body.consent === 'on';
+  const privacyVersion = clip(body.privacyVersion, 40);
+  const source = clip(body.source, 40).toLowerCase();
+  const language = clip(body.language, 8).toLowerCase();
+  const privacyAcknowledged = body.privacyAcknowledged === true
+    || body.privacyAcknowledged === 'true'
+    || body.privacyAcknowledged === 'on';
+  const telegramDeliveryConsent = body.telegramDeliveryConsent === true
+    || body.telegramDeliveryConsent === 'true'
+    || body.telegramDeliveryConsent === 'on';
   if (!name || !contact) return json({ error: "вкажіть імʼя і контакт" }, 400);
-  if (!consent) return json({ error: 'потрібна згода на обробку даних' }, 400);
+  if (!privacyAcknowledged) return json({ error: 'потрібне підтвердження ознайомлення з повідомленням про приватність' }, 400);
+  if (!telegramDeliveryConsent) return json({ error: 'потрібна окрема згода на доставку через Telegram Bot API' }, 400);
+  if (privacyVersion !== PRIVACY_VERSION) return json({ error: 'оновіть сторінку та підтвердьте чинне повідомлення про приватність' }, 409);
+  if (!LEAD_SOURCES.has(source) || !LEAD_LANGUAGES.has(language)) {
+    return json({ error: 'некоректне джерело заявки' }, 400);
+  }
+  if (rateLimited(request)) {
+    return json({ error: 'забагато заявок, спробуйте за хвилину' }, 429, { 'Retry-After': '60' });
+  }
 
   if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) {
     return json({ error: 'delivery unavailable', contact_url: 'https://t.me/madbod_77' }, 503, { 'Retry-After': '60' });
@@ -79,6 +146,7 @@ async function submitLead(request, env) {
     '📝 <b>Опис:</b>',
     escapeHtml(brief || '—'),
     '',
+    `🛡️ <b>Privacy:</b> ${escapeHtml(privacyVersion)} · ${escapeHtml(language)} · ${escapeHtml(source)} · Telegram consent ✓`,
     `<i>${now} (Київ)</i>`,
   ].join('\n');
 
@@ -112,6 +180,8 @@ function withSecurityHeaders(response, pathname) {
   headers.set('X-Frame-Options', 'SAMEORIGIN');
   headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=()');
+  headers.set('Content-Security-Policy', CONTENT_SECURITY_POLICY);
+  headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
 
   if (pathname.endsWith('.html') || pathname === '/') {
     headers.set('Cache-Control', 'public, max-age=0, must-revalidate');

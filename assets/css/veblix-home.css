@@ -1,7 +1,8 @@
 /*
  * Velira / home
  * DESIGN.md is the visual source of truth.
- * The exact owner-supplied brand/velira-logo-original.jpg is only cropped/scaled.
+ * The exact owner-supplied brand/velira-logo-original.jpg is cropped/scaled;
+ * the footer variant is inverted in CSS for white artwork on black.
  */
 
 :root {
@@ -144,64 +145,9 @@ h3 {
   transform: translateY(0);
 }
 
-/* Intro: the exact owner artwork, never reconstructed. */
-.vl-intro {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  background: #fff;
-  animation: vl-intro-exit 850ms var(--vl-ease) 1450ms forwards;
-}
-
-.vl-intro > img {
-  width: min(72vmin, 660px);
-  height: auto;
-  animation: vl-intro-logo 900ms var(--vl-ease) both;
-}
-
-.vl-intro__line {
-  position: absolute;
-  right: -5vw;
-  bottom: 14vh;
-  left: -5vw;
-  height: 10px;
-  overflow: hidden;
-  transform: rotate(-2deg);
-}
-
-.vl-intro__line i {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: var(--vl-red);
-  transform: scaleX(0);
-  transform-origin: left;
-  animation: vl-intro-line 1100ms var(--vl-ease) 260ms forwards;
-}
-
-.vl-intro.is-leaving {
-  animation-delay: 0ms;
-}
-
-.vl-intro.is-done {
-  display: none;
-}
-
-@keyframes vl-intro-logo {
-  from { opacity: 0; transform: scale(0.92); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-@keyframes vl-intro-line {
-  to { transform: scaleX(1); }
-}
-
-@keyframes vl-intro-exit {
-  0% { opacity: 1; visibility: visible; }
-  100% { opacity: 0; visibility: hidden; pointer-events: none; }
+/* Inert copy store: never rendered, never measured. */
+.vl-preserved-copy {
+  display: none !important;
 }
 
 /* Header */
@@ -401,7 +347,7 @@ h3 {
   display: flex;
   min-height: max(780px, 100svh);
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 25px 0 0;
   background: var(--vl-paper);
   isolation: isolate;
@@ -419,6 +365,7 @@ h3 {
   border-radius: 50%;
 }
 
+/* Shared-page rail base only: the homepage no longer renders any rail. */
 .vl-rail {
   display: flex;
   width: 100%;
@@ -439,19 +386,13 @@ h3 {
   min-height: 22px;
 }
 
-.vl-rail--bottom {
-  min-height: 47px;
-  justify-content: space-between;
-  padding-inline: var(--vl-gutter);
-  border-top: 1px solid var(--vl-rule);
-  font-size: 10px;
-  letter-spacing: 0.22em;
-}
-
+/* The grid absorbs the height freed by the removed hero rail, so the hero has
+   no dead bottom strip and no second vertical centring. */
 .vl-hero__grid {
   display: grid;
   width: var(--vl-wrap);
   min-height: 690px;
+  flex: 1 1 auto;
   margin: 0 auto;
   padding: clamp(118px, 12vh, 160px) 0 58px;
   grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -530,61 +471,6 @@ h3 {
   filter: brightness(1.08);
 }
 
-.vl-phone-stage__orbit {
-  position: absolute;
-  inset: -8% 2% -7% 8%;
-  border: 1px solid rgba(48, 54, 71, 0.25);
-  border-radius: 50%;
-  transform: rotate(12deg);
-  animation: vl-orbit 14s linear infinite;
-  animation-play-state: paused;
-}
-
-.vl-phone-stage__orbit::after {
-  content: "";
-  position: absolute;
-  top: 14%;
-  right: 3%;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--vl-red);
-  box-shadow: 0 0 0 8px rgba(200, 13, 10, 0.12);
-}
-
-.vl-phone-stage__badge {
-  position: absolute;
-  right: 4%;
-  bottom: 0;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 11px 14px;
-  border: 1px solid var(--vl-rule);
-  background: rgba(255, 249, 234, 0.88);
-  font-size: 10px;
-  font-weight: 750;
-  letter-spacing: 0.15em;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  transform: rotate(3deg);
-}
-
-.vl-phone-stage__badge i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--vl-red);
-  animation: vl-pulse 1.8s ease-in-out infinite;
-  animation-play-state: paused;
-}
-
-.vl-phone-stage.is-motion-active .vl-phone-stage__orbit,
-.vl-phone-stage.is-motion-active .vl-phone-stage__badge i {
-  animation-play-state: running;
-}
-
 .vl-hero__lede {
   position: relative;
   z-index: 4;
@@ -654,15 +540,6 @@ h3 {
   background: currentColor;
 }
 
-@keyframes vl-orbit {
-  to { transform: rotate(372deg); }
-}
-
-@keyframes vl-pulse {
-  0%, 100% { opacity: 0.45; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.18); }
-}
-
 /* Moving service rail */
 .vl-marquee {
   position: relative;
@@ -728,34 +605,11 @@ h3 {
   to { transform: translateX(-50%); }
 }
 
-/* Long story and cable */
+/* Long story */
 .vl-story {
   position: relative;
   background: var(--vl-paper);
   isolation: isolate;
-}
-
-.vl-signal {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.vl-signal path {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.vl-signal__draw {
-  stroke: var(--vl-red);
-  stroke-width: 8;
-  stroke-dasharray: 1;
-  stroke-dashoffset: var(--signal-progress, 1);
 }
 
 .vl-section > .vl-wrap,
@@ -2164,6 +2018,15 @@ h3 {
 .vl-form__error[hidden] { display: none !important; }
 .vl-form__consent > .vl-form__error:not([hidden]) { display: block !important; margin-top: 8px; }
 
+.vl-form__privacy-note {
+  margin: -6px 0 0;
+  padding-left: 12px;
+  border-left: 3px solid var(--vl-red);
+  color: rgba(48, 54, 71, 0.74);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
 .vl-form__consent {
   position: relative;
   display: block;
@@ -2268,7 +2131,7 @@ h3 {
 .vl-footer {
   padding: clamp(65px, 7vw, 105px) 0 25px;
   border-top: 1px solid rgba(255, 249, 234, 0.16);
-  background: var(--vl-ink);
+  background: #000;
   color: var(--vl-paper-soft);
 }
 
@@ -2283,7 +2146,7 @@ h3 {
 .vl-brand.vl-brand--footer {
   width: 154px;
   height: 150px;
-  background: #fff;
+  background: #000;
   filter: none;
   mix-blend-mode: normal;
 }
@@ -2293,6 +2156,7 @@ h3 {
   left: -70px;
   width: 294px;
   height: 294px;
+  filter: invert(1);
   mix-blend-mode: normal;
 }
 
@@ -2385,22 +2249,24 @@ h3 {
     --vl-gutter: 20px;
   }
 
-  html { scroll-padding-top: 106px; }
+  html {
+    scroll-padding-top: max(80px, calc(68px + env(safe-area-inset-top)));
+  }
 
   .vl-nav,
   .vl-nav.is-scrolled {
-    top: max(12px, env(safe-area-inset-top));
-    right: clamp(12px, 4vw, 20px);
-    left: clamp(12px, 4vw, 20px);
-    min-height: 78px;
-    gap: 12px;
-    padding: 6px 7px 6px 10px;
+    top: max(8px, env(safe-area-inset-top));
+    right: max(clamp(12px, 4vw, 20px), env(safe-area-inset-right));
+    left: max(clamp(12px, 4vw, 20px), env(safe-area-inset-left));
+    min-height: 60px;
+    gap: 8px;
+    padding: 4px 6px 4px 8px;
     border-color: rgba(48, 54, 71, 0.16);
-    border-radius: 18px;
+    border-radius: 14px;
     background: rgba(255, 253, 246, 0.94);
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.95) inset,
-      0 16px 42px rgba(37, 42, 56, 0.14),
-      0 5px 0 rgba(200, 13, 10, 0.82);
+      0 12px 32px rgba(37, 42, 56, 0.13),
+      0 4px 0 rgba(200, 13, 10, 0.82);
     -webkit-backdrop-filter: blur(20px) saturate(1.15);
     backdrop-filter: blur(20px) saturate(1.15);
   }
@@ -2409,41 +2275,41 @@ h3 {
     content: "";
     position: absolute;
     right: 22px;
-    bottom: -5px;
+    bottom: -4px;
     left: 22px;
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(200, 13, 10, 0.72), transparent);
     pointer-events: none;
   }
 
-  .vl-brand {
+  .vl-nav .vl-brand {
     z-index: 4;
-    width: 80px;
-    height: 66px;
-    border-radius: 12px;
+    width: 66px;
+    height: 50px;
+    border-radius: 10px;
   }
 
-  .vl-brand__art {
+  .vl-nav .vl-brand__art {
     border-radius: inherit;
     background: #fff;
   }
 
-  .vl-brand__art img {
-    top: -38px;
-    left: -34px;
-    width: 140px;
-    height: 140px;
+  .vl-nav .vl-brand__art img {
+    top: -30px;
+    left: -27px;
+    width: 112px;
+    height: 112px;
   }
 
   .vl-nav__toggle {
     position: relative;
     z-index: 4;
     display: block;
-    width: 54px;
-    height: 54px;
-    padding: 14px;
+    width: 44px;
+    height: 44px;
+    padding: 10px;
     border-color: rgba(16, 17, 20, 0.78);
-    border-radius: 15px;
+    border-radius: 12px;
     background: linear-gradient(145deg, #3b4255, #252a38);
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.14) inset,
       0 9px 22px rgba(37, 42, 56, 0.2);
@@ -2492,7 +2358,7 @@ h3 {
     align-items: stretch;
     justify-content: center;
     gap: 25px;
-    padding: calc(122px + env(safe-area-inset-top)) var(--vl-gutter)
+    padding: calc(94px + env(safe-area-inset-top)) var(--vl-gutter)
       calc(30px + env(safe-area-inset-bottom));
     overflow: hidden;
     background: radial-gradient(circle at 94% 18%, rgba(200, 13, 10, 0.2), transparent 28%),
@@ -2508,7 +2374,7 @@ h3 {
   .vl-nav__panel::before {
     content: "VELIRA / NAVIGATION";
     position: absolute;
-    top: calc(102px + env(safe-area-inset-top));
+    top: calc(78px + env(safe-area-inset-top));
     left: var(--vl-gutter);
     color: rgba(255, 249, 234, 0.54);
     font-size: 9px;
@@ -2594,7 +2460,7 @@ h3 {
 
   .vl-lang button {
     min-width: 48px;
-    min-height: 40px;
+    min-height: 44px;
     border: 1px solid rgba(255, 249, 234, 0.28);
     border-radius: 999px;
     color: rgba(255, 249, 234, 0.68);
@@ -2657,7 +2523,7 @@ h3 {
 
   .vl-hero {
     min-height: max(800px, 100svh);
-    padding-top: 100px;
+    padding-top: 84px;
   }
 
   .vl-rail--top { display: none; }
@@ -2666,6 +2532,7 @@ h3 {
     display: flex;
     min-height: 0;
     flex-direction: column;
+    justify-content: center;
     padding: 35px 0 45px;
   }
 
@@ -2689,8 +2556,6 @@ h3 {
     margin: -4vw -7% -4vw;
   }
 
-  .vl-phone-stage__orbit { inset: 0 5% 0 9%; }
-
   .vl-hero__lede {
     order: 3;
     max-width: 560px;
@@ -2698,7 +2563,6 @@ h3 {
 
   .vl-hero__lede > p { font-size: 16px; }
   .vl-hero__note { display: none; }
-  .vl-rail--bottom { padding-inline: 20px; }
 
   .vl-section__head--split {
     grid-template-columns: 1fr;
@@ -2776,15 +2640,12 @@ h3 {
     --vl-gutter: 16px;
   }
 
-  .vl-intro > img { width: 91vw; }
-  .vl-intro__line { bottom: 18vh; height: 7px; }
-
   .vl-rail { gap: 30px; font-size: 9px; }
   .vl-rail span:nth-child(n + 3) { display: none; }
 
   .vl-hero {
     min-height: max(760px, 100svh);
-    padding-top: 92px;
+    padding-top: 80px;
   }
 
   .vl-hero::before { top: 31%; right: -38vw; width: 84vw; }
@@ -2818,8 +2679,6 @@ h3 {
     margin: -1vw -12.5% -2vw;
   }
 
-  .vl-phone-stage__badge { right: 10%; bottom: 3%; }
-
   .vl-hero__lede > p {
     margin-bottom: 20px;
     font-size: 14px;
@@ -2834,8 +2693,6 @@ h3 {
 
   .vl-hero__actions .vl-button { width: 100%; }
   .vl-text-link { width: fit-content; }
-  .vl-rail--bottom { min-height: 38px; justify-content: center; }
-  .vl-rail--bottom span:not(:first-child) { display: none; }
   .vl-marquee__track { padding-block: 13px; }
   .vl-section { padding-block: 94px; }
   .vl-section__head { margin-bottom: 48px; }
@@ -3013,10 +2870,12 @@ h3 {
 }
 
 @media (max-width: 375px) {
-  .vl-nav { right: 12px; left: 12px; }
+  .vl-nav {
+    right: max(12px, env(safe-area-inset-right));
+    left: max(12px, env(safe-area-inset-left));
+  }
   .vl-hero__title { font-size: clamp(43px, 13.25vw, 51px); }
   .vl-phone-stage { width: 132%; margin-inline: -16%; }
-  .vl-phone-stage__badge { font-size: 8px; }
 
   .vl-section__head h2,
   .vl-contact__copy h2 { font-size: clamp(38px, 11.9vw, 46px); }
@@ -3039,8 +2898,8 @@ h3 {
     min-height: 54px;
   }
 
-  .vl-brand { width: 66px; height: 50px; }
-  .vl-brand__art img { top: -30px; left: -27px; width: 112px; height: 112px; }
+  .vl-nav .vl-brand { width: 66px; height: 50px; }
+  .vl-nav .vl-brand__art img { top: -30px; left: -27px; width: 112px; height: 112px; }
   .vl-nav__toggle { width: 44px; height: 44px; }
 
   .vl-nav__panel {
@@ -3057,20 +2916,20 @@ h3 {
   .vl-button--nav { width: 54%; min-height: 48px; }
 
   .vl-hero {
-    min-height: 600px;
-    padding-top: 76px;
+    min-height: 100svh;
+    padding-top: 64px;
   }
 
   .vl-hero__grid {
     display: grid;
-    min-height: 500px;
-    padding: 20px 0 30px;
+    min-height: calc(100svh - 64px);
+    padding: 8px 0 14px;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     grid-template-rows: 1fr auto;
   }
 
   .vl-hero__copy { grid-column: 1 / 8; grid-row: 1; }
-  .vl-hero__title { font-size: clamp(45px, 7.2vw, 66px); }
+  .vl-hero__title { font-size: clamp(42px, 5.8vw, 54px); }
 
   .vl-phone-stage {
     grid-column: 7 / 13;
@@ -3079,8 +2938,6 @@ h3 {
     width: 119%;
     margin: 0 -14% 0 -5%;
   }
-
-  .vl-phone-stage__badge { right: 7%; }
 
   .vl-hero__lede {
     grid-column: 1 / 7;
@@ -3091,7 +2948,6 @@ h3 {
   .vl-hero__lede > p { margin-bottom: 13px; font-size: 13px; }
   .vl-hero__actions { flex-direction: row; align-items: center; }
   .vl-hero__actions .vl-button { width: auto; min-height: 46px; }
-  .vl-rail--bottom { min-height: 34px; }
   .vl-section { padding-block: 78px; }
   .vl-section__head { margin-bottom: 44px; }
   .vl-leaks { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
@@ -3160,16 +3016,11 @@ h3 {
     transition-duration: 0.01ms !important;
   }
 
-  .vl-intro { display: none !important; }
   .vl-marquee__toggle { display: none; }
 
   .js [data-reveal] {
     opacity: 1 !important;
     transform: none !important;
-  }
-
-  .vl-signal__draw {
-    stroke-dashoffset: 0 !important;
   }
 
   .vl-phone-stage {
@@ -3195,17 +3046,14 @@ h3 {
     border: 2px solid ButtonText;
   }
 
-  .vl-signal__draw { stroke: CanvasText; }
 }
 
 /* Simple conversion homepage -------------------------------------------------
-   One promise, one animated route, one conversion action. Supporting proof
-   follows only after the contact block. */
+   One promise, one static route told once, one conversion action. Supporting
+   proof follows only after the contact block. */
 .vl-core {
   overflow: hidden;
-  background:
-    radial-gradient(circle at 84% 12%, rgba(200, 13, 10, 0.08), transparent 25%),
-    linear-gradient(180deg, var(--vl-paper-soft), var(--vl-paper));
+  background: var(--vl-paper-soft);
 }
 
 .vl-core::before {
@@ -3521,6 +3369,71 @@ h3 {
   18%, 31% { border-color: var(--vl-paper-soft); box-shadow: 0 20px 54px rgba(200, 13, 10, 0.2), 8px 8px 0 var(--vl-red); }
 }
 
+/* Homepage-scoped calm interactions ------------------------------------------
+   Keyboard feedback is always available; pointer transforms are enabled only
+   on devices that genuinely support hover, so touch suppression still wins. */
+.vl-home .vl-button:focus-visible {
+  border-color: var(--vl-navy);
+  background: var(--vl-navy);
+  box-shadow: none;
+  transform: translateY(-1px);
+}
+
+.vl-home .vl-button:focus-visible svg {
+  transform: translateX(3px);
+}
+
+.vl-home .vl-text-link:focus-visible b {
+  transform: translateY(3px);
+}
+
+.vl-home .vl-telegram-link:focus-visible b {
+  transform: translate(3px, -3px);
+}
+
+.vl-home .vl-work__meta {
+  transition: border-bottom-color 200ms ease;
+}
+
+.vl-home .vl-work:focus-visible .vl-work__media img {
+  filter: saturate(1) contrast(1.02);
+  transform: none;
+}
+
+.vl-home .vl-work:focus-visible .vl-work__meta {
+  border-bottom-color: var(--vl-red);
+}
+
+.vl-home .vl-work:focus-visible .vl-work__meta b {
+  transform: translate(3px, -3px);
+}
+
+@media (hover: hover) {
+  .vl-home .vl-button:hover {
+    border-color: var(--vl-navy);
+    background: var(--vl-navy);
+    box-shadow: none;
+    transform: translateY(-1px);
+  }
+
+  .vl-home .vl-button:hover svg { transform: translateX(3px); }
+  .vl-home .vl-text-link:hover b { transform: translateY(3px); }
+  .vl-home .vl-telegram-link:hover b { transform: translate(3px, -3px); }
+
+  .vl-home .vl-work:hover .vl-work__media img {
+    filter: saturate(1) contrast(1.02);
+    transform: none;
+  }
+
+  .vl-home .vl-work:hover .vl-work__meta {
+    border-bottom-color: var(--vl-red);
+  }
+
+  .vl-home .vl-work:hover .vl-work__meta b {
+    transform: translate(3px, -3px);
+  }
+}
+
 @media (max-width: 1100px) {
   .vl-core__grid {
     grid-template-columns: minmax(250px, 0.75fr) minmax(530px, 1.25fr);
@@ -3606,7 +3519,13 @@ h3 {
   .vl-core-route__status { justify-content: flex-end; }
 
   .vl-works .vl-work-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 720px;
+    grid-template-columns: 1fr;
+    margin-inline: auto;
+  }
+
+  .vl-works .vl-work__media {
+    aspect-ratio: 16 / 10;
   }
 
   .vl-steps {
@@ -3683,6 +3602,7 @@ h3 {
   100% { transform: translateY(390px); opacity: 0; }
 }
 
+/* Preserve the route story while reduced-motion users receive a static path. */
 @media (prefers-reduced-motion: reduce) {
   .vl-core-route__live {
     stroke-dashoffset: 0;
@@ -3691,6 +3611,21 @@ h3 {
   .vl-core-route__packet,
   .vl-core-route__canvas::after {
     display: none;
+  }
+
+  .vl-home .vl-nav__toggle:hover,
+  .vl-home .vl-nav__toggle:focus-visible,
+  .vl-home .vl-button:hover,
+  .vl-home .vl-button:focus-visible,
+  .vl-home .vl-button:hover svg,
+  .vl-home .vl-button:focus-visible svg,
+  .vl-home .vl-text-link:hover b,
+  .vl-home .vl-text-link:focus-visible b,
+  .vl-home .vl-telegram-link:hover b,
+  .vl-home .vl-telegram-link:focus-visible b,
+  .vl-home .vl-work:hover .vl-work__meta b,
+  .vl-home .vl-work:focus-visible .vl-work__meta b {
+    transform: none !important;
   }
 }
 

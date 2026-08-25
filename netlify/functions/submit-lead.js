@@ -6,6 +6,9 @@ const MAX_PER_WINDOW = 5;
 const MAX_RATE_KEYS = 1000;
 const MAX_BODY_BYTES = 16 * 1024;
 const TELEGRAM_TIMEOUT_MS = 8000;
+const PRIVACY_VERSION = '2026-08-25-v2';
+const LEAD_SOURCES = new Set(['home', 'websites', 'flow']);
+const LEAD_LANGUAGES = new Set(['uk', 'en']);
 const hits = new Map();
 
 const json = (statusCode, payload, extraHeaders = {}) => ({
@@ -54,8 +57,13 @@ exports.handler = async (event = {}) => {
     return json(405, { error: 'method not allowed' }, { Allow: 'POST' });
   }
 
+  const fetchSite = getHeader(event.headers, 'sec-fetch-site').toLowerCase();
+  if (fetchSite === 'cross-site') {
+    return json(403, { error: 'cross-site request rejected' });
+  }
+
   const contentType = getHeader(event.headers, 'content-type').split(';')[0].trim().toLowerCase();
-  if (contentType && contentType !== 'application/json') {
+  if (contentType !== 'application/json') {
     return json(415, { error: 'очікується application/json' });
   }
 
@@ -83,10 +91,25 @@ exports.handler = async (event = {}) => {
   const contact = clip(data.contact, 200).trim();
   const plan = clip(data.plan, 120).trim();
   const brief = clip(data.brief, 2000).trim();
-  const consent = data.consent === true || data.consent === 'true' || data.consent === 'on';
+  const privacyVersion = clip(data.privacyVersion, 40).trim();
+  const source = clip(data.source, 40).trim().toLowerCase();
+  const language = clip(data.language, 8).trim().toLowerCase();
+  const privacyAcknowledged = data.privacyAcknowledged === true
+    || data.privacyAcknowledged === 'true'
+    || data.privacyAcknowledged === 'on';
+  const telegramDeliveryConsent = data.telegramDeliveryConsent === true
+    || data.telegramDeliveryConsent === 'true'
+    || data.telegramDeliveryConsent === 'on';
 
   if (!name || !contact) return json(400, { error: "вкажіть імʼя і контакт" });
-  if (!consent) return json(400, { error: 'потрібна згода на обробку даних' });
+  if (!privacyAcknowledged) return json(400, { error: 'потрібне підтвердження ознайомлення з повідомленням про приватність' });
+  if (!telegramDeliveryConsent) return json(400, { error: 'потрібна окрема згода на доставку через Telegram Bot API' });
+  if (privacyVersion !== PRIVACY_VERSION) {
+    return json(409, { error: 'оновіть сторінку та підтвердьте чинне повідомлення про приватність' });
+  }
+  if (!LEAD_SOURCES.has(source) || !LEAD_LANGUAGES.has(language)) {
+    return json(400, { error: 'некоректне джерело заявки' });
+  }
 
   const ip = getHeader(event.headers, 'x-nf-client-connection-ip')
     || getHeader(event.headers, 'x-forwarded-for').split(',')[0].trim()
@@ -113,6 +136,7 @@ exports.handler = async (event = {}) => {
     `📩 <b>Контакт:</b> ${esc(contact)}`,
     `💎 <b>Напрям:</b> ${esc(plan || '—')}`, '',
     '📝 <b>Опис:</b>', esc(brief || '—'), '',
+    `🛡️ <b>Privacy:</b> ${esc(privacyVersion)} · ${esc(language)} · ${esc(source)} · Telegram consent ✓`,
     `<i>${now} (Київ)</i>`,
   ].join('\n');
 
