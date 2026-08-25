@@ -6,10 +6,8 @@
 <meta name="description" content="Velira Flow — живе демо: як автоматизація приймає заявку, кваліфікує ліда і рахує аналітику вашого бізнесу." />
 <meta name="theme-color" content="#F3E7C5" />
 <title>Velira Flow — демо автоматизації та аналітики</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/veblix-flow.css?v=6" />
+<link rel="stylesheet" href="assets/css/velira-fonts.css?v=1">
+<link rel="stylesheet" href="assets/css/veblix-flow.css?v=7" />
 </head>
 <body class="fl">
 
@@ -226,13 +224,18 @@
           <h2>Аудит від Velira</h2>
           <p class="fl-sub" style="margin-bottom:12px">Надішлемо ваші цифри Богдану — повернемось із планом, який виток закривати першим і чим (сайт, бот чи автоматизація).</p>
           <form class="fl-form" data-audit-form novalidate>
-            <label><span>Ім'я</span><input type="text" name="name" maxlength="200" placeholder="Як до вас звертатись" required></label>
-            <label><span>Telegram або телефон</span><input type="text" name="contact" maxlength="200" placeholder="@username" required></label>
+            <label><span>Ім'я</span><input type="text" name="name" autocomplete="name" maxlength="200" placeholder="Як до вас звертатись" required></label>
+            <label><span>Telegram або телефон</span><input type="text" name="contact" autocomplete="off" maxlength="200" placeholder="@username" required></label>
+            <input type="hidden" name="privacyVersion" value="2026-08-25-v2">
+            <input type="hidden" name="source" value="flow">
             <label class="fl-form__trap" aria-hidden="true"><span>Company</span><input type="text" name="company" tabindex="-1" autocomplete="off"></label>
-            <label class="fl-form__consent"><input type="checkbox" name="consent" value="true" required><span>Погоджуюсь на обробку даних згідно з <a href="privacy.html">політикою конфіденційності</a>.</span></label>
+            <p class="fl-form__privacy-note">Надсилаючи форму, ви просите Velira зв’язатися щодо проєкту. Якщо проєкт не почнеться, заявку зберігаємо до 90 днів. Не надсилайте паролі, платіжні дані, документи чи іншу чутливу інформацію.</p>
+            <label class="fl-form__consent"><input type="checkbox" name="privacyAcknowledged" value="true" required><span>Підтверджую, що прочитав(ла) <a href="privacy.html">повідомлення про приватність</a>.</span></label>
+            <label class="fl-form__consent"><input type="checkbox" name="telegramDeliveryConsent" value="true" required><span>Окремо погоджуюсь на доставку цієї заявки через Telegram Bot API, включно з можливою обробкою за межами України. Це не згода на маркетинг.</span></label>
             <div class="fl-form__row">
               <button class="vh-btn" type="submit" data-audit-send>Надіслати аудит →</button>
               <button class="fl-ghostbtn" type="button" data-biz-save>Зберегти місяць</button>
+              <button class="fl-ghostbtn" type="button" data-biz-clear>Очистити локальні дані</button>
             </div>
             <p class="fl-form__err" data-audit-msg role="status" aria-live="polite" hidden></p>
           </form>
@@ -248,6 +251,6 @@
   <a class="vh-btn" href="https://t.me/madbod_77" target="_blank" rel="noopener">Хочу таке для свого бізнесу →</a>
 </footer>
 
-<script src="assets/js/veblix-flow.js?v=4" defer></script>
+<script src="assets/js/veblix-flow.js?v=5" defer></script>
 </body>
 </html>

@@ -1,7 +1,8 @@
 /*
  * Velira / home
  * DESIGN.md is the visual source of truth.
- * The exact owner-supplied brand/velira-logo-original.jpg is only cropped/scaled.
+ * The exact owner-supplied brand/velira-logo-original.jpg is cropped/scaled;
+ * the footer variant is inverted in CSS for white artwork on black.
  */
 
 :root {
@@ -144,64 +145,9 @@ h3 {
   transform: translateY(0);
 }
 
-/* Intro: the exact owner artwork, never reconstructed. */
-.vl-intro {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  background: #fff;
-  animation: vl-intro-exit 850ms var(--vl-ease) 1450ms forwards;
-}
-
-.vl-intro > img {
-  width: min(72vmin, 660px);
-  height: auto;
-  animation: vl-intro-logo 900ms var(--vl-ease) both;
-}
-
-.vl-intro__line {
-  position: absolute;
-  right: -5vw;
-  bottom: 14vh;
-  left: -5vw;
-  height: 10px;
-  overflow: hidden;
-  transform: rotate(-2deg);
-}
-
-.vl-intro__line i {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: var(--vl-red);
-  transform: scaleX(0);
-  transform-origin: left;
-  animation: vl-intro-line 1100ms var(--vl-ease) 260ms forwards;
-}
-
-.vl-intro.is-leaving {
-  animation-delay: 0ms;
-}
-
-.vl-intro.is-done {
-  display: none;
-}
-
-@keyframes vl-intro-logo {
-  from { opacity: 0; transform: scale(0.92); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-@keyframes vl-intro-line {
-  to { transform: scaleX(1); }
-}
-
-@keyframes vl-intro-exit {
-  0% { opacity: 1; visibility: visible; }
-  100% { opacity: 0; visibility: hidden; pointer-events: none; }
+/* Inert copy store: never rendered, never measured. */
+.vl-preserved-copy {
+  display: none !important;
 }
 
 /* Header */
@@ -401,7 +347,7 @@ h3 {
   display: flex;
   min-height: max(780px, 100svh);
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 25px 0 0;
   background: var(--vl-paper);
   isolation: isolate;
@@ -419,6 +365,7 @@ h3 {
   border-radius: 50%;
 }
 
+/* Shared-page rail base only: the homepage no longer renders any rail. */
 .vl-rail {
   display: flex;
   width: 100%;
@@ -439,19 +386,13 @@ h3 {
   min-height: 22px;
 }
 
-.vl-rail--bottom {
-  min-height: 47px;
-  justify-content: space-between;
-  padding-inline: var(--vl-gutter);
-  border-top: 1px solid var(--vl-rule);
-  font-size: 10px;
-  letter-spacing: 0.22em;
-}
-
+/* The grid absorbs the height freed by the removed hero rail, so the hero has
+   no dead bottom strip and no second vertical centring. */
 .vl-hero__grid {
   display: grid;
   width: var(--vl-wrap);
   min-height: 690px;
+  flex: 1 1 auto;
   margin: 0 auto;
   padding: clamp(118px, 12vh, 160px) 0 58px;
   grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -530,61 +471,6 @@ h3 {
   filter: brightness(1.08);
 }
 
-.vl-phone-stage__orbit {
-  position: absolute;
-  inset: -8% 2% -7% 8%;
-  border: 1px solid rgba(48, 54, 71, 0.25);
-  border-radius: 50%;
-  transform: rotate(12deg);
-  animation: vl-orbit 14s linear infinite;
-  animation-play-state: paused;
-}
-
-.vl-phone-stage__orbit::after {
-  content: "";
-  position: absolute;
-  top: 14%;
-  right: 3%;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--vl-red);
-  box-shadow: 0 0 0 8px rgba(200, 13, 10, 0.12);
-}
-
-.vl-phone-stage__badge {
-  position: absolute;
-  right: 4%;
-  bottom: 0;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 11px 14px;
-  border: 1px solid var(--vl-rule);
-  background: rgba(255, 249, 234, 0.88);
-  font-size: 10px;
-  font-weight: 750;
-  letter-spacing: 0.15em;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  transform: rotate(3deg);
-}
-
-.vl-phone-stage__badge i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--vl-red);
-  animation: vl-pulse 1.8s ease-in-out infinite;
-  animation-play-state: paused;
-}
-
-.vl-phone-stage.is-motion-active .vl-phone-stage__orbit,
-.vl-phone-stage.is-motion-active .vl-phone-stage__badge i {
-  animation-play-state: running;
-}
-
 .vl-hero__lede {
   position: relative;
   z-index: 4;
@@ -654,15 +540,6 @@ h3 {
   background: currentColor;
 }
 
-@keyframes vl-orbit {
-  to { transform: rotate(372deg); }
-}
-
-@keyframes vl-pulse {
-  0%, 100% { opacity: 0.45; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.18); }
-}
-
 /* Moving service rail */
 .vl-marquee {
   position: relative;
@@ -728,34 +605,11 @@ h3 {
   to { transform: translateX(-50%); }
 }
 
-/* Long story and cable */
+/* Long story */
 .vl-story {
   position: relative;
   background: var(--vl-paper);
   isolation: isolate;
-}
-
-.vl-signal {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.vl-signal path {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.vl-signal__draw {
-  stroke: var(--vl-red);
-  stroke-width: 8;
-  stroke-dasharray: 1;
-  stroke-dashoffset: var(--signal-progress, 1);
 }
 
 .vl-section > .vl-wrap,
@@ -2164,6 +2018,15 @@ h3 {
 .vl-form__error[hidden] { display: none !important; }
 .vl-form__consent > .vl-form__error:not([hidden]) { display: block !important; margin-top: 8px; }
 
+.vl-form__privacy-note {
+  margin: -6px 0 0;
+  padding-left: 12px;
+  border-left: 3px solid var(--vl-red);
+  color: rgba(48, 54, 71, 0.74);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
 .vl-form__consent {
   position: relative;
   display: block;
@@ -2268,7 +2131,7 @@ h3 {
 .vl-footer {
   padding: clamp(65px, 7vw, 105px) 0 25px;
   border-top: 1px solid rgba(255, 249, 234, 0.16);
-  background: var(--vl-ink);
+  background: #000;
   color: var(--vl-paper-soft);
 }
 
@@ -2283,7 +2146,7 @@ h3 {
 .vl-brand.vl-brand--footer {
   width: 154px;
   height: 150px;
-  background: #fff;
+  background: #000;
   filter: none;
   mix-blend-mode: normal;
 }
@@ -2293,6 +2156,7 @@ h3 {
   left: -70px;
   width: 294px;
   height: 294px;
+  filter: invert(1);
   mix-blend-mode: normal;
 }
 
@@ -2385,22 +2249,24 @@ h3 {
     --vl-gutter: 20px;
   }
 
-  html { scroll-padding-top: 106px; }
+  html {
+    scroll-padding-top: max(80px, calc(68px + env(safe-area-inset-top)));
+  }
 
   .vl-nav,
   .vl-nav.is-scrolled {
-    top: max(12px, env(safe-area-inset-top));
-    right: clamp(12px, 4vw, 20px);
-    left: clamp(12px, 4vw, 20px);
-    min-height: 78px;
-    gap: 12px;
-    padding: 6px 7px 6px 10px;
+    top: max(8px, env(safe-area-inset-top));
+    right: max(clamp(12px, 4vw, 20px), env(safe-area-inset-right));
+    left: max(clamp(12px, 4vw, 20px), env(safe-area-inset-left));
+    min-height: 60px;
+    gap: 8px;
+    padding: 4px 6px 4px 8px;
     border-color: rgba(48, 54, 71, 0.16);
-    border-radius: 18px;
+    border-radius: 14px;
     background: rgba(255, 253, 246, 0.94);
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.95) inset,
-      0 16px 42px rgba(37, 42, 56, 0.14),
-      0 5px 0 rgba(200, 13, 10, 0.82);
+      0 12px 32px rgba(37, 42, 56, 0.13),
+      0 4px 0 rgba(200, 13, 10, 0.82);
     -webkit-backdrop-filter: blur(20px) saturate(1.15);
     backdrop-filter: blur(20px) saturate(1.15);
   }
@@ -2409,41 +2275,41 @@ h3 {
     content: "";
     position: absolute;
     right: 22px;
-    bottom: -5px;
+    bottom: -4px;
     left: 22px;
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(200, 13, 10, 0.72), transparent);
     pointer-events: none;
   }
 
-  .vl-brand {
+  .vl-nav .vl-brand {
     z-index: 4;
-    width: 80px;
-    height: 66px;
-    border-radius: 12px;
+    width: 66px;
+    height: 50px;
+    border-radius: 10px;
   }
 
-  .vl-brand__art {
+  .vl-nav .vl-brand__art {
     border-radius: inherit;
     background: #fff;
   }
 
-  .vl-brand__art img {
-    top: -38px;
-    left: -34px;
-    width: 140px;
-    height: 140px;
+  .vl-nav .vl-brand__art img {
+    top: -30px;
+    left: -27px;
+    width: 112px;
+    height: 112px;
   }
 
   .vl-nav__toggle {
     position: relative;
     z-index: 4;
     display: block;
-    width: 54px;
-    height: 54px;
-    padding: 14px;
+    width: 44px;
+    height: 44px;
+    padding: 10px;
     border-color: rgba(16, 17, 20, 0.78);
-    border-radius: 15px;
+    border-radius: 12px;
     background: linear-gradient(145deg, #3b4255, #252a38);
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.14) inset,
       0 9px 22px rgba(37, 42, 56, 0.2);
@@ -2492,7 +2358,7 @@ h3 {
     align-items: stretch;
     justify-content: center;
     gap: 25px;
-    padding: calc(122px + env(safe-area-inset-top)) var(--vl-gutter)
+    padding: calc(94px + env(safe-area-inset-top)) var(--vl-gutter)
       calc(30px + env(safe-area-inset-bottom));
     overflow: hidden;
     background: radial-gradient(circle at 94% 18%, rgba(200, 13, 10, 0.2), transparent 28%),
@@ -2508,7 +2374,7 @@ h3 {
   .vl-nav__panel::before {
     content: "VELIRA / NAVIGATION";
     position: absolute;
-    top: calc(102px + env(safe-area-inset-top));
+    top: calc(78px + env(safe-area-inset-top));
     left: var(--vl-gutter);
     color: rgba(255, 249, 234, 0.54);
     font-size: 9px;
@@ -2594,7 +2460,7 @@ h3 {
 
   .vl-lang button {
     min-width: 48px;
-    min-height: 40px;
+    min-height: 44px;
     border: 1px solid rgba(255, 249, 234, 0.28);
     border-radius: 999px;
     color: rgba(255, 249, 234, 0.68);
@@ -2657,7 +2523,7 @@ h3 {
 
   .vl-hero {
     min-height: max(800px, 100svh);
-    padding-top: 100px;
+    padding-top: 84px;
   }
 
   .vl-rail--top { display: none; }
@@ -2666,6 +2532,7 @@ h3 {
     display: flex;
     min-height: 0;
     flex-direction: column;
+    justify-content: center;
     padding: 35px 0 45px;
   }
 
@@ -2689,8 +2556,6 @@ h3 {
     margin: -4vw -7% -4vw;
   }
 
-  .vl-phone-stage__orbit { inset: 0 5% 0 9%; }
-
   .vl-hero__lede {
     order: 3;
     max-width: 560px;
@@ -2698,7 +2563,6 @@ h3 {
 
   .vl-hero__lede > p { font-size: 16px; }
   .vl-hero__note { display: none; }
-  .vl-rail--bottom { padding-inline: 20px; }
 
   .vl-section__head--split {
     grid-template-columns: 1fr;
@@ -2776,15 +2640,12 @@ h3 {
     --vl-gutter: 16px;
   }
 
-  .vl-intro > img { width: 91vw; }
-  .vl-intro__line { bottom: 18vh; height: 7px; }
-
   .vl-rail { gap: 30px; font-size: 9px; }
   .vl-rail span:nth-child(n + 3) { display: none; }
 
   .vl-hero {
     min-height: max(760px, 100svh);
-    padding-top: 92px;
+    padding-top: 80px;
   }
 
   .vl-hero::before { top: 31%; right: -38vw; width: 84vw; }
@@ -2818,8 +2679,6 @@ h3 {
     margin: -1vw -12.5% -2vw;
   }
 
-  .vl-phone-stage__badge { right: 10%; bottom: 3%; }
-
   .vl-hero__lede > p {
     margin-bottom: 20px;
     font-size: 14px;
@@ -2834,8 +2693,6 @@ h3 {
 
   .vl-hero__actions .vl-button { width: 100%; }
   .vl-text-link { width: fit-content; }
-  .vl-rail--bottom { min-height: 38px; justify-content: center; }
-  .vl-rail--bottom span:not(:first-child) { display: none; }
   .vl-marquee__track { padding-block: 13px; }
   .vl-section { padding-block: 94px; }
   .vl-section__head { margin-bottom: 48px; }
@@ -3013,10 +2870,12 @@ h3 {
 }
 
 @media (max-width: 375px) {
-  .vl-nav { right: 12px; left: 12px; }
+  .vl-nav {
+    right: max(12px, env(safe-area-inset-right));
+    left: max(12px, env(safe-area-inset-left));
+  }
   .vl-hero__title { font-size: clamp(43px, 13.25vw, 51px); }
   .vl-phone-stage { width: 132%; margin-inline: -16%; }
-  .vl-phone-stage__badge { font-size: 8px; }
 
   .vl-section__head h2,
   .vl-contact__copy h2 { font-size: clamp(38px, 11.9vw, 46px); }
@@ -3039,8 +2898,8 @@ h3 {
     min-height: 54px;
   }
 
-  .vl-brand { width: 66px; height: 50px; }
-  .vl-brand__art img { top: -30px; left: -27px; width: 112px; height: 112px; }
+  .vl-nav .vl-brand { width: 66px; height: 50px; }
+  .vl-nav .vl-brand__art img { top: -30px; left: -27px; width: 112px; height: 112px; }
   .vl-nav__toggle { width: 44px; height: 44px; }
 
   .vl-nav__panel {
@@ -3057,20 +2916,20 @@ h3 {
   .vl-button--nav { width: 54%; min-height: 48px; }
 
   .vl-hero {
-    min-height: 600px;
-    padding-top: 76px;
+    min-height: 100svh;
+    padding-top: 64px;
   }
 
   .vl-hero__grid {
     display: grid;
-    min-height: 500px;
-    padding: 20px 0 30px;
+    min-height: calc(100svh - 64px);
+    padding: 8px 0 14px;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     grid-template-rows: 1fr auto;
   }
 
   .vl-hero__copy { grid-column: 1 / 8; grid-row: 1; }
-  .vl-hero__title { font-size: clamp(45px, 7.2vw, 66px); }
+  .vl-hero__title { font-size: clamp(42px, 5.8vw, 54px); }
 
   .vl-phone-stage {
     grid-column: 7 / 13;
@@ -3079,8 +2938,6 @@ h3 {
     width: 119%;
     margin: 0 -14% 0 -5%;
   }
-
-  .vl-phone-stage__badge { right: 7%; }
 
   .vl-hero__lede {
     grid-column: 1 / 7;
@@ -3091,7 +2948,6 @@ h3 {
   .vl-hero__lede > p { margin-bottom: 13px; font-size: 13px; }
   .vl-hero__actions { flex-direction: row; align-items: center; }
   .vl-hero__actions .vl-button { width: auto; min-height: 46px; }
-  .vl-rail--bottom { min-height: 34px; }
   .vl-section { padding-block: 78px; }
   .vl-section__head { margin-bottom: 44px; }
   .vl-leaks { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
@@ -3160,16 +3016,11 @@ h3 {
     transition-duration: 0.01ms !important;
   }
 
-  .vl-intro { display: none !important; }
   .vl-marquee__toggle { display: none; }
 
   .js [data-reveal] {
     opacity: 1 !important;
     transform: none !important;
-  }
-
-  .vl-signal__draw {
-    stroke-dashoffset: 0 !important;
   }
 
   .vl-phone-stage {
@@ -3195,17 +3046,14 @@ h3 {
     border: 2px solid ButtonText;
   }
 
-  .vl-signal__draw { stroke: CanvasText; }
 }
 
 /* Simple conversion homepage -------------------------------------------------
-   One promise, one animated route, one conversion action. Supporting proof
-   follows only after the contact block. */
+   One promise, one static route told once, one conversion action. Supporting
+   proof follows only after the contact block. */
 .vl-core {
   overflow: hidden;
-  background:
-    radial-gradient(circle at 84% 12%, rgba(200, 13, 10, 0.08), transparent 25%),
-    linear-gradient(180deg, var(--vl-paper-soft), var(--vl-paper));
+  background: var(--vl-paper-soft);
 }
 
 .vl-core::before {
@@ -3254,6 +3102,8 @@ h3 {
 }
 
 .vl-core-route {
+  --route-progress-scale: 0;
+  --route-packet-y: 0px;
   position: relative;
   min-width: 0;
   margin: 0;
@@ -3309,12 +3159,15 @@ h3 {
   border-radius: 50%;
   background: var(--vl-red);
   box-shadow: 0 0 0 7px rgba(200, 13, 10, 0.13);
+}
+
+.vl-core-route.is-route-running .vl-core-route__hud i {
   animation: vl-core-pulse 1.5s ease-in-out infinite;
 }
 
 .vl-core-route__canvas {
   position: relative;
-  min-height: 460px;
+  min-height: 510px;
 }
 
 .vl-core-route__track {
@@ -3339,26 +3192,39 @@ h3 {
 }
 
 .vl-core-route__glow {
-  stroke: rgba(200, 13, 10, 0.22);
-  stroke-width: 22;
+  stroke: rgba(200, 13, 10, 0.12);
+  stroke-width: 10;
 }
 
 .vl-core-route__live {
   stroke: var(--vl-red);
-  stroke-width: 7;
-  stroke-dasharray: 1;
-  animation: vl-core-draw 5.6s var(--vl-ease-in-out) infinite;
+  stroke-width: 5;
 }
 
 .vl-core-route__packet {
   fill: var(--vl-paper-soft);
   filter: drop-shadow(0 0 11px rgba(200, 13, 10, 0.95));
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.vl-core-route.is-route-running .vl-core-route__packet,
+.vl-core-route.is-route-complete .vl-core-route__packet {
+  opacity: 1;
 }
 
 .vl-core-route__packet-ring {
   fill: rgba(200, 13, 10, 0.2);
   stroke: var(--vl-red);
   stroke-width: 2;
+}
+
+.vl-core-route.is-route-running .vl-core-route__packet-ring {
+  animation: vl-core-packet-ring 1.15s ease-in-out infinite;
+}
+
+.vl-core-route__mobile-rail {
+  display: none;
 }
 
 .vl-core-route__nodes {
@@ -3375,6 +3241,7 @@ h3 {
 }
 
 .vl-core-route__nodes li {
+  --route-node-y: 0px;
   position: relative;
   width: 100%;
   max-width: 190px;
@@ -3385,24 +3252,29 @@ h3 {
   box-shadow: 0 16px 42px rgba(0, 0, 0, 0.22), 6px 6px 0 rgba(200, 13, 10, 0.62);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
-  animation: vl-core-node 5.6s ease-in-out infinite;
+  opacity: 0.74;
+  transform: translateY(var(--route-node-y));
+  transition:
+    border-color 420ms var(--vl-ease),
+    background-color 420ms var(--vl-ease),
+    box-shadow 420ms var(--vl-ease),
+    opacity 320ms ease,
+    transform 520ms var(--vl-ease);
 }
 
 .vl-core-route__nodes li:nth-child(1) {
+  --route-node-y: 88px;
   justify-self: start;
-  transform: translateY(82px);
 }
 
 .vl-core-route__nodes li:nth-child(2) {
+  --route-node-y: -98px;
   justify-self: center;
-  transform: translateY(-92px);
-  animation-delay: 1.86s;
 }
 
 .vl-core-route__nodes li:nth-child(3) {
+  --route-node-y: 88px;
   justify-self: end;
-  transform: translateY(82px);
-  animation-delay: 3.72s;
 }
 
 .vl-core-route__nodes li::before {
@@ -3415,6 +3287,15 @@ h3 {
   border: 3px solid var(--vl-navy-deep);
   border-radius: 50%;
   background: var(--vl-red);
+  color: var(--vl-navy-deep);
+  font-size: 9px;
+  font-weight: 900;
+  line-height: 10px;
+  text-align: center;
+  transition:
+    background-color 300ms ease,
+    box-shadow 300ms ease,
+    transform 420ms var(--vl-ease);
 }
 
 .vl-core-route__nodes span,
@@ -3449,6 +3330,54 @@ h3 {
   line-height: 1.35;
 }
 
+.vl-core-route__nodes h3,
+.vl-core-route__nodes p,
+.vl-core-route__nodes i {
+  transition: color 320ms ease, opacity 320ms ease;
+}
+
+.vl-core-route[data-route-step="1"] .vl-core-route__nodes li:nth-child(1),
+.vl-core-route[data-route-step="2"] .vl-core-route__nodes li:nth-child(2),
+.vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(3) {
+  border-color: var(--vl-paper-soft);
+  background: rgba(44, 49, 64, 0.98);
+  box-shadow: 0 24px 58px rgba(200, 13, 10, 0.24), 9px 9px 0 var(--vl-red);
+  opacity: 1;
+  transform: translateY(calc(var(--route-node-y) - 6px)) scale(1.012);
+}
+
+.vl-core-route[data-route-step="1"] .vl-core-route__nodes li:nth-child(1)::before,
+.vl-core-route[data-route-step="2"] .vl-core-route__nodes li:nth-child(2)::before,
+.vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(3)::before {
+  background: var(--vl-paper-soft);
+  box-shadow: 0 0 0 5px rgba(200, 13, 10, 0.45), 0 0 24px var(--vl-red);
+  transform: scale(1.12);
+}
+
+.vl-core-route[data-route-step="2"] .vl-core-route__nodes li:nth-child(1),
+.vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(1),
+.vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(2),
+.vl-core-route.is-route-complete .vl-core-route__nodes li {
+  opacity: 0.92;
+}
+
+.vl-core-route[data-route-step="2"] .vl-core-route__nodes li:nth-child(1)::before,
+.vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(1)::before,
+.vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(2)::before,
+.vl-core-route.is-route-complete .vl-core-route__nodes li::before {
+  content: "✓";
+  background: var(--vl-paper-soft);
+  box-shadow: 0 0 0 3px var(--vl-red);
+}
+
+.vl-core-route[data-route-step] .vl-core-route__nodes li h3 {
+  color: var(--vl-paper-soft);
+}
+
+.vl-core-route[data-route-step] .vl-core-route__nodes li p {
+  color: rgba(255, 249, 234, 0.72);
+}
+
 .vl-core-route__status {
   min-height: 52px;
   border-top: 1px solid var(--vl-rule-light);
@@ -3458,6 +3387,47 @@ h3 {
 .vl-core-route__status strong {
   color: var(--vl-paper-soft);
   font-weight: 760;
+}
+
+.vl-core-route__status span,
+.vl-core-route__status strong {
+  opacity: 0.32;
+  transition: color 320ms ease, opacity 320ms ease, transform 420ms var(--vl-ease);
+}
+
+.vl-core-route[data-route-step="1"] .vl-core-route__status span:first-child,
+.vl-core-route[data-route-step="2"] .vl-core-route__status span:nth-child(2),
+.vl-core-route[data-route-step="3"] .vl-core-route__status strong,
+.vl-core-route.is-route-complete .vl-core-route__status strong {
+  color: var(--vl-paper-soft);
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.no-js .vl-core-route {
+  --route-progress-scale: 1;
+}
+
+.no-js .vl-core-route__packet {
+  display: none;
+}
+
+.no-js .vl-core-route__nodes li,
+.no-js .vl-core-route__status strong {
+  opacity: 1;
+}
+
+.no-js .vl-core-route[data-route-step] .vl-core-route__nodes li:nth-child(n) {
+  border-color: rgba(255, 249, 234, 0.62);
+  background: rgba(37, 42, 56, 0.92);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.22), 6px 6px 0 rgba(200, 13, 10, 0.62);
+  transform: translateY(var(--route-node-y)) !important;
+}
+
+.no-js .vl-core-route__nodes li::before {
+  content: "✓";
+  background: var(--vl-paper-soft);
+  box-shadow: 0 0 0 3px var(--vl-red);
 }
 
 .vl-final-cta {
@@ -3505,20 +3475,79 @@ h3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-@keyframes vl-core-draw {
-  0% { stroke-dashoffset: 1; opacity: 0.45; }
-  18%, 76% { stroke-dashoffset: 0; opacity: 1; }
-  100% { stroke-dashoffset: -1; opacity: 0.45; }
-}
-
 @keyframes vl-core-pulse {
   0%, 100% { opacity: 0.55; transform: scale(0.82); }
   50% { opacity: 1; transform: scale(1.15); }
 }
 
-@keyframes vl-core-node {
-  0%, 12%, 100% { border-color: rgba(255, 249, 234, 0.56); box-shadow: 0 16px 42px rgba(0, 0, 0, 0.22), 6px 6px 0 rgba(200, 13, 10, 0.48); }
-  18%, 31% { border-color: var(--vl-paper-soft); box-shadow: 0 20px 54px rgba(200, 13, 10, 0.2), 8px 8px 0 var(--vl-red); }
+@keyframes vl-core-packet-ring {
+  0%, 100% { fill: rgba(200, 13, 10, 0.16); stroke-width: 2; }
+  50% { fill: rgba(200, 13, 10, 0.3); stroke-width: 3; }
+}
+
+/* Homepage-scoped calm interactions ------------------------------------------
+   Keyboard feedback is always available; pointer transforms are enabled only
+   on devices that genuinely support hover, so touch suppression still wins. */
+.vl-home .vl-button:focus-visible {
+  border-color: var(--vl-navy);
+  background: var(--vl-navy);
+  box-shadow: none;
+  transform: translateY(-1px);
+}
+
+.vl-home .vl-button:focus-visible svg {
+  transform: translateX(3px);
+}
+
+.vl-home .vl-text-link:focus-visible b {
+  transform: translateY(3px);
+}
+
+.vl-home .vl-telegram-link:focus-visible b {
+  transform: translate(3px, -3px);
+}
+
+.vl-home .vl-work__meta {
+  transition: border-bottom-color 200ms ease;
+}
+
+.vl-home .vl-work:focus-visible .vl-work__media img {
+  filter: saturate(1) contrast(1.02);
+  transform: none;
+}
+
+.vl-home .vl-work:focus-visible .vl-work__meta {
+  border-bottom-color: var(--vl-red);
+}
+
+.vl-home .vl-work:focus-visible .vl-work__meta b {
+  transform: translate(3px, -3px);
+}
+
+@media (hover: hover) {
+  .vl-home .vl-button:hover {
+    border-color: var(--vl-navy);
+    background: var(--vl-navy);
+    box-shadow: none;
+    transform: translateY(-1px);
+  }
+
+  .vl-home .vl-button:hover svg { transform: translateX(3px); }
+  .vl-home .vl-text-link:hover b { transform: translateY(3px); }
+  .vl-home .vl-telegram-link:hover b { transform: translate(3px, -3px); }
+
+  .vl-home .vl-work:hover .vl-work__media img {
+    filter: saturate(1) contrast(1.02);
+    transform: none;
+  }
+
+  .vl-home .vl-work:hover .vl-work__meta {
+    border-bottom-color: var(--vl-red);
+  }
+
+  .vl-home .vl-work:hover .vl-work__meta b {
+    transform: translate(3px, -3px);
+  }
 }
 
 @media (max-width: 1100px) {
@@ -3549,64 +3578,142 @@ h3 {
   }
 
   .vl-core-route__canvas {
-    min-height: 560px;
-    padding: 46px clamp(22px, 7vw, 64px);
+    --route-pad-block: 54px;
+    --route-pad-inline: clamp(22px, 7vw, 64px);
+    --route-card-offset: 58px;
+    --route-card-height: 146px;
+    --route-card-half: 73px;
+    --route-rail-local: 17px;
+    --route-link-width: 41px;
+    --route-link-offset: -41px;
+    min-height: 760px;
+    padding: var(--route-pad-block) var(--route-pad-inline);
   }
 
-  .vl-core-route__canvas::before {
-    content: "";
+  .vl-core-route__mobile-rail {
+    display: block;
     position: absolute;
-    top: 65px;
-    bottom: 65px;
-    left: clamp(39px, calc(7vw + 17px), 81px);
-    z-index: 0;
-    width: 5px;
+    top: calc(var(--route-pad-block) + var(--route-card-half));
+    bottom: calc(var(--route-pad-block) + var(--route-card-half));
+    left: calc(var(--route-pad-inline) + var(--route-rail-local));
+    z-index: 1;
+    width: 2px;
     border-radius: 999px;
-    background: linear-gradient(180deg, rgba(255, 249, 234, 0.22), var(--vl-red), rgba(255, 249, 234, 0.22));
+    background: rgba(255, 249, 234, 0.2);
   }
 
-  .vl-core-route__canvas::after {
+  .vl-core-route__mobile-rail::before {
     content: "";
     position: absolute;
-    top: 68px;
-    left: clamp(33px, calc(7vw + 11px), 75px);
-    z-index: 4;
+    inset: 0 50% auto auto;
+    width: 4px;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--vl-red);
+    box-shadow: 0 0 18px rgba(200, 13, 10, 0.58);
+    transform: translateX(50%) scaleY(var(--route-progress-scale));
+    transform-origin: top center;
+    will-change: transform;
+  }
+
+  .vl-core-route__mobile-rail i {
+    position: absolute;
+    top: 0;
+    left: 50%;
     width: 17px;
     height: 17px;
     border: 4px solid var(--vl-navy-deep);
     border-radius: 50%;
     background: var(--vl-paper-soft);
-    box-shadow: 0 0 0 5px var(--vl-red), 0 0 22px var(--vl-red);
-    animation: vl-core-travel-mobile 5.6s var(--vl-ease-in-out) infinite;
+    box-shadow: 0 0 0 5px var(--vl-red), 0 0 22px rgba(200, 13, 10, 0.88);
+    opacity: 0;
+    transform: translate3d(-50%, calc(var(--route-packet-y) - 8.5px), 0);
+    transition: opacity 180ms ease;
+    will-change: transform;
+  }
+
+  .vl-core-route.is-route-running .vl-core-route__mobile-rail i,
+  .vl-core-route.is-route-complete .vl-core-route__mobile-rail i {
+    opacity: 1;
   }
 
   .vl-core-route__track { display: none; }
 
   .vl-core-route__nodes {
-    position: relative;
-    inset: auto;
+    position: absolute;
+    inset: var(--route-pad-block) var(--route-pad-inline);
     display: flex;
-    height: 100%;
+    height: auto;
     padding: 0;
     flex-direction: column;
     justify-content: space-between;
-    gap: 28px;
+    gap: 44px;
   }
 
   .vl-core-route__nodes li,
   .vl-core-route__nodes li:nth-child(n) {
-    width: calc(100% - 58px);
+    --route-node-y: 0px;
+    width: calc(100% - var(--route-card-offset));
     max-width: none;
-    min-height: 122px;
-    margin-left: 58px;
-    transform: none;
+    min-height: var(--route-card-height);
+    height: var(--route-card-height);
+    margin-left: var(--route-card-offset);
+    transform: translateY(0);
+  }
+
+  .vl-core-route__nodes li::before {
+    top: 50%;
+    right: auto;
+    left: calc(var(--route-link-offset) - 7px);
+    z-index: 3;
+    transform: translateY(-50%);
+  }
+
+  .vl-core-route__nodes li::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: var(--route-link-offset);
+    width: var(--route-link-width);
+    height: 2px;
+    background: rgba(255, 249, 234, 0.2);
+    transform: translateY(-50%);
+    transform-origin: left center;
+    transition: background-color 320ms ease, box-shadow 320ms ease;
+  }
+
+  .vl-core-route[data-route-step="1"] .vl-core-route__nodes li:nth-child(1)::after,
+  .vl-core-route[data-route-step="2"] .vl-core-route__nodes li:nth-child(2)::after,
+  .vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(3)::after,
+  .vl-core-route[data-route-step="2"] .vl-core-route__nodes li:nth-child(1)::after,
+  .vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(-n+2)::after,
+  .vl-core-route.is-route-complete .vl-core-route__nodes li::after {
+    background: var(--vl-red);
+    box-shadow: 0 0 12px rgba(200, 13, 10, 0.72);
+  }
+
+  .no-js .vl-core-route__nodes li::after {
+    background: var(--vl-red);
+    box-shadow: 0 0 12px rgba(200, 13, 10, 0.72);
+  }
+
+  .vl-core-route[data-route-step="1"] .vl-core-route__nodes li:nth-child(1)::before,
+  .vl-core-route[data-route-step="2"] .vl-core-route__nodes li:nth-child(2)::before,
+  .vl-core-route[data-route-step="3"] .vl-core-route__nodes li:nth-child(3)::before {
+    transform: translateY(-50%) scale(1.12);
   }
 
   .vl-core-route__status span { display: none; }
   .vl-core-route__status { justify-content: flex-end; }
 
   .vl-works .vl-work-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 720px;
+    grid-template-columns: 1fr;
+    margin-inline: auto;
+  }
+
+  .vl-works .vl-work__media {
+    aspect-ratio: 16 / 10;
   }
 
   .vl-steps {
@@ -3620,26 +3727,24 @@ h3 {
   }
 
   .vl-core-route__canvas {
-    min-height: 520px;
-    padding: 38px 20px;
-  }
-
-  .vl-core-route__canvas::before {
-    top: 55px;
-    bottom: 55px;
-    left: 36px;
-  }
-
-  .vl-core-route__canvas::after {
-    top: 58px;
-    left: 30px;
+    --route-pad-block: 46px;
+    --route-pad-inline: 18px;
+    --route-card-offset: 48px;
+    --route-card-height: 144px;
+    --route-card-half: 72px;
+    --route-rail-local: 16px;
+    --route-link-width: 32px;
+    --route-link-offset: -32px;
+    min-height: clamp(700px, 185vw, 820px);
+    padding: var(--route-pad-block) var(--route-pad-inline);
   }
 
   .vl-core-route__nodes li,
   .vl-core-route__nodes li:nth-child(n) {
-    width: calc(100% - 48px);
-    min-height: 112px;
-    margin-left: 48px;
+    width: calc(100% - var(--route-card-offset));
+    min-height: var(--route-card-height);
+    height: var(--route-card-height);
+    margin-left: var(--route-card-offset);
     padding: 15px;
   }
 
@@ -3676,21 +3781,41 @@ h3 {
   .vl-final-cta .vl-button { width: 100%; }
 }
 
-@keyframes vl-core-travel-mobile {
-  0% { transform: translateY(0); opacity: 0; }
-  10% { opacity: 1; }
-  82% { transform: translateY(380px); opacity: 1; }
-  100% { transform: translateY(390px); opacity: 0; }
-}
-
+/* Preserve the route story while reduced-motion users receive a static path. */
 @media (prefers-reduced-motion: reduce) {
   .vl-core-route__live {
     stroke-dashoffset: 0;
   }
 
   .vl-core-route__packet,
-  .vl-core-route__canvas::after {
+  .vl-core-route__mobile-rail i {
     display: none;
+  }
+
+  .vl-core-route {
+    --route-progress-scale: 1;
+  }
+
+  .vl-core-route__nodes li,
+  .vl-core-route__nodes li:nth-child(n) {
+    opacity: 1;
+    transform: translateY(var(--route-node-y)) !important;
+    transition: none;
+  }
+
+  .vl-home .vl-nav__toggle:hover,
+  .vl-home .vl-nav__toggle:focus-visible,
+  .vl-home .vl-button:hover,
+  .vl-home .vl-button:focus-visible,
+  .vl-home .vl-button:hover svg,
+  .vl-home .vl-button:focus-visible svg,
+  .vl-home .vl-text-link:hover b,
+  .vl-home .vl-text-link:focus-visible b,
+  .vl-home .vl-telegram-link:hover b,
+  .vl-home .vl-telegram-link:focus-visible b,
+  .vl-home .vl-work:hover .vl-work__meta b,
+  .vl-home .vl-work:focus-visible .vl-work__meta b {
+    transform: none !important;
   }
 }
 

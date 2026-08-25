@@ -14,20 +14,22 @@
 <meta name="twitter:card" content="summary_large_image" />
 <title>Velira — сайти, Telegram-боти та автоматизації для бізнесу</title>
 <link rel="icon" type="image/jpeg" href="brand/velira-logo-original.jpg" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/velira-fonts.css?v=1" />
 <link rel="preload" as="image" href="assets/img/velira-phone-hero.jpg" fetchpriority="high" />
-<link rel="stylesheet" href="assets/css/veblix-home.css?v=36" />
-<noscript><style>.vl-intro{display:none!important}.vl-nav__links{display:flex!important}[data-reveal]{opacity:1!important;transform:none!important}</style></noscript>
+  <link rel="stylesheet" href="assets/css/veblix-home.css?v=49" />
+<noscript><style>.vl-nav__links{display:flex!important}[data-reveal]{opacity:1!important;transform:none!important}</style></noscript>
 </head>
-<body id="top">
-<a class="vl-skip" href="#main-content" data-ua="До головного вмісту" data-en="Skip to main content">До головного вмісту</a>
-
-<div class="vl-intro" data-intro aria-hidden="true">
-  <img src="brand/velira-logo-original.jpg" alt="" width="1280" height="1280" />
-  <div class="vl-intro__line"><i></i></div>
+<body id="top" class="vl-home">
+<!-- Inert copy store: keeps the localized pairs and plain strings that used to live in the removed hero rail, route HUD and status strip. Never visible, focusable or announced. -->
+<div class="vl-preserved-copy" hidden aria-hidden="true">
+  <span data-ua="ЛІНІЯ ВІДКРИТА" data-en="LINE OPEN">ЛІНІЯ ВІДКРИТА</span>
+  <span data-ua="VELIRA / ШЛЯХ КЛІЄНТА" data-en="VELIRA / CLIENT ROUTE">VELIRA / ШЛЯХ КЛІЄНТА</span>
+  <span data-ua="ПРАЦЮЄ" data-en="LIVE">ПРАЦЮЄ</span>
+  <span>VELIRA / CLIENT ROUTE SYSTEMS</span>
+  <span>KYIV · WORLDWIDE</span>
 </div>
+
+<a class="vl-skip" href="#main-content" data-ua="До головного вмісту" data-en="Skip to main content">До головного вмісту</a>
 
 <header class="vl-nav" data-nav>
   <a class="vl-brand" href="#top" aria-label="Velira — на головну" data-aria-label-ua="Velira — на головну" data-aria-label-en="Velira — home">
@@ -70,9 +72,7 @@
       </div>
 
       <div class="vl-phone-stage" data-phone-stage aria-hidden="true">
-        <div class="vl-phone-stage__orbit"></div>
         <img src="assets/img/velira-phone-hero.jpg" width="1536" height="1024" alt="" fetchpriority="high" decoding="async" />
-        <div class="vl-phone-stage__badge"><i></i><span data-ua="ЛІНІЯ ВІДКРИТА" data-en="LINE OPEN">ЛІНІЯ ВІДКРИТА</span></div>
       </div>
 
       <div class="vl-hero__lede">
@@ -83,45 +83,38 @@
         </div>
       </div>
     </div>
-    <div class="vl-rail vl-rail--bottom" aria-hidden="true">
-      <span>VELIRA / CLIENT ROUTE SYSTEMS</span><span>KYIV · WORLDWIDE</span>
-    </div>
   </section>
 
-  <div class="vl-story" data-story>
-    <svg class="vl-signal" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" data-signal-svg>
-      <path class="vl-signal__draw" pathLength="1" vector-effect="non-scaling-stroke" data-signal-path d="M99-3C96 8 101 14 98 24 96 34 101 41 98 51 96 63 101 71 98 82 96 91 100 98 99 104" />
-    </svg>
-
+  <div class="vl-story">
     <section class="vl-section vl-core" id="solutions" aria-labelledby="solutions-title">
       <div class="vl-wrap vl-core__grid">
         <div class="vl-core__copy" data-reveal>
-          <p class="vl-index" data-ua="01 / ОДИН МАРШРУТ" data-en="01 / ONE ROUTE">01 / ОДИН МАРШРУТ</p>
-          <h2 id="solutions-title"><span data-ua="САЙТ → БОТ →" data-en="SITE → BOT →">САЙТ → БОТ →</span><span class="is-red" data-ua="ЗАЯВКА." data-en="LEAD.">ЗАЯВКА.</span></h2>
-          <p data-ua="Три зрозумілі кроки. Одна система. Клієнт одразу бачить, що робити, отримує відповідь і не губиться дорогою до команди." data-en="Three clear steps. One system. The client sees what to do, gets an answer and never gets lost on the way to your team.">Три зрозумілі кроки. Одна система. Клієнт одразу бачить, що робити, отримує відповідь і не губиться дорогою до команди.</p>
-          <a class="vl-button" href="#contact"><span data-ua="Зібрати маршрут" data-en="Build the route">Зібрати маршрут</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a>
+          <p class="vl-index" data-ua="01 / ЯК КЛІК СТАЄ ЗАЯВКОЮ" data-en="01 / HOW A CLICK BECOMES A LEAD">01 / ЯК КЛІК СТАЄ ЗАЯВКОЮ</p>
+          <h2 id="solutions-title"><span data-ua="ВІД КЛІКУ —" data-en="CLICK →">ВІД КЛІКУ —</span><span class="is-red" data-ua="ДО ЗАЯВКИ." data-en="LEAD.">ДО ЗАЯВКИ.</span></h2>
+          <p data-ua="Реклама вже привела людину. Сайт за 5 секунд пояснює, чому обрати вас; бот одразу відповідає і збирає контакт; ви отримуєте готову заявку, поки інтерес ще гарячий." data-en="Your ad has already earned the click. The site explains why to choose you in five seconds; the bot replies immediately and collects the contact details; you receive the lead while intent is still high.">Реклама вже привела людину. Сайт за 5 секунд пояснює, чому обрати вас; бот одразу відповідає і збирає контакт; ви отримуєте готову заявку, поки інтерес ще гарячий.</p>
+          <a class="vl-button" href="#contact"><span data-ua="Налаштувати під мій бізнес" data-en="Set it up for my business">Налаштувати під мій бізнес</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a>
         </div>
 
-        <figure class="vl-core-route" data-reveal role="img" aria-label="Сайт пояснює, бот відповідає, система передає заявку команді" data-aria-label-ua="Сайт пояснює, бот відповідає, система передає заявку команді" data-aria-label-en="The site explains, the bot responds and the system hands the lead to the team">
-          <div class="vl-core-route__hud" aria-hidden="true"><span>VELIRA / CLIENT ROUTE</span><b><i></i> LIVE</b></div>
+        <figure class="vl-core-route" data-client-route data-route-step="1" data-reveal role="img" aria-label="Сайт пояснює, чому обрати вас, бот одразу відповідає та збирає контакт, ви отримуєте готову заявку" data-aria-label-ua="Сайт пояснює, чому обрати вас, бот одразу відповідає та збирає контакт, ви отримуєте готову заявку" data-aria-label-en="The site explains why to choose you, the bot replies immediately and captures the contact, and you receive a ready lead">
+          <div class="vl-core-route__hud" aria-hidden="true"><span data-ua="VELIRA / ШЛЯХ КЛІЄНТА" data-en="VELIRA / CLIENT ROUTE">VELIRA / ШЛЯХ КЛІЄНТА</span><b><i></i><span data-ua="ПРАЦЮЄ" data-en="LIVE">ПРАЦЮЄ</span></b></div>
           <div class="vl-core-route__canvas" aria-hidden="true">
             <svg class="vl-core-route__track" viewBox="0 0 1000 420" preserveAspectRatio="none">
               <path class="vl-core-route__base" d="M115 288C270 288 300 112 500 112S705 288 885 288" />
               <path class="vl-core-route__glow" d="M115 288C270 288 300 112 500 112S705 288 885 288" />
-              <path class="vl-core-route__live" pathLength="1" d="M115 288C270 288 300 112 500 112S705 288 885 288" />
-              <g class="vl-core-route__packet">
+              <path class="vl-core-route__live" data-route-path d="M115 288C270 288 300 112 500 112S705 288 885 288" />
+              <g class="vl-core-route__packet" data-route-packet>
                 <circle class="vl-core-route__packet-ring" r="17" />
                 <circle r="7" />
-                <animateMotion dur="5.6s" repeatCount="indefinite" path="M115 288C270 288 300 112 500 112S705 288 885 288" />
               </g>
             </svg>
+            <span class="vl-core-route__mobile-rail" aria-hidden="true"><i></i></span>
             <ol class="vl-core-route__nodes">
-              <li><span>01</span><i>5 SEC</i><h3 data-ua="САЙТ" data-en="SITE">САЙТ</h3><p data-ua="Пояснює" data-en="Explains">Пояснює</p></li>
-              <li><span>02</span><i>0 WAIT</i><h3 data-ua="БОТ" data-en="BOT">БОТ</h3><p data-ua="Відповідає" data-en="Responds">Відповідає</p></li>
-              <li><span>03</span><i>DELIVERED</i><h3 data-ua="КОМАНДА" data-en="TEAM">КОМАНДА</h3><p data-ua="Отримує заявку" data-en="Gets the lead">Отримує заявку</p></li>
+              <li><span>01</span><i data-ua="5 СЕК" data-en="5 SEC">5 СЕК</i><h3 data-ua="САЙТ" data-en="SITE">САЙТ</h3><p data-ua="Показує, чому обрати вас" data-en="Shows why clients should choose you">Показує, чому обрати вас</p></li>
+              <li><span>02</span><i>24/7</i><h3 data-ua="БОТ" data-en="BOT">БОТ</h3><p data-ua="Відповідає й збирає контакт" data-en="Replies and captures the contact">Відповідає й збирає контакт</p></li>
+              <li><span>03</span><i data-ua="ГОТОВО" data-en="READY">ГОТОВО</i><h3 data-ua="ВИ" data-en="YOU">ВИ</h3><p data-ua="Отримуєте готову заявку" data-en="Receive a ready lead">Отримуєте готову заявку</p></li>
             </ol>
           </div>
-          <figcaption class="vl-core-route__status" aria-hidden="true"><span>CLICK RECEIVED</span><span>ANSWER SENT</span><strong>TEAM NOTIFIED ✓</strong></figcaption>
+          <figcaption class="vl-core-route__status" aria-hidden="true"><span data-ua="ЦІННІСТЬ ЗРОЗУМІЛА" data-en="VALUE UNDERSTOOD">ЦІННІСТЬ ЗРОЗУМІЛА</span><span data-ua="КОНТАКТ ЗІБРАНО" data-en="CONTACT CAPTURED">КОНТАКТ ЗІБРАНО</span><strong data-ua="ЗАЯВКА У ВАС ✓" data-en="LEAD DELIVERED ✓">ЗАЯВКА У ВАС ✓</strong></figcaption>
         </figure>
       </div>
     </section>
@@ -138,11 +131,15 @@
         <form class="vl-form" id="velira-lead-form" novalidate data-lead-form data-reveal>
           <div class="vl-form__row">
             <label><span data-ua="Ім’я / бренд" data-en="Name / brand">Ім’я / бренд</span><input type="text" name="name" autocomplete="name" required maxlength="200" placeholder="Як до вас звертатись" data-placeholder-ua="Як до вас звертатись" data-placeholder-en="How should we address you?" /></label>
-            <label><span data-ua="Telegram, email або телефон" data-en="Telegram, email or phone">Telegram, email або телефон</span><input type="text" name="contact" autocomplete="email" required maxlength="200" placeholder="@username / email / +380…" data-placeholder-ua="@username / email / +380…" data-placeholder-en="@username / email / phone" /></label>
+            <label><span data-ua="Telegram, email або телефон" data-en="Telegram, email or phone">Telegram, email або телефон</span><input type="text" name="contact" autocomplete="off" required maxlength="200" placeholder="@username / email / +380…" data-placeholder-ua="@username / email / +380…" data-placeholder-en="@username / email / phone" /></label>
           </div>
           <input type="hidden" name="plan" value="Потрібна діагностика" />
+          <input type="hidden" name="privacyVersion" value="2026-08-25-v2" />
+          <input type="hidden" name="source" value="home" />
           <label><span data-ua="Що потрібно виправити?" data-en="What needs fixing?">Що потрібно виправити?</span><textarea name="brief" rows="4" required maxlength="2000" placeholder="Одним-двома реченнями" data-placeholder-ua="Одним-двома реченнями" data-placeholder-en="One or two sentences"></textarea></label>
-          <label class="vl-form__consent"><input type="checkbox" name="consent" value="true" required /><span><i></i><b data-ua="Погоджуюсь на обробку даних згідно з політикою конфіденційності." data-en="I agree to data processing under the privacy policy.">Погоджуюсь на обробку даних згідно з політикою конфіденційності.</b> <a href="privacy.html" data-ua="Переглянути" data-en="Read it">Переглянути</a></span></label>
+          <p class="vl-form__privacy-note" data-ua="Надсилаючи форму, ви просите Velira зв’язатися щодо проєкту. Якщо проєкт не почнеться, заявку зберігаємо до 90 днів. Не надсилайте паролі, платіжні дані, документи чи іншу чутливу інформацію." data-en="By submitting, you ask Velira to contact you about the project. If no project starts, we retain the enquiry for up to 90 days. Do not send passwords, payment data, identity documents or other sensitive information.">Надсилаючи форму, ви просите Velira зв’язатися щодо проєкту. Якщо проєкт не почнеться, заявку зберігаємо до 90 днів. Не надсилайте паролі, платіжні дані, документи чи іншу чутливу інформацію.</p>
+          <label class="vl-form__consent"><input type="checkbox" name="privacyAcknowledged" value="true" required /><span><i></i><b data-ua="Підтверджую, що прочитав(ла) повідомлення про приватність." data-en="I confirm that I have read the Privacy Notice.">Підтверджую, що прочитав(ла) повідомлення про приватність.</b> <a href="privacy.html" data-href-ua="privacy.html" data-href-en="privacy-en.html" data-ua="Переглянути" data-en="Read it">Переглянути</a></span></label>
+          <label class="vl-form__consent"><input type="checkbox" name="telegramDeliveryConsent" value="true" required /><span><i></i><b data-ua="Окремо погоджуюсь на доставку цієї заявки через Telegram Bot API, включно з можливою обробкою за межами України. Це не згода на маркетинг." data-en="I separately consent to delivery of this enquiry through Telegram Bot API, including possible processing outside Ukraine. This is not marketing consent.">Окремо погоджуюсь на доставку цієї заявки через Telegram Bot API, включно з можливою обробкою за межами України. Це не згода на маркетинг.</b></span></label>
           <label class="vl-form__trap" aria-hidden="true">Company<input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
           <div class="vl-form__foot"><button class="vl-button" type="submit" data-submit><span data-ua="Надіслати задачу" data-en="Send the brief">Надіслати задачу</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button><p class="vl-form__status" data-form-status role="status" aria-live="polite"></p></div>
           <noscript><p><a href="https://t.me/madbod_77">Напишіть нам у Telegram →</a></p></noscript>
@@ -165,9 +162,9 @@
       <div class="vl-wrap">
         <header class="vl-section__head vl-section__head--split" data-reveal><div><p class="vl-index" data-ua="НА ЗАВЕРШЕННЯ / ВИБРАНІ РОБОТИ" data-en="LAST / SELECTED WORK">НА ЗАВЕРШЕННЯ / ВИБРАНІ РОБОТИ</p><h2 id="works-title"><span data-ua="ТРИ ПРИКЛАДИ." data-en="THREE EXAMPLES.">ТРИ ПРИКЛАДИ.</span><span data-ua="НЕ БІЛЬШЕ." data-en="NO MORE.">НЕ БІЛЬШЕ.</span></h2></div><p data-ua="Достатньо, щоб побачити характер і рівень виконання. Решта — на окремій сторінці." data-en="Enough to see the character and execution quality. The rest lives on a separate page.">Достатньо, щоб побачити характер і рівень виконання. Решта — на окремій сторінці.</p></header>
         <div class="vl-work-grid">
-          <a class="vl-work" href="websites.html#works" data-reveal><div class="vl-work__media"><img src="works/millyedits.webp" width="1200" height="750" loading="lazy" decoding="async" alt="Сайт MILLY EDITS — студія відеомонтажу" data-alt-ua="Сайт MILLY EDITS — студія відеомонтажу" data-alt-en="MILLY EDITS video editing studio website" /></div><div class="vl-work__meta"><span>MILLY EDITS</span><span data-ua="Креативна студія · відеомонтаж" data-en="Creative studio · video editing">Креативна студія · відеомонтаж</span><b>↗</b></div></a>
-          <a class="vl-work" href="websites.html#works" data-reveal><div class="vl-work__media"><img src="works/lakshmi.webp" width="1200" height="750" loading="lazy" decoding="async" alt="Сайт Lakshmi — студія краси у Вишневому" data-alt-ua="Сайт Lakshmi — студія краси у Вишневому" data-alt-en="Lakshmi beauty studio website" /></div><div class="vl-work__meta"><span>LAKSHMI</span><span data-ua="Студія краси · сайт" data-en="Beauty studio · website">Студія краси · сайт</span><b>↗</b></div></a>
-          <a class="vl-work" href="https://taniasite.netlify.app/" target="_blank" rel="noopener noreferrer" data-reveal><div class="vl-work__media"><em>LIVE</em><img src="works/deutschwerk.webp?v=2" width="1200" height="750" loading="lazy" decoding="async" alt="Сайт SERVUS DEUTSCH — мовна школа німецької у Відні" data-alt-ua="Сайт SERVUS DEUTSCH — мовна школа німецької у Відні" data-alt-en="SERVUS DEUTSCH German language school website in Vienna" /></div><div class="vl-work__meta"><span>SERVUS DEUTSCH</span><span data-ua="Мовна школа · Відень" data-en="Language school · Vienna">Мовна школа · Відень</span><b>↗</b></div></a>
+          <a class="vl-work" href="https://madbod77.github.io/dronprint-v2/" target="_blank" rel="noopener noreferrer" aria-label="Відкрити сайт DRONPRINT у новій вкладці" data-aria-label-ua="Відкрити сайт DRONPRINT у новій вкладці" data-aria-label-en="Open the DRONPRINT website in a new tab" data-reveal><div class="vl-work__media"><em>LIVE</em><img src="works/dronprint-v2.webp" width="1200" height="750" loading="lazy" decoding="async" alt="Сайт DRONPRINT — 3D-друк деталей для FPV-дронів і БПЛА" data-alt-ua="Сайт DRONPRINT — 3D-друк деталей для FPV-дронів і БПЛА" data-alt-en="DRONPRINT website — 3D-printed parts for FPV drones and UAVs" /></div><div class="vl-work__meta"><span>DRONPRINT</span><span data-ua="3D-друк · FPV/БПЛА" data-en="3D printing · FPV/UAVs">3D-друк · FPV/БПЛА</span><b aria-hidden="true">↗</b></div></a>
+          <a class="vl-work" href="websites.html#works" data-reveal><div class="vl-work__media"><img src="works/beauty-salon.webp" width="1200" height="750" loading="lazy" decoding="async" alt="Концепт сайту Beauty Salon" data-alt-ua="Концепт сайту Beauty Salon" data-alt-en="Beauty Salon concept website" /></div><div class="vl-work__meta"><span>BEAUTY SALON</span><span data-ua="Б’юті-салон · сайт" data-en="Beauty salon · website">Б’юті-салон · сайт</span><b>↗</b></div></a>
+          <a class="vl-work" href="https://madbod77.github.io/strikeball-suppressors/" target="_blank" rel="noopener noreferrer" aria-label="Відкрити сайт STRIKEFORGE у новій вкладці" data-aria-label-ua="Відкрити сайт STRIKEFORGE у новій вкладці" data-aria-label-en="Open the STRIKEFORGE website in a new tab" data-reveal><div class="vl-work__media"><em>LIVE</em><img src="works/strikeforge.webp" width="1200" height="750" loading="lazy" decoding="async" alt="Сайт STRIKEFORGE — 3D-друк страйкбольних аксесуарів" data-alt-ua="Сайт STRIKEFORGE — 3D-друк страйкбольних аксесуарів" data-alt-en="STRIKEFORGE website — 3D-printed airsoft accessories" /></div><div class="vl-work__meta"><span>STRIKEFORGE</span><span data-ua="Страйкбол · 3D-друк" data-en="Airsoft · 3D printing">Страйкбол · 3D-друк</span><b aria-hidden="true">↗</b></div></a>
         </div>
         <div class="vl-final-cta" data-reveal><p data-ua="ЦЬОГО ДОСТАТНЬО, ЩОБ ПОЧАТИ." data-en="THAT IS ENOUGH TO START.">ЦЬОГО ДОСТАТНЬО, ЩОБ ПОЧАТИ.</p><a class="vl-button" href="#contact"><span data-ua="Обговорити задачу" data-en="Discuss your brief">Обговорити задачу</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a></div>
       </div>
@@ -178,10 +175,10 @@
 <footer class="vl-footer">
   <div class="vl-wrap">
     <div class="vl-footer__top"><a class="vl-brand vl-brand--footer" href="#top" aria-label="Velira — нагору" data-aria-label-ua="Velira — нагору" data-aria-label-en="Velira — back to top"><span class="vl-brand__art"><img src="brand/velira-logo-original.jpg" alt="" width="1280" height="1280" /></span></a><p data-ua="ЗВ’ЯЗОК ІЗ КЛІЄНТОМ НЕ МАЄ ОБРИВАТИСЯ." data-en="THE LINE TO YOUR CLIENT SHOULD NEVER BREAK.">ЗВ’ЯЗОК ІЗ КЛІЄНТОМ НЕ МАЄ ОБРИВАТИСЯ.</p></div>
-    <div class="vl-footer__bottom"><span>© <span data-year>2026</span> VELIRA</span><div><a href="privacy.html" data-ua="Конфіденційність" data-en="Privacy">Конфіденційність</a><a href="terms.html" data-ua="Оферта" data-en="Terms">Оферта</a><a href="rights.html" data-ua="Права" data-en="Rights">Права</a></div><span>VELIRA.WEB / KYIV</span></div>
+    <div class="vl-footer__bottom"><span>© <span data-year>2026</span> VELIRA</span><div><a href="privacy.html" data-href-ua="privacy.html" data-href-en="privacy-en.html" data-ua="Приватність" data-en="Privacy">Приватність</a><a href="terms.html" data-href-ua="terms.html" data-href-en="terms-en.html" data-ua="Умови" data-en="Terms">Умови</a><a href="rights.html" data-href-ua="rights.html" data-href-en="rights-en.html" data-ua="Права та IP" data-en="Rights &amp; IP">Права та IP</a></div><span>VELIRA.WEB / KYIV</span></div>
   </div>
 </footer>
 
-<script src="assets/js/veblix-home.js?v=23" defer></script>
+<script src="assets/js/veblix-home.js?v=27" defer></script>
 </body>
 </html>

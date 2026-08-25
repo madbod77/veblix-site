@@ -274,17 +274,49 @@
   form.addEventListener('submit', (e) => { e.preventDefault(); compute(); });
 
   /* ── збереження місяців + динаміка ── */
-  const months = () => { try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; } catch (_) { return []; } };
+  const LS_TTL_MS = 365 * 24 * 60 * 60 * 1000;
+  const months = () => {
+    try {
+      const stored = JSON.parse(localStorage.getItem(LS_KEY));
+      if (Array.isArray(stored)) {
+        localStorage.removeItem(LS_KEY);
+        return [];
+      }
+      if (!stored || !Array.isArray(stored.items)) return [];
+      const now = Date.now();
+      const current = stored.items.filter((item) =>
+        item && Number.isFinite(item.savedAt) && now - item.savedAt <= LS_TTL_MS);
+      if (current.length !== stored.items.length) {
+        if (current.length) localStorage.setItem(LS_KEY, JSON.stringify({ items: current }));
+        else localStorage.removeItem(LS_KEY);
+      }
+      return current;
+    } catch (_) {
+      return [];
+    }
+  };
   $('[data-biz-save]').addEventListener('click', () => {
     if (!last) { auditMsg.hidden = false; auditMsg.textContent = 'Спершу натисніть «Порахувати».'; return; }
     const d = new Date();
     const label = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
     const list = months().filter((m) => m.m !== label);
-    list.push({ m: label, leads: last.leads, sales: last.sales });
+    list.push({ m: label, leads: last.leads, sales: last.sales, savedAt: Date.now() });
     list.sort((a, b) => a.m < b.m ? -1 : 1);
-    localStorage.setItem(LS_KEY, JSON.stringify(list.slice(-12)));
+    localStorage.setItem(LS_KEY, JSON.stringify({ items: list.slice(-12) }));
     auditMsg.hidden = false; auditMsg.textContent = `Місяць ${label} збережено (у цьому браузері).`;
     drawBizChart();
+  });
+
+  $('[data-biz-clear]').addEventListener('click', () => {
+    try {
+      localStorage.removeItem(LS_KEY);
+      auditMsg.hidden = false;
+      auditMsg.textContent = 'Локально збережені місяці видалено з цього браузера.';
+      drawBizChart();
+    } catch (_) {
+      auditMsg.hidden = false;
+      auditMsg.textContent = 'Браузер не дозволив очистити локальні дані.';
+    }
   });
 
   function drawBizChart() {
@@ -313,7 +345,7 @@
     if (!f.checkValidity()) {
       f.reportValidity();
       auditMsg.hidden = false;
-      auditMsg.textContent = 'Заповніть контактні поля та підтвердьте згоду.';
+      auditMsg.textContent = 'Заповніть контактні поля, підтвердьте ознайомлення та окрему згоду на доставку через Telegram Bot API.';
       return;
     }
     const name = f.elements.name.value.trim(), contact = f.elements.contact.value.trim();
@@ -333,7 +365,11 @@
           plan: 'Velira Flow · аудит цифр',
           brief,
           company: f.elements.company.value,
-          consent: f.elements.consent.checked,
+          privacyAcknowledged: f.elements.privacyAcknowledged.checked,
+          telegramDeliveryConsent: f.elements.telegramDeliveryConsent.checked,
+          privacyVersion: f.elements.privacyVersion.value,
+          source: f.elements.source.value,
+          language: 'uk',
         }),
         signal: controller.signal,
       });
@@ -346,7 +382,7 @@
     btn.disabled = false; btn.textContent = 'Надіслати аудит →';
     auditMsg.hidden = false;
     auditMsg.innerHTML = ok
-      ? 'Дякуємо! Аудит отримано — відповімо протягом 24 годин.'
+      ? 'Дякуємо! Аудит отримано — зв’яжемося з вами найближчим часом.'
       : 'Не вдалося надіслати звідси. Напишіть нам напряму: <a href="https://t.me/madbod_77" target="_blank" rel="noopener" style="color:var(--signal-2)">t.me/madbod_77</a>';
   });
 })();

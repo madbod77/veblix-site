@@ -18,53 +18,6 @@
     }
   };
 
-  /* Never leave the intro overlay in front of the page if loading or CSS fails. */
-  init('intro', () => {
-    const intro = document.querySelector('[data-intro]');
-    if (!intro) {
-      body.classList.add('is-ready');
-      return;
-    }
-
-    let removed = false;
-    let exitTimer = 0;
-    let removeTimer = 0;
-
-    const remove = () => {
-      if (removed) return;
-      removed = true;
-      window.clearTimeout(exitTimer);
-      window.clearTimeout(removeTimer);
-      intro.classList.add('is-done');
-      body.classList.add('is-ready');
-      intro.remove();
-    };
-
-    const leave = () => {
-      if (removed || intro.classList.contains('is-leaving')) return;
-      intro.classList.add('is-leaving');
-      body.classList.add('is-ready');
-      removeTimer = window.setTimeout(remove, 900);
-    };
-
-    intro.addEventListener('transitionend', (event) => {
-      if (event.target === intro && intro.classList.contains('is-leaving')) remove();
-    });
-
-    if (reduceMotion.matches) {
-      remove();
-      return;
-    }
-
-    const queueExit = () => {
-      exitTimer = window.setTimeout(leave, 360);
-    };
-    if (document.readyState === 'complete') queueExit();
-    else window.addEventListener('load', queueExit, { once: true });
-
-    window.setTimeout(remove, 3000);
-  });
-
   /* Mobile menu: focus stays inside, Escape restores the toggle, desktop resets. */
   init('navigation menu', () => {
     const nav = document.querySelector('[data-nav]');
@@ -177,6 +130,7 @@
   const translatedPlaceholders = Array.from(document.querySelectorAll('[data-placeholder-ua][data-placeholder-en]'));
   const translatedAriaLabels = Array.from(document.querySelectorAll('[data-aria-label-ua][data-aria-label-en]'));
   const translatedAltText = Array.from(document.querySelectorAll('[data-alt-ua][data-alt-en]'));
+  const translatedHrefs = Array.from(document.querySelectorAll('[data-href-ua][data-href-en]'));
 
   const readSavedLanguage = () => {
     try {
@@ -218,6 +172,11 @@
       const key = dataKey === 'en' ? 'altEn' : 'altUa';
       const value = element.dataset[key];
       if (typeof value === 'string') element.setAttribute('alt', value);
+    });
+    translatedHrefs.forEach((element) => {
+      const key = dataKey === 'en' ? 'hrefEn' : 'hrefUa';
+      const value = element.dataset[key];
+      if (typeof value === 'string') element.setAttribute('href', value);
     });
     languageButtons.forEach((button) => {
       const active = button.dataset.lang === currentLanguage;
@@ -295,6 +254,174 @@
       });
 
       selectStep(machine.dataset.step || '1');
+    });
+  });
+
+  /* Client route: one viewport-triggered signal, three exact handoff states. */
+  init('client route motion', () => {
+    const routes = Array.from(document.querySelectorAll('[data-client-route]'));
+    if (!routes.length) return;
+
+    const duration = 4800;
+    const compactRoute = window.matchMedia('(max-width: 932px)');
+    const smoothstep = (value) => value * value * (3 - (2 * value));
+    const progressAt = (time) => {
+      if (time < 0.08) return 0;
+      if (time < 0.28) return smoothstep((time - 0.08) / 0.2) * 0.5;
+      if (time < 0.36) return 0.5;
+      if (time < 0.58) return 0.5 + (smoothstep((time - 0.36) / 0.22) * 0.5);
+      return 1;
+    };
+    const stepAt = (time) => {
+      if (time < 0.28) return 1;
+      if (time < 0.58) return 2;
+      return 3;
+    };
+
+    routes.forEach((route) => {
+      const path = route.querySelector('[data-route-path]');
+      const packet = route.querySelector('[data-route-packet]');
+      const mobileRail = route.querySelector('.vl-core-route__mobile-rail');
+      if (!path || !packet || !mobileRail || typeof path.getTotalLength !== 'function') return;
+
+      const length = path.getTotalLength();
+      let animationFrame = 0;
+      let measureFrame = 0;
+      let startedAt = 0;
+      let inView = false;
+      let running = false;
+      let finished = false;
+      let railLength = 0;
+      let lastProgress = 0;
+      let lastStep = 1;
+      let lastResolved = false;
+
+      path.style.strokeDasharray = `${length}`;
+
+      const stop = () => {
+        if (animationFrame) window.cancelAnimationFrame(animationFrame);
+        animationFrame = 0;
+        running = false;
+      };
+
+      const draw = (progress, step, resolved = false) => {
+        const safeProgress = clamp(progress);
+        lastProgress = safeProgress;
+        lastStep = step;
+        lastResolved = resolved;
+
+        route.style.setProperty('--route-progress-scale', safeProgress.toFixed(4));
+        route.style.setProperty('--route-packet-y', `${(safeProgress * railLength).toFixed(2)}px`);
+
+        if (!compactRoute.matches) {
+          const distance = length * safeProgress;
+          const point = path.getPointAtLength(distance);
+          path.style.strokeDashoffset = `${length - distance}`;
+          packet.setAttribute('transform', `translate(${point.x} ${point.y})`);
+        }
+
+        const nextStep = String(step);
+        if (route.dataset.routeStep !== nextStep) route.dataset.routeStep = nextStep;
+        if (route.classList.contains('is-route-complete') !== resolved) {
+          route.classList.toggle('is-route-complete', resolved);
+        }
+      };
+
+      const measureRail = () => {
+        railLength = compactRoute.matches ? mobileRail.getBoundingClientRect().height : 0;
+      };
+
+      const scheduleMeasure = () => {
+        if (measureFrame) return;
+        measureFrame = window.requestAnimationFrame(() => {
+          measureFrame = 0;
+          measureRail();
+          draw(lastProgress, lastStep, lastResolved);
+        });
+      };
+
+      const reset = () => {
+        stop();
+        startedAt = 0;
+        finished = false;
+        route.classList.remove('is-route-running', 'is-route-complete');
+        draw(0, 1);
+      };
+
+      const renderComplete = () => {
+        stop();
+        finished = true;
+        draw(1, 3, true);
+        route.classList.remove('is-route-running');
+      };
+
+      const tick = (now) => {
+        if (!running) return;
+        if (!startedAt) startedAt = now;
+        const time = clamp((now - startedAt) / duration);
+        draw(progressAt(time), stepAt(time), time >= 0.86);
+        if (time < 1) {
+          animationFrame = window.requestAnimationFrame(tick);
+          return;
+        }
+        renderComplete();
+      };
+
+      const run = () => {
+        if (reduceMotion.matches) {
+          renderComplete();
+          return;
+        }
+        if (running || finished) return;
+        measureRail();
+        reset();
+        running = true;
+        route.classList.add('is-route-running');
+        animationFrame = window.requestAnimationFrame(tick);
+      };
+
+      const sync = () => {
+        if (reduceMotion.matches) {
+          renderComplete();
+          return;
+        }
+        if (inView && !document.hidden) run();
+        else reset();
+      };
+
+      route.classList.add('is-route-ready');
+      measureRail();
+      reset();
+
+      if ('IntersectionObserver' in window) {
+        const routeObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            inView = entry.isIntersecting && entry.intersectionRatio >= 0.18;
+            sync();
+          });
+        }, { threshold: 0.18, rootMargin: '5% 0px 5% 0px' });
+        routeObserver.observe(route);
+      } else {
+        inView = true;
+        sync();
+      }
+
+      const onMotionPreferenceChange = () => {
+        if (!reduceMotion.matches) finished = false;
+        sync();
+      };
+      if (typeof reduceMotion.addEventListener === 'function') {
+        reduceMotion.addEventListener('change', onMotionPreferenceChange);
+      } else {
+        reduceMotion.addListener(onMotionPreferenceChange);
+      }
+      if (typeof compactRoute.addEventListener === 'function') {
+        compactRoute.addEventListener('change', scheduleMeasure);
+      } else {
+        compactRoute.addListener(scheduleMeasure);
+      }
+      window.addEventListener('resize', scheduleMeasure, { passive: true });
+      document.addEventListener('visibilitychange', sync);
     });
   });
 
@@ -448,7 +575,7 @@
     const revealItems = Array.from(document.querySelectorAll('[data-reveal]'));
     const services = Array.from(document.querySelectorAll('[data-service]'));
     const motionItems = Array.from(document.querySelectorAll(
-      '.vl-phone-stage, .vl-marquee, .vl-leak, .vl-service, .vw-clarity-machine',
+      '.vl-marquee, .vl-leak, .vl-service, .vw-clarity-machine',
     ));
     const showEverything = () => {
       revealItems.forEach((element) => element.classList.add('is-visible'));
@@ -505,40 +632,11 @@
   /* Visual scroll effects never intercept wheel, touch, keys or scroll position. */
   init('scroll effects', () => {
     const nav = document.querySelector('[data-nav]');
-    const story = document.querySelector('[data-story]');
-    const signalSvg = document.querySelector('[data-signal-svg]');
-    const signalPath = document.querySelector('[data-signal-path]');
     const phoneStage = document.querySelector('[data-phone-stage]');
-    let signalLength = 1;
     let frame = 0;
     let pointerX = 0;
     let pointerY = 0;
     let pointerInside = false;
-
-    if (signalPath) {
-      try {
-        signalLength = signalPath.getTotalLength();
-        if (!Number.isFinite(signalLength) || signalLength <= 0) signalLength = 1;
-      } catch (_) {
-        signalLength = 1;
-      }
-      signalPath.style.strokeDasharray = String(signalLength);
-      signalPath.style.strokeDashoffset = reduceMotion.matches ? '0' : String(signalLength);
-    }
-
-    const updateSignal = () => {
-      if (!story || !signalPath) return;
-      const progress = reduceMotion.matches
-        ? 1
-        : (() => {
-          const rect = story.getBoundingClientRect();
-          const startLine = window.innerHeight * 0.78;
-          const endLine = window.innerHeight * 0.2;
-          return clamp((startLine - rect.top) / Math.max(1, rect.height + startLine - endLine));
-        })();
-      signalPath.style.strokeDashoffset = String(signalLength * (1 - progress));
-      signalSvg?.style.setProperty('--signal-progress', progress.toFixed(4));
-    };
 
     const updatePhone = () => {
       if (!phoneStage) return;
@@ -550,10 +648,10 @@
       }
       const rect = phoneStage.getBoundingClientRect();
       const progress = clamp((window.innerHeight - rect.top) / Math.max(1, window.innerHeight + rect.height));
-      const scrollOffset = (0.5 - progress) * 18;
-      const hoverY = pointerInside && finePointer.matches ? pointerY * 5 : 0;
-      const rotate = pointerInside && finePointer.matches ? pointerX * 2.2 : 0;
-      const scale = pointerInside && finePointer.matches ? 1.012 : 1;
+      const scrollOffset = (0.5 - progress) * 9;
+      const hoverY = pointerInside && finePointer.matches ? pointerY * 2.5 : 0;
+      const rotate = pointerInside && finePointer.matches ? pointerX * 1.1 : 0;
+      const scale = pointerInside && finePointer.matches ? 1.006 : 1;
       phoneStage.style.setProperty('--phone-y', `${(scrollOffset + hoverY).toFixed(2)}px`);
       phoneStage.style.setProperty('--phone-rotate', `${rotate.toFixed(2)}deg`);
       phoneStage.style.setProperty('--phone-scale', String(scale));
@@ -562,7 +660,6 @@
     const update = () => {
       frame = 0;
       nav?.classList.toggle('is-scrolled', window.scrollY > 20);
-      updateSignal();
       updatePhone();
     };
     const schedule = () => {
@@ -624,7 +721,8 @@
         sending: 'Надсилаємо…',
         nameRequired: 'Вкажіть ім’я або назву бренду.',
         contactRequired: 'Вкажіть Telegram, email або телефон.',
-        consentRequired: 'Підтвердьте згоду на обробку даних.',
+        consentRequired: 'Підтвердьте, що прочитали повідомлення про приватність.',
+        telegramConsentRequired: 'Підтвердьте окрему згоду на доставку заявки через Telegram Bot API.',
         required: 'Заповніть це поле.',
         validation: 'Перевірте позначені поля й спробуйте ще раз.',
         success: 'Дякуємо! Заявку отримано — зв’яжемося з вами найближчим часом.',
@@ -639,7 +737,8 @@
         sending: 'Sending…',
         nameRequired: 'Enter your name or brand.',
         contactRequired: 'Enter a Telegram handle, email or phone number.',
-        consentRequired: 'Please consent to data processing.',
+        consentRequired: 'Confirm that you have read the Privacy Notice.',
+        telegramConsentRequired: 'Confirm separate consent to deliver the enquiry through Telegram Bot API.',
         required: 'Complete this field.',
         validation: 'Check the highlighted fields and try again.',
         success: 'Thank you! We received your brief and will contact you shortly.',
@@ -683,7 +782,8 @@
     const errorKeyFor = (field) => {
       if (field.name === 'name') return 'nameRequired';
       if (field.name === 'contact') return 'contactRequired';
-      if (field.name === 'consent') return 'consentRequired';
+      if (field.name === 'privacyAcknowledged') return 'consentRequired';
+      if (field.name === 'telegramDeliveryConsent') return 'telegramConsentRequired';
       return 'required';
     };
     const errorIdFor = (field) => `${form.id || 'velira-lead-form'}-${field.name}-error`;
@@ -788,8 +888,12 @@
         contact: String(data.get('contact') || '').trim(),
         plan: String(data.get('plan') || '').trim(),
         brief: String(data.get('brief') || '').trim(),
-        consent: data.get('consent') === 'true',
+        privacyAcknowledged: data.get('privacyAcknowledged') === 'true',
+        telegramDeliveryConsent: data.get('telegramDeliveryConsent') === 'true',
         company: String(data.get('company') || '').trim(),
+        privacyVersion: String(data.get('privacyVersion') || '').trim(),
+        source: String(data.get('source') || '').trim(),
+        language: currentLanguage,
       };
 
       setState('sending');
