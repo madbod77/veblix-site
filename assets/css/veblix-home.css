@@ -210,6 +210,12 @@ h3 {
   mix-blend-mode: multiply;
 }
 
+/* Keep the owner-supplied artwork intact while the compact header shows
+   only the VL monogram, never the wordmark below it. */
+.vl-nav .vl-brand__art img {
+  clip-path: inset(0 0 35% 0);
+}
+
 .vl-nav__panel {
   display: flex;
   min-width: 0;
