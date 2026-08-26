@@ -304,13 +304,17 @@
         ? dispatchPath.getTotalLength()
         : 0;
       let animationFrame = 0;
-      let measureFrame = 0;
-      let scrollFrame = 0;
+      let mobileFrame = 0;
+      let mobileMeasureDirty = false;
       let startedAt = 0;
       let inView = false;
       let running = false;
       let finished = false;
       let railLength = 0;
+      let mobileChapterMetrics = [];
+      let mobileActiveIndex = -1;
+      let stableMobileViewportWidth = 0;
+      let stableMobileViewportHeight = 0;
       let lastProgress = 0;
       let lastStep = 1;
       let lastResolved = false;
@@ -332,14 +336,24 @@
         lastStep = step;
         lastResolved = resolved;
 
-        route.style.setProperty('--route-progress-scale', safeProgress.toFixed(4));
-        route.style.setProperty('--route-packet-y', `${(safeProgress * railLength).toFixed(2)}px`);
-
         const nextStep = String(step);
         if (route.dataset.routeStep !== nextStep) route.dataset.routeStep = nextStep;
         if (route.classList.contains('is-route-complete') !== resolved) {
           route.classList.toggle('is-route-complete', resolved);
         }
+      };
+
+      const stableMobileViewport = () => {
+        const width = Math.max(document.documentElement.clientWidth || window.innerWidth || 0, 1);
+        if (!stableMobileViewportHeight || Math.abs(width - stableMobileViewportWidth) > 1) {
+          stableMobileViewportWidth = width;
+          stableMobileViewportHeight = Math.max(
+            window.innerHeight || 0,
+            document.documentElement.clientHeight || 0,
+            1,
+          );
+        }
+        return stableMobileViewportHeight;
       };
 
       const drawDesktop = (progress, step, resolved = false) => {
@@ -380,29 +394,40 @@
       };
 
       const currentMobileState = () => {
-        const viewportHeight = Math.max(window.innerHeight || 0, document.documentElement.clientHeight || 0, 1);
-        const chapterRects = chapters.map((chapter) => chapter.getBoundingClientRect());
+        /* Mobile browser chrome continuously changes innerHeight while the
+           user scrolls. Anchor the route to a height that only resets when the
+           viewport width/orientation changes, so the rail cannot jump. */
+        const viewportHeight = stableMobileViewport();
         const focusLine = viewportHeight * 0.48;
-        let activeIndex = 0;
+        const focusDocumentY = window.scrollY + focusLine;
+        let candidateIndex = 0;
         let closestDistance = Number.POSITIVE_INFINITY;
 
-        chapterRects.forEach((rect, index) => {
-          const distance = Math.abs((rect.top + (rect.height * 0.5)) - focusLine);
+        mobileChapterMetrics.forEach((metric, index) => {
+          const distance = Math.abs(metric.center - focusDocumentY);
           if (distance < closestDistance) {
             closestDistance = distance;
-            activeIndex = index;
+            candidateIndex = index;
           }
         });
 
-        const centers = chapterRects.map((rect) => rect.top + (rect.height * 0.5));
-        const progress = clamp((focusLine - centers[0]) / Math.max(1, centers[centers.length - 1] - centers[0]));
+        if (mobileActiveIndex < 0) {
+          mobileActiveIndex = candidateIndex;
+        } else if (candidateIndex !== mobileActiveIndex) {
+          const currentDistance = Math.abs(mobileChapterMetrics[mobileActiveIndex].center - focusDocumentY);
+          if (closestDistance + 18 < currentDistance) mobileActiveIndex = candidateIndex;
+        }
+
+        const firstCenter = mobileChapterMetrics[0].center;
+        const lastCenter = mobileChapterMetrics[mobileChapterMetrics.length - 1].center;
+        const progress = clamp((focusDocumentY - firstCenter) / Math.max(1, lastCenter - firstCenter));
         const startLine = viewportHeight * 0.82;
         const endLine = viewportHeight * 0.42;
-        const automationRect = chapterRects[chapterRects.length - 1];
-        const dispatchTravel = Math.max(1, automationRect.height + startLine - endLine);
-        const dispatchProgress = clamp((startLine - automationRect.top) / dispatchTravel);
+        const automation = mobileChapterMetrics[mobileChapterMetrics.length - 1];
+        const dispatchTravel = Math.max(1, automation.height + startLine - endLine);
+        const dispatchProgress = clamp(((window.scrollY + startLine) - automation.top) / dispatchTravel);
 
-        return { activeIndex, progress, dispatchProgress };
+        return { activeIndex: mobileActiveIndex, progress, dispatchProgress };
       };
 
       const drawMobile = ({ activeIndex, progress, dispatchProgress }) => {
@@ -423,24 +448,42 @@
       const measureMobile = () => {
         if (!compactRoute.matches) {
           railLength = 0;
+          mobileChapterMetrics = [];
+          mobileActiveIndex = -1;
+          stableMobileViewportWidth = 0;
+          stableMobileViewportHeight = 0;
           mobileRail.style.removeProperty('top');
           mobileRail.style.removeProperty('bottom');
           mobileRail.style.removeProperty('height');
-          route.style.removeProperty('--route-middle');
+          mobileRail.style.removeProperty('--route-middle-y');
+          mobileRail.style.removeProperty('--route-track-length');
+          mobileRail.style.removeProperty('--route-sticky-y');
           return;
         }
+        const viewportHeight = stableMobileViewport();
+        mobileChapterMetrics = chapters.map((chapter) => {
+          const rect = chapter.getBoundingClientRect();
+          const top = rect.top + window.scrollY;
+          return {
+            top,
+            height: rect.height,
+            center: top + (rect.height * 0.5),
+          };
+        });
         const chapterCenters = chapters.map((chapter) => chapter.offsetTop + (chapter.offsetHeight * 0.5));
+        const cursorSize = 13;
+        const cursorRadius = cursorSize * 0.5;
         const railStart = chapterCenters[0];
         railLength = Math.max(1, chapterCenters[chapterCenters.length - 1] - railStart);
-        mobileRail.style.top = `${railStart.toFixed(2)}px`;
+        mobileRail.style.top = `${(railStart - cursorRadius).toFixed(2)}px`;
         mobileRail.style.bottom = 'auto';
-        mobileRail.style.height = `${railLength.toFixed(2)}px`;
-        const middlePosition = ((chapterCenters[1] - railStart) / railLength) * 100;
-        route.style.setProperty('--route-middle', `${middlePosition.toFixed(3)}%`);
+        mobileRail.style.height = `${(railLength + cursorSize).toFixed(2)}px`;
+        mobileRail.style.setProperty('--route-sticky-y', `${((viewportHeight * 0.48) - cursorRadius).toFixed(2)}px`);
+        mobileRail.style.setProperty('--route-track-length', `${railLength.toFixed(2)}px`);
+        mobileRail.style.setProperty('--route-middle-y', `${(chapterCenters[1] - railStart).toFixed(2)}px`);
       };
 
       const renderMobile = () => {
-        scrollFrame = 0;
         if (!compactRoute.matches) return;
         if (reduceMotion.matches || staticCompactRoute.matches) {
           chapters.forEach((chapter) => {
@@ -454,19 +497,32 @@
         drawMobile(currentMobileState());
       };
 
+      const flushMobileFrame = () => {
+        mobileFrame = 0;
+        const needsMeasure = mobileMeasureDirty;
+        mobileMeasureDirty = false;
+        if (needsMeasure) measureMobile();
+
+        if (compactRoute.matches) {
+          if (needsMeasure || inView || reduceMotion.matches || staticCompactRoute.matches) renderMobile();
+          return;
+        }
+        if (needsMeasure) drawDesktop(lastProgress, lastStep, lastResolved);
+      };
+
+      const requestMobileFrame = () => {
+        if (mobileFrame) return;
+        mobileFrame = window.requestAnimationFrame(flushMobileFrame);
+      };
+
       const scheduleMobileRender = () => {
-        if (!compactRoute.matches || reduceMotion.matches || staticCompactRoute.matches || !inView || scrollFrame) return;
-        scrollFrame = window.requestAnimationFrame(renderMobile);
+        if (!compactRoute.matches || reduceMotion.matches || staticCompactRoute.matches || !inView) return;
+        requestMobileFrame();
       };
 
       const scheduleMeasure = () => {
-        if (measureFrame) return;
-        measureFrame = window.requestAnimationFrame(() => {
-          measureFrame = 0;
-          measureMobile();
-          if (compactRoute.matches) renderMobile();
-          else drawDesktop(lastProgress, lastStep, lastResolved);
-        });
+        mobileMeasureDirty = true;
+        requestMobileFrame();
       };
 
       const resetDesktop = () => {

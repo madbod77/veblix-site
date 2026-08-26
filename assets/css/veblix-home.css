@@ -3659,6 +3659,7 @@ h3 {
     position: absolute;
     inset: 0 50% auto auto;
     width: 4px;
+    z-index: 0;
     height: 100%;
     border-radius: inherit;
     background: var(--vl-red);
@@ -3672,6 +3673,7 @@ h3 {
     position: absolute;
     top: 0;
     left: 50%;
+    z-index: 2;
     width: 17px;
     height: 17px;
     border: 4px solid var(--vl-navy-deep);
@@ -3862,7 +3864,7 @@ h3 {
     height: auto;
     min-height: 0;
     max-height: none;
-    overflow: hidden;
+    overflow: visible;
     border: 1px solid var(--vl-navy-deep);
     flex-direction: column;
     background: var(--vl-navy-deep);
@@ -3909,7 +3911,7 @@ h3 {
     min-height: 0;
     padding: 0;
     flex: 0 0 auto;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .vl-core-route__canvas::after {
@@ -4238,6 +4240,9 @@ h3 {
   }
 
   .vl-core-route__mobile-rail {
+    --route-cursor-size: 13px;
+    --route-cursor-radius: 6.5px;
+    --route-fill-y: 0px;
     position: absolute;
     top: clamp(28px, 7vw, 46px);
     bottom: clamp(28px, 7vw, 46px);
@@ -4246,39 +4251,65 @@ h3 {
     display: block;
     width: 2px;
     border-radius: 999px;
-    background: rgba(255, 249, 234, 0.19);
+    background: transparent;
+    pointer-events: none;
   }
 
-  .vl-core-route__mobile-rail::before {
+  .vl-core-route__mobile-rail::before,
+  .vl-core-route__mobile-rail::after {
     content: "";
     position: absolute;
-    inset: 0;
-    width: 4px;
+    top: var(--route-cursor-radius);
+    left: 50%;
+    z-index: 0;
+    width: 2px;
+    height: var(--route-track-length, calc(100% - var(--route-cursor-size)));
     border-radius: inherit;
+    background: rgba(255, 249, 234, 0.2);
+    transform: translateX(-50%);
+  }
+
+  .vl-core-route__mobile-rail::after {
+    z-index: 1;
+    width: 4px;
+    height: var(--route-fill-y);
     background: var(--vl-red);
-    box-shadow: 0 0 18px rgba(200, 13, 10, 0.56);
-    transform: translateX(-1px) scaleY(var(--route-progress-scale));
-    transform-origin: top center;
+    box-shadow: 0 0 14px rgba(200, 13, 10, 0.5);
+    transition: height 220ms var(--vl-ease);
+  }
+
+  .vl-core-route[data-route-step="2"] .vl-core-route__mobile-rail {
+    --route-fill-y: var(--route-middle-y, 50%);
+  }
+
+  .vl-core-route[data-route-step="3"] .vl-core-route__mobile-rail,
+  .vl-core-route.is-route-complete .vl-core-route__mobile-rail {
+    --route-fill-y: var(--route-track-length, calc(100% - var(--route-cursor-size)));
   }
 
   .vl-core-route__mobile-rail i {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 13px;
-    height: 13px;
+    position: sticky;
+    top: var(--route-sticky-y, 48svh);
+    left: auto;
+    z-index: 4;
+    display: block;
+    width: var(--route-cursor-size);
+    height: var(--route-cursor-size);
+    margin-left: calc((2px - var(--route-cursor-size)) / 2);
     border: 3px solid var(--vl-navy-deep);
     border-radius: 50%;
     background: var(--vl-paper-soft);
-    box-shadow: 0 0 0 4px var(--vl-red), 0 0 18px rgba(200, 13, 10, 0.82);
+    box-shadow: 0 0 0 4px var(--vl-red), 0 0 16px rgba(200, 13, 10, 0.76);
     opacity: 1;
-    transform: translate3d(-50%, calc(var(--route-packet-y) - 6.5px), 0);
-    will-change: transform;
+    transform: none;
+    transition: none;
+    will-change: auto;
   }
 
   .vl-core-route__mobile-rail > b {
     position: absolute;
     left: 50%;
+    z-index: 2;
     width: 8px;
     height: 8px;
     border: 2px solid var(--vl-navy-deep);
@@ -4287,9 +4318,9 @@ h3 {
     transform: translate(-50%, -50%);
   }
 
-  .vl-core-route__mobile-rail > b:nth-of-type(1) { top: 0; }
-  .vl-core-route__mobile-rail > b:nth-of-type(2) { top: var(--route-middle, 50%); }
-  .vl-core-route__mobile-rail > b:nth-of-type(3) { top: 100%; }
+  .vl-core-route__mobile-rail > b:nth-of-type(1) { top: var(--route-cursor-radius); }
+  .vl-core-route__mobile-rail > b:nth-of-type(2) { top: calc(var(--route-cursor-radius) + var(--route-middle-y, 50%)); }
+  .vl-core-route__mobile-rail > b:nth-of-type(3) { top: calc(var(--route-cursor-radius) + var(--route-track-length, calc(100% - var(--route-cursor-size)))); }
 
   .vl-core-route[data-route-step="1"] .vl-core-route__mobile-rail > b:nth-of-type(1),
   .vl-core-route[data-route-step="2"] .vl-core-route__mobile-rail > b:nth-of-type(2),
