@@ -420,21 +420,30 @@
 
         const firstCenter = mobileChapterMetrics[0].center;
         const lastCenter = mobileChapterMetrics[mobileChapterMetrics.length - 1].center;
+        const middleCenter = mobileChapterMetrics[1].center;
         const progress = clamp((focusDocumentY - firstCenter) / Math.max(1, lastCenter - firstCenter));
+        /* Copy changes early to give the next chapter reading time. The rail,
+           however, advances only after its sticky cursor crosses a marker. */
+        const railStep = focusDocumentY >= lastCenter ? 3 : (focusDocumentY >= middleCenter ? 2 : 1);
         const startLine = viewportHeight * 0.82;
         const endLine = viewportHeight * 0.42;
         const automation = mobileChapterMetrics[mobileChapterMetrics.length - 1];
         const dispatchTravel = Math.max(1, automation.height + startLine - endLine);
         const dispatchProgress = clamp(((window.scrollY + startLine) - automation.top) / dispatchTravel);
 
-        return { activeIndex: mobileActiveIndex, progress, dispatchProgress };
+        return { activeIndex: mobileActiveIndex, progress, dispatchProgress, railStep };
       };
 
-      const drawMobile = ({ activeIndex, progress, dispatchProgress }) => {
+      const drawMobile = ({ activeIndex, progress, dispatchProgress, railStep }) => {
         const safeProgress = clamp(progress);
         const safeDispatchProgress = clamp(dispatchProgress);
         const step = activeIndex + 1;
         const resolved = safeDispatchProgress >= 0.985;
+        const nextRailStep = String(railStep);
+
+        if (route.dataset.routeRailStep !== nextRailStep) {
+          route.dataset.routeRailStep = nextRailStep;
+        }
 
         chapters.forEach((chapter, index) => {
           chapter.classList.toggle('is-route-active', index === activeIndex);
@@ -489,6 +498,7 @@
           chapters.forEach((chapter) => {
             chapter.classList.add('is-route-active');
           });
+          route.dataset.routeRailStep = '3';
           setRouteState(1, 3, true);
           drawDispatch(1, false);
           route.classList.remove('is-route-running');

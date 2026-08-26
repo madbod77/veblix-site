@@ -4275,15 +4275,14 @@ h3 {
     height: var(--route-fill-y);
     background: var(--vl-red);
     box-shadow: 0 0 14px rgba(200, 13, 10, 0.5);
-    transition: height 220ms var(--vl-ease);
+    transition: none;
   }
 
-  .vl-core-route[data-route-step="2"] .vl-core-route__mobile-rail {
+  .vl-core-route[data-route-rail-step="2"] .vl-core-route__mobile-rail {
     --route-fill-y: var(--route-middle-y, 50%);
   }
 
-  .vl-core-route[data-route-step="3"] .vl-core-route__mobile-rail,
-  .vl-core-route.is-route-complete .vl-core-route__mobile-rail {
+  .vl-core-route[data-route-rail-step="3"] .vl-core-route__mobile-rail {
     --route-fill-y: var(--route-track-length, calc(100% - var(--route-cursor-size)));
   }
 
@@ -4322,9 +4321,9 @@ h3 {
   .vl-core-route__mobile-rail > b:nth-of-type(2) { top: calc(var(--route-cursor-radius) + var(--route-middle-y, 50%)); }
   .vl-core-route__mobile-rail > b:nth-of-type(3) { top: calc(var(--route-cursor-radius) + var(--route-track-length, calc(100% - var(--route-cursor-size)))); }
 
-  .vl-core-route[data-route-step="1"] .vl-core-route__mobile-rail > b:nth-of-type(1),
-  .vl-core-route[data-route-step="2"] .vl-core-route__mobile-rail > b:nth-of-type(2),
-  .vl-core-route[data-route-step="3"] .vl-core-route__mobile-rail > b:nth-of-type(3) {
+  .vl-core-route[data-route-rail-step="1"] .vl-core-route__mobile-rail > b:nth-of-type(1),
+  .vl-core-route[data-route-rail-step="2"] .vl-core-route__mobile-rail > b:nth-of-type(2),
+  .vl-core-route[data-route-rail-step="3"] .vl-core-route__mobile-rail > b:nth-of-type(3) {
     background: var(--vl-paper-soft);
     box-shadow: 0 0 0 3px rgba(200, 13, 10, 0.74);
   }
