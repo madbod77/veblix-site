@@ -3834,8 +3834,8 @@ h3 {
 }
 
 /* Mobile product route -------------------------------------------------------
-   This is a scroll-scrubbed editorial scene, not a compressed desktop card
-   stack. The page keeps native scrolling; JS only derives a progress value. */
+   A continuous editorial sequence: each product passes through the viewport
+   in normal document flow while JS only reads that travel to pace the motion. */
 @media (max-width: 932px) {
   .vl-core__grid {
     align-items: start;
@@ -3843,8 +3843,7 @@ h3 {
   }
 
   .vl-core-route {
-    min-height: calc(230vh + 80px);
-    min-height: calc(230svh + 80px);
+    min-height: 0;
     overflow: visible;
     border: 0;
     background: transparent;
@@ -3857,13 +3856,12 @@ h3 {
   }
 
   .vl-core-route__frame {
-    position: sticky;
-    top: max(78px, calc(70px + env(safe-area-inset-top)));
+    position: relative;
+    top: auto;
     display: flex;
-    height: calc(100vh - 92px);
-    height: calc(100svh - 92px - env(safe-area-inset-top));
-    min-height: 460px;
-    max-height: 780px;
+    height: auto;
+    min-height: 0;
+    max-height: none;
     overflow: hidden;
     border: 1px solid var(--vl-navy-deep);
     flex-direction: column;
@@ -3910,26 +3908,13 @@ h3 {
     position: relative;
     min-height: 0;
     padding: 0;
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     overflow: hidden;
   }
 
   .vl-core-route__canvas::after {
-    content: "01";
-    position: absolute;
-    right: -0.05em;
-    bottom: -0.21em;
-    z-index: 0;
-    color: rgba(255, 249, 234, 0.035);
-    font-size: clamp(170px, 58vw, 360px);
-    font-weight: 880;
-    letter-spacing: -0.12em;
-    line-height: 1;
-    pointer-events: none;
+    display: none;
   }
-
-  .vl-core-route[data-route-step="2"] .vl-core-route__canvas::after { content: "02"; }
-  .vl-core-route[data-route-step="3"] .vl-core-route__canvas::after { content: "03"; }
 
   .vl-core-route__track,
   .vl-core-route__nodes--desktop {
@@ -3937,31 +3922,64 @@ h3 {
   }
 
   .vl-core-route__chapters {
-    position: absolute;
-    inset: 0;
+    position: relative;
     z-index: 2;
-    display: block;
+    display: grid;
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
   .vl-core-route__chapters > li {
-    position: absolute;
-    inset: 0;
+    position: relative;
+    inset: auto;
     display: grid;
     min-width: 0;
+    min-height: clamp(600px, 160vw, 760px);
     padding: clamp(16px, 4vw, 30px) clamp(16px, 4.8vw, 34px) clamp(15px, 4vw, 28px) clamp(43px, 10vw, 66px);
-    grid-template-rows: auto minmax(124px, 1fr);
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 249, 234, 0.2);
+    grid-template-rows: auto clamp(230px, 68vw, 340px);
     gap: clamp(12px, 3vw, 22px);
-    pointer-events: none;
+    isolation: isolate;
     transform-origin: 50% 50%;
   }
 
+  .vl-core-route__chapters > li:last-child {
+    border-bottom: 0;
+  }
+
+  .vl-core-route__chapters > li::before {
+    content: "01";
+    position: absolute;
+    right: -0.05em;
+    bottom: -0.18em;
+    z-index: -1;
+    color: rgba(255, 249, 234, 0.035);
+    font-size: clamp(170px, 58vw, 360px);
+    font-weight: 880;
+    letter-spacing: -0.12em;
+    line-height: 1;
+    pointer-events: none;
+    transition: color 520ms var(--vl-ease), transform 700ms var(--vl-ease);
+  }
+
+  .vl-core-route__chapters > li:nth-child(2)::before { content: "02"; }
+  .vl-core-route__chapters > li:nth-child(3)::before { content: "03"; }
+
   .js .vl-core-route__chapters > li {
-    opacity: var(--route-node-opacity, 0);
-    transform: translate3d(0, var(--route-node-shift, 86%), 0) scale(var(--route-node-scale, 0.965));
-    will-change: transform, opacity;
+    opacity: 1;
+    transform: none;
+  }
+
+  .js .vl-core-route__chapters > li.is-route-active {
+    opacity: 1;
+    transform: none;
+  }
+
+  .js .vl-core-route__chapters > li.is-route-active::before {
+    color: rgba(200, 13, 10, 0.085);
+    transform: translate3d(-0.035em, -0.02em, 0);
   }
 
   .vl-core-route__product-copy {
@@ -3969,6 +3987,17 @@ h3 {
     z-index: 2;
     align-self: start;
     min-width: 0;
+  }
+
+  .js .vl-core-route__product-copy {
+    opacity: 0.8;
+    transform: translate3d(0, 8px, 0);
+    transition: opacity 420ms ease, transform 620ms var(--vl-ease);
+  }
+
+  .js .vl-core-route__chapters > li.is-route-active .vl-core-route__product-copy {
+    opacity: 1;
+    transform: none;
   }
 
   .vl-core-route__product-meta {
@@ -4055,11 +4084,18 @@ h3 {
     width: 100%;
     min-width: 0;
     min-height: 0;
-    height: 100%;
+    height: clamp(230px, 68vw, 340px);
     overflow: hidden;
     border: 1px solid rgba(255, 249, 234, 0.68);
     box-shadow: 7px 8px 0 rgba(200, 13, 10, 0.72);
     transform: translateZ(0);
+    transition: border-color 420ms ease, box-shadow 520ms var(--vl-ease), transform 620ms var(--vl-ease);
+  }
+
+  .js .vl-core-route__chapters > li:not(.is-route-active) .vl-core-route__product-visual {
+    border-color: rgba(255, 249, 234, 0.46);
+    box-shadow: 5px 6px 0 rgba(200, 13, 10, 0.46);
+    transform: translate3d(0, 5px, 0) scale(0.99);
   }
 
   .vl-core-route__product-visual.vl-site-demo {
@@ -4203,8 +4239,8 @@ h3 {
 
   .vl-core-route__mobile-rail {
     position: absolute;
-    top: clamp(18px, 4vw, 28px);
-    bottom: clamp(18px, 4vw, 28px);
+    top: clamp(28px, 7vw, 46px);
+    bottom: clamp(28px, 7vw, 46px);
     left: clamp(19px, 4.6vw, 30px);
     z-index: 4;
     display: block;
@@ -4252,7 +4288,7 @@ h3 {
   }
 
   .vl-core-route__mobile-rail > b:nth-of-type(1) { top: 0; }
-  .vl-core-route__mobile-rail > b:nth-of-type(2) { top: 50%; }
+  .vl-core-route__mobile-rail > b:nth-of-type(2) { top: var(--route-middle, 50%); }
   .vl-core-route__mobile-rail > b:nth-of-type(3) { top: 100%; }
 
   .vl-core-route[data-route-step="1"] .vl-core-route__mobile-rail > b:nth-of-type(1),
@@ -4325,6 +4361,7 @@ h3 {
 
 @media (min-width: 641px) and (max-width: 932px) {
   .vl-core-route__chapters > li {
+    min-height: clamp(500px, 68vw, 560px);
     padding: clamp(28px, 5vw, 46px) clamp(30px, 5vw, 48px) clamp(28px, 5vw, 44px) clamp(62px, 8vw, 82px);
     grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
     grid-template-rows: 1fr;
@@ -4339,7 +4376,7 @@ h3 {
   .vl-core-route__product-visual {
     align-self: center;
     min-height: 330px;
-    height: min(52vh, 410px);
+    height: min(48vw, 390px);
   }
 
   .vl-core-route__chapters h3 {
@@ -4349,7 +4386,6 @@ h3 {
   .vl-core-route__chapters > li:nth-child(3) h3 {
     font-size: clamp(25px, 3.8vw, 31px);
     letter-spacing: -0.05em;
-    white-space: nowrap;
   }
 
   .vl-core-route__product-purpose {
@@ -4363,10 +4399,9 @@ h3 {
 
 @media (max-width: 375px) {
   .vl-core-route__frame {
-    top: max(74px, calc(68px + env(safe-area-inset-top)));
-    height: calc(100vh - 84px);
-    height: calc(100svh - 84px - env(safe-area-inset-top));
-    min-height: 450px;
+    top: auto;
+    height: auto;
+    min-height: 0;
     box-shadow: 8px 10px 0 var(--vl-red), 0 24px 60px rgba(37, 42, 56, 0.22);
   }
 

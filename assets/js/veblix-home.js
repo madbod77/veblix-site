@@ -257,8 +257,8 @@
     });
   });
 
-  /* Client route: desktop keeps the cinematic pass; mobile is scrubbed by the
-     page's native scroll so every product owns a readable, stable beat. */
+  /* Client route: desktop keeps the cinematic pass; mobile stays in normal
+     document flow and reads each chapter's viewport travel to pace the motion. */
   init('client route motion', () => {
     const routes = Array.from(document.querySelectorAll('[data-client-route]'));
     if (!routes.length) return;
@@ -279,23 +279,15 @@
       if (time < 0.58) return 2;
       return 3;
     };
-    const mobileSceneAt = (progress) => {
-      if (progress < 0.18) return 0;
-      if (progress < 0.38) return smoothstep((progress - 0.18) / 0.2);
-      if (progress < 0.62) return 1;
-      if (progress < 0.82) return 1 + smoothstep((progress - 0.62) / 0.2);
-      return 2;
-    };
     const dispatchStatuses = [
       'ROUTE READY / 0 OF 4',
       'CAPTURING / 1 OF 4',
       'VALIDATING / 2 OF 4',
       'SYNCING CRM / 3 OF 4',
-      'HANDOFF COMPLETE / 4 OF 4',
+      'NOTIFYING / 4 OF 4',
     ];
 
     routes.forEach((route) => {
-      const frame = route.querySelector('.vl-core-route__frame') || route;
       const path = route.querySelector('[data-route-path]');
       const packet = route.querySelector('[data-route-packet]');
       const mobileRail = route.querySelector('.vl-core-route__mobile-rail');
@@ -319,8 +311,6 @@
       let running = false;
       let finished = false;
       let railLength = 0;
-      let stickyTop = 0;
-      let mobileTravel = 1;
       let lastProgress = 0;
       let lastStep = 1;
       let lastResolved = false;
@@ -383,62 +373,70 @@
         if (routeDispatch.classList.contains('is-complete') !== isComplete) {
           routeDispatch.classList.toggle('is-complete', isComplete);
         }
-        if (dispatchStatus && dispatchStatus.textContent !== dispatchStatuses[step]) {
-          dispatchStatus.textContent = dispatchStatuses[step];
+        const nextStatus = isComplete ? 'HANDOFF COMPLETE / 4 OF 4' : dispatchStatuses[step];
+        if (dispatchStatus && dispatchStatus.textContent !== nextStatus) {
+          dispatchStatus.textContent = nextStatus;
         }
       };
 
-      const drawMobile = (progress) => {
-        const safeProgress = clamp(progress);
-        const scene = mobileSceneAt(safeProgress);
-        const step = scene < 0.5 ? 1 : scene < 1.5 ? 2 : 3;
-        const resolved = safeProgress >= 0.985;
+      const currentMobileState = () => {
+        const viewportHeight = Math.max(window.innerHeight || 0, document.documentElement.clientHeight || 0, 1);
+        const chapterRects = chapters.map((chapter) => chapter.getBoundingClientRect());
+        const focusLine = viewportHeight * 0.48;
+        let activeIndex = 0;
+        let closestDistance = Number.POSITIVE_INFINITY;
 
-        chapters.forEach((chapter, index) => {
-          const distance = index - scene;
-          const sceneIndex = Math.floor(scene);
-          const sceneFraction = scene - sceneIndex;
-          let opacity = 0;
-
-          /* Exit the current product before the next one enters. This keeps a
-             departing graphic from washing across the incoming explanation. */
-          if (index === sceneIndex) {
-            opacity = sceneFraction <= 0.12
-              ? 1
-              : 1 - smoothstep(clamp((sceneFraction - 0.12) / 0.36));
-          } else if (index === sceneIndex + 1 && sceneFraction >= 0.52) {
-            opacity = smoothstep(clamp((sceneFraction - 0.52) / 0.36));
+        chapterRects.forEach((rect, index) => {
+          const distance = Math.abs((rect.top + (rect.height * 0.5)) - focusLine);
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            activeIndex = index;
           }
-
-          const absoluteDistance = Math.abs(distance);
-          const scale = 1 - (Math.min(absoluteDistance, 1) * 0.04);
-          chapter.style.setProperty('--route-node-opacity', opacity.toFixed(4));
-          chapter.style.setProperty('--route-node-shift', `${(distance * 104).toFixed(2)}%`);
-          chapter.style.setProperty('--route-node-scale', scale.toFixed(4));
         });
 
-        route.classList.toggle('is-route-running', safeProgress > 0.01 && !resolved);
-        setRouteState(safeProgress, step, resolved);
+        const centers = chapterRects.map((rect) => rect.top + (rect.height * 0.5));
+        const progress = clamp((focusLine - centers[0]) / Math.max(1, centers[centers.length - 1] - centers[0]));
+        const startLine = viewportHeight * 0.82;
+        const endLine = viewportHeight * 0.42;
+        const automationRect = chapterRects[chapterRects.length - 1];
+        const dispatchTravel = Math.max(1, automationRect.height + startLine - endLine);
+        const dispatchProgress = clamp((startLine - automationRect.top) / dispatchTravel);
 
-        const dispatchProgress = clamp((safeProgress - 0.64) / 0.3);
-        drawDispatch(dispatchProgress, scene >= 1.45 && !resolved);
+        return { activeIndex, progress, dispatchProgress };
+      };
+
+      const drawMobile = ({ activeIndex, progress, dispatchProgress }) => {
+        const safeProgress = clamp(progress);
+        const safeDispatchProgress = clamp(dispatchProgress);
+        const step = activeIndex + 1;
+        const resolved = safeDispatchProgress >= 0.985;
+
+        chapters.forEach((chapter, index) => {
+          chapter.classList.toggle('is-route-active', index === activeIndex);
+        });
+
+        route.classList.toggle('is-route-running', inView && safeProgress > 0.01 && !resolved);
+        setRouteState(safeProgress, step, resolved);
+        drawDispatch(safeDispatchProgress, inView && activeIndex === 2 && !resolved);
       };
 
       const measureMobile = () => {
         if (!compactRoute.matches) {
           railLength = 0;
-          stickyTop = 0;
-          mobileTravel = 1;
+          mobileRail.style.removeProperty('top');
+          mobileRail.style.removeProperty('bottom');
+          mobileRail.style.removeProperty('height');
+          route.style.removeProperty('--route-middle');
           return;
         }
-        railLength = mobileRail.getBoundingClientRect().height;
-        stickyTop = Number.parseFloat(window.getComputedStyle(frame).top) || 0;
-        mobileTravel = Math.max(1, route.offsetHeight - frame.offsetHeight);
-      };
-
-      const currentMobileProgress = () => {
-        const routeRect = route.getBoundingClientRect();
-        return clamp((stickyTop - routeRect.top) / mobileTravel);
+        const chapterCenters = chapters.map((chapter) => chapter.offsetTop + (chapter.offsetHeight * 0.5));
+        const railStart = chapterCenters[0];
+        railLength = Math.max(1, chapterCenters[chapterCenters.length - 1] - railStart);
+        mobileRail.style.top = `${railStart.toFixed(2)}px`;
+        mobileRail.style.bottom = 'auto';
+        mobileRail.style.height = `${railLength.toFixed(2)}px`;
+        const middlePosition = ((chapterCenters[1] - railStart) / railLength) * 100;
+        route.style.setProperty('--route-middle', `${middlePosition.toFixed(3)}%`);
       };
 
       const renderMobile = () => {
@@ -446,16 +444,14 @@
         if (!compactRoute.matches) return;
         if (reduceMotion.matches || staticCompactRoute.matches) {
           chapters.forEach((chapter) => {
-            chapter.style.setProperty('--route-node-opacity', '1');
-            chapter.style.setProperty('--route-node-shift', '0%');
-            chapter.style.setProperty('--route-node-scale', '1');
+            chapter.classList.add('is-route-active');
           });
           setRouteState(1, 3, true);
           drawDispatch(1, false);
           route.classList.remove('is-route-running');
           return;
         }
-        drawMobile(currentMobileProgress());
+        drawMobile(currentMobileState());
       };
 
       const scheduleMobileRender = () => {
@@ -545,7 +541,7 @@
             }
             sync();
           });
-        }, { threshold: [0, 0.18], rootMargin: '75% 0px 75% 0px' });
+        }, { threshold: [0, 0.18], rootMargin: '25% 0px 25% 0px' });
         routeObserver.observe(route);
       } else {
         inView = true;
@@ -565,9 +561,7 @@
         stop();
         finished = false;
         chapters.forEach((chapter) => {
-          chapter.style.removeProperty('--route-node-opacity');
-          chapter.style.removeProperty('--route-node-shift');
-          chapter.style.removeProperty('--route-node-scale');
+          chapter.classList.remove('is-route-active');
         });
         scheduleMeasure();
         sync();
@@ -585,6 +579,10 @@
       window.addEventListener('resize', scheduleMeasure, { passive: true });
       window.addEventListener('scroll', scheduleMobileRender, { passive: true });
       document.addEventListener('visibilitychange', sync);
+      if ('ResizeObserver' in window) {
+        const routeResizeObserver = new ResizeObserver(scheduleMeasure);
+        routeResizeObserver.observe(route);
+      }
     });
   });
 
